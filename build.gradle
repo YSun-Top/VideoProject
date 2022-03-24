@@ -1,6 +1,9 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript{
     apply from: 'buildSrc/config.gradle'
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$rootProject.kotlin.kotlin_gradle_plugin"
+    }
 }
 plugins {
     id 'com.android.application' version '7.2.0-beta04' apply false
