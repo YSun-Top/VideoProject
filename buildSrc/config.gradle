@@ -1,0 +1,85 @@
+ext {
+    androidBuildTools = [
+            buildTools: "30.0.3",
+            minSdk    : 21,
+            targetSdk : 31,
+            compileSdk: 31
+    ]
+    androidx = [
+            gradleVersion          : "4.1.0",
+            viewBinding            : "7.0.3",
+            recyclerview           : "1.3.0-alpha01",
+            appcompat              : "1.4.1",
+            constraintLayout       : "2.1.3",
+            core_ktx               : "1.7.0",
+            activity_ktx           : "1.4.0",
+            test_junit             : "4.13.2",
+            ext_junit              : "1.1.3",
+            runner                 : "1.4.0",
+            test_rules             : "1.0.2",
+            espresso_intents       : "3.0.2",
+            espresso_core          : "3.4.0",
+            lifecycle_extensions   : "2.2.0",
+            lifecycle_viewModel_ktx: "2.4.0"
+    ]
+    kotlin = [
+            kotlin_gradle_plugin    : "1.5.31",
+            kotlin_stdlib           : "1.5.31",
+            kotlin_stdlib_jdk8      : "1.5.31",
+            kotlinXCoroutinesCore   : "1.5.0",
+            kotlinXCoroutinesAndroid: "1.5.0"
+    ]
+    okhttp3 = [
+            okhttp       : "5.0.0-alpha.3",
+            urlConnection: "3.11.0",
+            io           : "3.0.0"
+    ]
+    rxjava2 = [
+            rxJava2   : "2.2.8",
+            rxAndroid2: "2.1.0"
+    ]
+    retrofit2 = [
+            retrofit2              : "2.4.0",
+            retrofit2AdapterRxJava2: "2.9.0",
+            retrofit2_gson         : "2.4.0"
+    ]
+    googleCode = [
+            google_gson: "2.8.9",
+            material   : "1.5.0",
+            exoplayer  : "2.16.1"
+    ]
+    dagger = [
+            dagger                : "2.35.1",
+            daggerCompiler        : "2.21",
+            daggerAndroid         : "2.35.1",
+            daggerAndroidSupport  : "2.35.1",
+            daggerAndroidProcessor: "2.35.1"
+    ]
+
+    //com.github.bumptech.glide:glide:4.10.0
+    glide = "4.10.0"
+    //pl.droidsonroids.gif:android-gif-drawable:1.2.19
+    gif_drawable = "1.2.19"
+    //androidx.cardview:cardview:1.0.0
+    cardView = "1.0.0"
+    //cn.bluemobi.dylan:photoview:1.4
+    photoview = "1.4"
+    //cn.jzvd:jiaozivideoplayer:7.0.5
+    jiaoziVideoPlayer = "7.0.5"
+
+    /**
+     * build.gradle应用插件
+     * @param project 目标模块
+     * @param isApp true：application，false：library
+     */
+    applyPlugin = { Project project, boolean isApp ->
+        if (isApp) {
+            project.plugins.apply('com.android.application')
+        } else {
+            project.plugins.apply('com.android.library')
+        }
+        project.plugins.apply('kotlin-android')
+        project.plugins.apply('kotlin-kapt')
+//        project.plugins.apply("androidx.navigation.safeargs")
+    }
+}

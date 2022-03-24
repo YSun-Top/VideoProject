@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 rootProject.name = "VideoProject"
 include ':app'
 include ':ffmpeglib'
-include ':V_Base'
+include ':v_Base'
