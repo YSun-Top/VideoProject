@@ -36,6 +36,14 @@ android {
 
 dependencies {
     api("androidx.core:core-ktx:${rootProject.androidx.core_ktx}")
+    api("androidx.activity:activity-ktx:$rootProject.androidx.activity_ktx")
     api("androidx.appcompat:appcompat:$rootProject.androidx.appcompat")
     api("com.google.android.material:material:$rootProject.googleCode.material")
+    api("androidx.databinding:viewbinding:$rootProject.androidx.viewBinding")
+    api("androidx.recyclerview:recyclerview:$rootProject.androidx.recyclerview")
+    api("org.jetbrains.kotlin:kotlin-stdlib:$rootProject.kotlin.kotlin_stdlib")
+    api("com.google.code.gson:gson:$rootProject.googleCode.google_gson")
+    api("com.squareup.okhttp3:okhttp:$rootProject.okhttp3.okhttp")
+    api("com.squareup.okhttp3:okhttp-urlconnection:$rootProject.okhttp3.urlConnection")
+    api("com.squareup.okio:okio:$rootProject.okhttp3.okio")
 }

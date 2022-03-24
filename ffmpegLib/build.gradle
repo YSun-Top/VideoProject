@@ -1,18 +1,14 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
 }
-apply plugin: 'kotlin-android'
 
 android {
     compileSdk rootProject.androidBuildTools.compileSdk
 
     defaultConfig {
-        applicationId "com.voidcom.ffmpeglib"
         minSdk rootProject.androidBuildTools.minSdk
         targetSdk rootProject.androidBuildTools.targetSdk
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild{
