@@ -1,29 +1,33 @@
 package com.voidcom.videoproject
 
+import android.content.Intent
 import android.view.View
 import androidx.activity.viewModels
 import com.voidcom.ffmpeglib.FFmpegCmd
 import com.voidcom.v_base.ui.BaseActivity
-import com.voidcom.v_base.utils.KLog
+import com.voidcom.v_base.ui.EmptyViewModel
 import com.voidcom.videoproject.databinding.ActivityMainBinding
+import com.voidcom.videoproject.ui.VideoProcessActivity
 
-class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(),View.OnClickListener {
+class MainActivity : BaseActivity<ActivityMainBinding, EmptyViewModel>(), View.OnClickListener {
 
-    override val mViewModel by viewModels<MainViewModel>()
+    override val mViewModel by viewModels<EmptyViewModel>()
 
     override fun onInitUI() {
     }
 
     override fun onInitListener() {
-        mBinding.btn.setOnClickListener(this)
+        mBinding.btnTestCmd.setOnClickListener(this)
+        mBinding.btnVideoProcess.setOnClickListener(this)
     }
 
     override fun onInitData() {
     }
 
     override fun onClick(v: View?) {
-        KLog.d("onClick")
-        val cmdArray = arrayOf("ffmpeg", "-hwaccels")
-        FFmpegCmd.getInstance().executeFFmpeg(cmdArray)
+        when (v?.id) {
+            R.id.btn_test_cmd -> FFmpegCmd.getInstance().executeFFmpeg(arrayOf("ffmpeg", "-hwaccels"))
+            R.id.btn_video_process -> startActivity(Intent(this, VideoProcessActivity::class.java))
+        }
     }
 }

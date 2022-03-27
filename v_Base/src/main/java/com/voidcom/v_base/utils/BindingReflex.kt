@@ -33,13 +33,8 @@ object BindingReflex {
                 }
             }
             return reflexViewBinding(aClass.superclass, from)
-        } catch (e: NoSuchMethodException) {
-            e.printStackTrace()
-        } catch (e: IllegalAccessException) {
-            e.printStackTrace()
-        } catch (e: InvocationTargetException) {
-            e.printStackTrace()
+        } catch (e: Exception) {
+            throw e
         }
-        throw RuntimeException("ViewBinding初始化失败")
     }
 }

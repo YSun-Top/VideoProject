@@ -32,4 +32,8 @@ object AppCode {
     //region ------------------ 用于储存SharedPreferences数据所使用的key
 
     //endregion
+
+    //region
+    const val log_videoProcess="Log-VideoProcess"
+    //endregion
 }
