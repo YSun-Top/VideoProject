@@ -8,12 +8,14 @@ import com.voidcom.v_base.ui.BaseActivity
 import com.voidcom.v_base.ui.EmptyViewModel
 import com.voidcom.videoproject.databinding.ActivityMainBinding
 import com.voidcom.videoproject.ui.VideoProcessActivity
+import com.voidcom.videoproject.ui.videoFilter.VideoFiltersActivity
 
 class MainActivity : BaseActivity<ActivityMainBinding, EmptyViewModel>(), View.OnClickListener {
 
     override val mViewModel by viewModels<EmptyViewModel>()
 
     override fun onInitUI() {
+        startActivity(Intent(this, VideoFiltersActivity::class.java))
     }
 
     override fun onInitListener() {

@@ -14,13 +14,13 @@ import com.voidcom.v_base.utils.BindingReflex
  *
  */
 abstract class BaseDefaultFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment() {
-    private lateinit var _binding: VB
+    protected lateinit var mBinding: VB
 
     protected abstract val mViewModel: VM
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = BindingReflex.reflexViewBinding(javaClass, layoutInflater)
-        return _binding.root
+        mBinding = BindingReflex.reflexViewBinding(javaClass, layoutInflater)
+        return mBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

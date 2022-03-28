@@ -16,12 +16,12 @@ import com.voidcom.v_base.utils.*
 import com.voidcom.videoproject.R
 import com.voidcom.videoproject.databinding.ActivityVideoProcessBinding
 import com.voidcom.videoproject.ui.videoFilter.KEY_FILE_PATH
-import com.voidcom.videoproject.ui.videoFilter.VideoFilterActivity
+import com.voidcom.videoproject.ui.videoFilter.VideoFiltersActivity
 
 /**
  * Created by voidcom on 2022/3/27 17:36
  * Description:
- * 视频处理
+ * 视频处理列表
  */
 class VideoProcessActivity : BaseActivity<ActivityVideoProcessBinding, EmptyViewModel>(),
         View.OnClickListener {
@@ -43,7 +43,7 @@ class VideoProcessActivity : BaseActivity<ActivityVideoProcessBinding, EmptyView
                 e.printStackTrace()
             }
             if (TextUtils.isEmpty(path)) return@ActivityResultCallback
-            startActivity(Intent(this, VideoFilterActivity::class.java).apply {
+            startActivity(Intent(this, VideoFiltersActivity::class.java).apply {
                 putExtra(KEY_FILE_PATH, path)
             })
         }

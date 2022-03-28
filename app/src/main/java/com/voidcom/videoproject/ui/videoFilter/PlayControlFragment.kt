@@ -2,6 +2,7 @@ package com.voidcom.videoproject.ui.videoFilter
 
 import com.voidcom.v_base.ui.BaseDefaultFragment
 import com.voidcom.videoproject.databinding.FragmentPlayControlBinding
+import com.voidcom.videoproject.viewModel.videoFilter.PlayControlViewModel
 
 /**
  * Created by voidcom on 2022/3/27 17:36

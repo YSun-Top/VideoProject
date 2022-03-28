@@ -11,6 +11,15 @@
         android:layout_height="match_parent" />
 
     <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/filtersFragment"
+        android:name="com.voidcom.videoproject.ui.videoFilter.FiltersFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:tag="FiltersFragment"
+        tools:layout="@layout/fragment_filters" />
+
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/playControlFragment"
         android:name="com.voidcom.videoproject.ui.videoFilter.PlayControlFragment"
         android:layout_width="match_parent"

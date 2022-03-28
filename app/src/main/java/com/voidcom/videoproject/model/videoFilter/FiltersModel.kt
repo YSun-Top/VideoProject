@@ -6,7 +6,7 @@ import com.voidcom.v_base.ui.BaseModel
  * Created by voidcom on 2022/3/27 17:36
  * Description:
  */
-class VideoFilterModel: BaseModel() {
+class FiltersModel: BaseModel() {
 
     //vflip is up and down, hflip is left and right
     private val filtersHint = arrayOf(

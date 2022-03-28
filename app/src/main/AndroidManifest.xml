@@ -14,7 +14,7 @@
         android:theme="@style/Theme.VideoProject"
         tools:targetApi="31">
         <activity
-            android:name=".ui.videoFilter.VideoFilterActivity"
+            android:name=".ui.videoFilter.VideoFiltersActivity"
             android:launchMode="singleInstance"
             android:screenOrientation="landscape"
             android:exported="false" />

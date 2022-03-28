@@ -2,16 +2,16 @@
     <string name="app_name">VideoProject</string>
     <string name="test_cmd">测试CMD命令</string>
     <string name="video_process">视频处理</string>
-    <string name="video_filter">滤镜</string>
+    <string name="video_filters">滤镜</string>
+    <string name="player_start">开始</string>
+    <string name="player_stop">暂停</string>
 
     <!--滤镜类型-->
-    <string-array name="filterType">
-        <item>素描</item>
-        <item>鲜明</item>
-        <item>旋转90</item>
-        <item>九宫格</item>
-        <item>矩形</item>
-        <item>翻转</item>
-        <item>锐化</item>
-    </string-array>
+    <string name="filters_1">素描</string>
+    <string name="filters_2">鲜明</string>
+    <string name="filters_3">旋转90</string>
+    <string name="filters_4">九宫格</string>
+    <string name="filters_5">矩形</string>
+    <string name="filters_6">翻转</string>
+    <string name="filters_7">锐化</string>
 </resources>

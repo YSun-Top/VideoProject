@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/filterView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/grey_a19f9d"
+    android:orientation="horizontal">
+
+    <RadioButton
+        android:id="@+id/filter_1"
+        style="@style/Filters_radio_button"
+        android:text="@string/filters_1" />
+
+    <RadioButton
+        android:id="@+id/filter_2"
+        style="@style/Filters_radio_button"
+        android:text="@string/filters_2" />
+
+    <RadioButton
+        android:id="@+id/filter_3"
+        style="@style/Filters_radio_button"
+        android:text="@string/filters_3" />
+
+    <RadioButton
+        android:id="@+id/filter_4"
+        style="@style/Filters_radio_button"
+        android:text="@string/filters_4" />
+
+    <RadioButton
+        android:id="@+id/filter_5"
+        style="@style/Filters_radio_button"
+        android:text="@string/filters_5" />
+
+    <RadioButton
+        android:id="@+id/filter_6"
+        style="@style/Filters_radio_button"
+        android:text="@string/filters_6" />
+
+    <RadioButton
+        android:id="@+id/filter_7"
+        style="@style/Filters_radio_button"
+        android:text="@string/filters_7" />
+</RadioGroup>

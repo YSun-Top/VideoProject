@@ -1,4 +1,4 @@
-package com.voidcom.videoproject.ui.videoFilter
+package com.voidcom.videoproject.viewModel.videoFilter
 
 import com.voidcom.v_base.ui.BaseViewModel
 
