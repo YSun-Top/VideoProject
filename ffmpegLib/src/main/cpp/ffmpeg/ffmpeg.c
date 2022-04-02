@@ -111,10 +111,17 @@
 
 #include "ffmpeg.h"
 #include "cmdutils.h"
-#include "../ffmpeg_cmd.h"
 
 #include "libavutil/avassert.h"
 #include <setjmp.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include "../ffmpeg_cmd.h"
+#ifdef __cplusplus
+}
+#endif
 
 jmp_buf jump_buf;
 

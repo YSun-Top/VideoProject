@@ -11,7 +11,6 @@ import com.voidcom.videoproject.utils.FileAttributes
  * Description:
  */
 class FFmpegDecoder : VideoDecoder() {
-    private val decoderJni = FFmpegDecoderJni.newInstant
     private val mHandler = Handler(Looper.getMainLooper())
 
     override fun setDisPlay(holder: SurfaceHolder?, fileInfo: FileAttributes) {
@@ -19,31 +18,31 @@ class FFmpegDecoder : VideoDecoder() {
     }
 
     override fun setDataSource(path: String) {
-        mHolder?.let { decoderJni.setDisplay(it.surface) }
-        decoderJni.setDataSource(path)
+        mHolder?.let { FFmpegDecoderJni.newInstant.setDisplay(it.surface) }
+        FFmpegDecoderJni.newInstant.setDataSource(path)
     }
 
     override fun start() {
-        decoderJni.setPlayState(1)
+        FFmpegDecoderJni.newInstant.setPlayState(1)
     }
 
     override fun pause() {
-        decoderJni.setPlayState(2)
+        FFmpegDecoderJni.newInstant.setPlayState(2)
     }
 
     override fun seekTo(time: Int) {
-        decoderJni.goSelectedTime(time)
+        FFmpegDecoderJni.newInstant.goSelectedTime(time)
     }
 
     override fun release() {
-        decoderJni.setPlayState(5)
+        FFmpegDecoderJni.newInstant.setPlayState(5)
     }
 
-    override fun isPlaying(): Boolean = decoderJni.mIsPlaying()
+    override fun isPlaying(): Boolean = FFmpegDecoderJni.newInstant.mIsPlaying()
 
     override fun getPlayTimeIndex(type: Int): Long = if (type == 1) {
-        decoderJni.getCurrentPosition()
+        FFmpegDecoderJni.newInstant.getCurrentPosition()
     } else {
-        decoderJni.getDuration()
+        FFmpegDecoderJni.newInstant.getDuration()
     }
 }

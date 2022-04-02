@@ -210,7 +210,7 @@ void show_help_children(const AVClass *avClass, int flags)
         printf("\n");
     }
 
-    while (child = av_opt_child_class_iterate(avClass, &iter))
+    while (child == av_opt_child_class_iterate(avClass, &iter))
         show_help_children(child, flags);
 }
 

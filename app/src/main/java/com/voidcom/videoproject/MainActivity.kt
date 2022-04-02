@@ -15,7 +15,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, EmptyViewModel>(), View.O
     override val mViewModel by viewModels<EmptyViewModel>()
 
     override fun onInitUI() {
-        startActivity(Intent(this, VideoFiltersActivity::class.java))
+//        startActivity(Intent(this, VideoFiltersActivity::class.java))
     }
 
     override fun onInitListener() {

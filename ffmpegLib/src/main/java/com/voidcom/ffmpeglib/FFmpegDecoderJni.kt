@@ -21,7 +21,7 @@ class FFmpegDecoderJni private constructor() {
      * @param sampleRate 采样率
      * @param channels   频道
      */
-    private fun createAudioTrack(sampleRate: Int, channels: Int) {
+    fun createAudioTrack(sampleRate: Int, channels: Int) {
         val audioFormat = AudioFormat.ENCODING_PCM_16BIT
         val channelConfig: Int = when (channels) {
             1 -> AudioFormat.CHANNEL_OUT_MONO
@@ -65,7 +65,7 @@ class FFmpegDecoderJni private constructor() {
         audioTrack?.stop()
     }
 
-    fun releaseAudio(){
+    fun releaseJni() {
         audioTrack?.release()
     }
 
@@ -74,7 +74,7 @@ class FFmpegDecoderJni private constructor() {
      * 注: 由c调用改方法
      * @param status 0=Prepared
      */
-    fun addJniPlayStatusCallback(status: Int) {
+    fun jniPlayStatusCallback(status: Int) {
 
     }
 
@@ -84,15 +84,19 @@ class FFmpegDecoderJni private constructor() {
      * 详细请查看错误定义文件：src/main/cpp/ErrorCodeDefine.h
      * @param errorCode
      */
-    fun addJniErrorCallback(errorCode: Int, msg: String) {
+    fun jniErrorCallback(errorCode: Int, msg: String) {
 
     }
+
+    fun writeAudioData(audioData: ByteArray, offsetInBytes: Int, sizeInBytes: Int): Int =
+        audioTrack?.write(audioData, offsetInBytes, sizeInBytes)
+            ?: AudioTrack.ERROR_INVALID_OPERATION
 
     external fun initJni()
 
     external fun setDisplay(surface: Any)
 
-    external fun setDataSource(vPath: String): Int
+    external fun setDataSource(vPath: String)
 
     external fun getCurrentPosition(): Long
 

@@ -1,5 +1,7 @@
 package com.voidcom.v_base.ui
 
+import android.os.Handler
+import android.os.Looper
 import androidx.viewbinding.ViewBinding
 import com.voidcom.v_base.ui.BaseFrameActivity
 import com.voidcom.v_base.ui.BaseViewModel
@@ -9,5 +11,5 @@ import com.voidcom.v_base.ui.BaseViewModel
  *
  */
 abstract class BaseActivity<VB : ViewBinding, VM : BaseViewModel> : BaseFrameActivity<VB, VM>() {
-
+    protected val mHandle: Handler by lazy { Handler(Looper.getMainLooper()) }
 }

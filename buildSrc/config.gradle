@@ -20,7 +20,8 @@ ext {
             espresso_intents       : "3.0.2",
             espresso_core          : "3.4.0",
             lifecycle_extensions   : "2.2.0",
-            lifecycle_viewModel_ktx: "2.4.0"
+            lifecycle_livedata_ktx : "2.4.1",
+            lifecycle_viewModel_ktx: "2.4.1",
     ]
     kotlin = [
             kotlin_gradle_plugin    : "1.6.10",

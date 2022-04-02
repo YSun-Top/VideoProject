@@ -63,7 +63,6 @@ object GsonUtils {
     </T> */
     fun <T> toMapList(json: String): List<Map<String, T>> {
         return gson.fromJson(json, object : TypeToken<List<Map<String, T>>>() {
-
         }.type)
     }
 

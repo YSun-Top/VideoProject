@@ -16,3 +16,4 @@ rootProject.name = "VideoProject"
 include ':app'
 include ':ffmpegLib'
 include ':v_Base'
+include ':libSDKBase'

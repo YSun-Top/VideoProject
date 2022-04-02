@@ -3,22 +3,24 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 project("ffmpegLib")
 
 # 添加头文件路径
-include_directories(./ffmpeg)
-include_directories(./include)
+include_directories(ffmpeg)
+include_directories(include)
 # 定义源码所在目录
 aux_source_directory(. SRC_CPP)
+aux_source_directory(./define SRC_DEFINE)
 aux_source_directory(./ffmpeg SRC_FFMPEG)
+list(APPEND SRC_CPP ${SRC_DEFINE})
 list(APPEND SRC_CPP ${SRC_FFMPEG})
-
+#message("-------------${SRC_CPP}")
 if (${CMAKE_ANDROID_ARCH_ABI} MATCHES "armeabi-v7a")
     message("This is armeabi-v7a")
-    include_directories(./include/armeabi-v7a)
+    include_directories(include/armeabi-v7a)
 elseif (${CMAKE_ANDROID_ARCH_ABI} MATCHES "arm64-v8a")
     message("This is arm64-v8a")
-    include_directories(./include/arm64-v8a)
+    include_directories(include/arm64-v8a)
 elseif (${CMAKE_ANDROID_ARCH_ABI} MATCHES "x86_64")
     message("This is x86_64")
-    include_directories(./include/x86_64)
+    include_directories(include/x86_64)
 endif ()
 
 add_library(
