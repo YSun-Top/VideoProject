@@ -4,14 +4,24 @@ import android.os.Handler
 import android.os.Looper
 import android.view.SurfaceHolder
 import com.voidcom.ffmpeglib.FFmpegDecoderJni
+import com.voidcom.libsdkbase.JniCallback
+import com.voidcom.v_base.utils.ToastUtils
+import com.voidcom.videoproject.VideoApplication
+import com.voidcom.videoproject.model.videoFilter.PlayStateCallback
 import com.voidcom.videoproject.utils.FileAttributes
 
 /**
  * Created by voidcom on 2022/3/28 21:58
  * Description:
  */
-class FFmpegDecoder : VideoDecoder() {
+class FFmpegDecoder(val callback: PlayStateCallback) : VideoDecoder(), JniCallback {
     private val mHandler = Handler(Looper.getMainLooper())
+
+    init {
+        FFmpegDecoderJni.newInstant.callback = this
+        FFmpegDecoderJni.newInstant.initJni()
+        FFmpegDecoderJni.newInstant.isPlayAudio(false)
+    }
 
     override fun setDisPlay(holder: SurfaceHolder?, fileInfo: FileAttributes) {
         mHolder = holder
@@ -38,11 +48,26 @@ class FFmpegDecoder : VideoDecoder() {
         FFmpegDecoderJni.newInstant.setPlayState(5)
     }
 
-    override fun isPlaying(): Boolean = FFmpegDecoderJni.newInstant.mIsPlaying()
+    override fun isPlaying(): Boolean = FFmpegDecoderJni.newInstant.isPlaying()
 
     override fun getPlayTimeIndex(type: Int): Long = if (type == 1) {
         FFmpegDecoderJni.newInstant.getCurrentPosition()
     } else {
         FFmpegDecoderJni.newInstant.getDuration()
+    }
+
+    override fun onPlayStatusCallback(status: Int) {
+        mHandler.post {
+            when (status) {
+                0 -> callback.onPrepared()
+                5 -> {
+                    ToastUtils.showShort(VideoApplication.context, "滤镜切换成功")
+                }
+            }
+        }
+    }
+
+    override fun onErrorCallback(errorCode: Int, msg: String) {
+        TODO("Not yet implemented")
     }
 }

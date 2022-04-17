@@ -12,7 +12,7 @@ import com.voidcom.videoproject.videoProcess.FFmpegDecoder
  */
 class PlayVideoHandler : SurfaceHolder.Callback, PlayStateCallback {
 
-    private val fFmpegDecoder: FFmpegDecoder by lazy { FFmpegDecoder() }
+    private val fFmpegDecoder: FFmpegDecoder by lazy { FFmpegDecoder(this) }
     private val fileInfo: FileAttributes by lazy { FileAttributes() }
 
     override fun surfaceCreated(holder: SurfaceHolder) {

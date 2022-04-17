@@ -5,6 +5,7 @@ import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
 import android.os.Build
+import com.voidcom.libsdkbase.JniCallback
 
 /**
  * Created by voidcom on 2022/3/28 22:20
@@ -15,6 +16,7 @@ import android.os.Build
 
 class FFmpegDecoderJni private constructor() {
     private var audioTrack: AudioTrack? = null
+    var callback: JniCallback? = null
 
     /**
      * 创建音轨
@@ -75,7 +77,7 @@ class FFmpegDecoderJni private constructor() {
      * @param status 0=Prepared
      */
     fun jniPlayStatusCallback(status: Int) {
-
+        callback?.onPlayStatusCallback(status)
     }
 
     /**
@@ -85,7 +87,7 @@ class FFmpegDecoderJni private constructor() {
      * @param errorCode
      */
     fun jniErrorCallback(errorCode: Int, msg: String) {
-
+        callback?.onErrorCallback(errorCode, msg)
     }
 
     fun writeAudioData(audioData: ByteArray, offsetInBytes: Int, sizeInBytes: Int): Int =
@@ -104,7 +106,7 @@ class FFmpegDecoderJni private constructor() {
 
     external fun goSelectedTime(t: Int)
 
-    external fun mIsPlaying(): Boolean
+    external fun isPlaying(): Boolean
 
     external fun setPlayState(status: Int)
 

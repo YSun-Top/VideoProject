@@ -21,6 +21,7 @@ extern "C" {
 #include <libavfilter/buffersrc.h>
 #include <libavfilter/buffersink.h>
 #include "libswresample/swresample.h"
+#include "run_callback.h"
 
 #define MAX_AUDIO_FRAME_SIZE 48000 * 4
 #ifdef __cplusplus

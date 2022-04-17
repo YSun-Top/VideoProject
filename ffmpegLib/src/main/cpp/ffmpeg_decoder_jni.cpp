@@ -27,7 +27,7 @@ void FFmpegDecoderJni::jniPlayStatusCallback(int status) {
   pthread_rwlock_unlock(&stateCallbackRWLock);
 }
 
-void FFmpegDecoderJni::jniErrorCallback(int errorCode, char *msg) {
+void FFmpegDecoderJni::jniErrorCallback(int errorCode, char const*msg) {
   if (isRelease || errorCallbackList == nullptr)return;
   LOGE("addCallback-error--status:%d, msg:%s", errorCode, msg);
   //写加锁
@@ -192,7 +192,7 @@ VIDEO_LIB_FUNC(void, goSelectedTime, jint t) {
   return nativePlayer.seekTo(t);
 }
 
-VIDEO_LIB_FUNC(bool, mIsPlaying) {
+VIDEO_LIB_FUNC(bool, isPlaying) {
   if (libDefine->isRelease)return false;
   return nativePlayer.getPlayStatus() == 1;
 }

@@ -10,6 +10,7 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+
 #include "ffmpeg_decoder_jni.h"
 #include "NativePlayer.h"
 
@@ -65,7 +66,7 @@ void *playVideo(void *arg) {
 
                 if (av_buffersrc_add_frame_flags(buffersrc_ctx, vFrame,
                                                  AV_BUFFERSRC_FLAG_KEEP_REF) <
-                    0) {
+                        0) {
                     LOGE("Error while feeding the filter_graph");
                     break;
                 }
@@ -118,24 +119,6 @@ void *playVideo(void *arg) {
     return 0;
 }
 
-void log_callback(void *ptr, int level, const char *format, va_list args) {
-    if (IsCloseLog_v)return;
-    switch (level) {
-        case AV_LOG_DEBUG:
-            LOGD_v(format, args);
-            break;
-        case AV_LOG_WARNING:
-            LOGW_v(format, args);
-            break;
-        case AV_LOG_ERROR:
-            LOGE_v(format, args);
-            break;
-        default:
-            LOGI_v(format, args);
-            break;
-    }
-}
-
 int NativePlayer::init_player() {
     // 设置日志输出等级
     av_log_set_level(AV_LOG_INFO);
@@ -171,13 +154,16 @@ int NativePlayer::open_file(const char *file_path) {
     //分配一个AVFormatContext结构
     pFormatCtx = avformat_alloc_context();
     //打开文件
-    if (avformat_open_input(&pFormatCtx, file_path, nullptr, nullptr) != 0) {
-        LOGE("Could not open input stream:%s", file_path);
+    ret = avformat_open_input(&pFormatCtx, file_path, nullptr, nullptr);
+    if (ret != 0) {
+        LOGE("Could not open input stream:%s; errorCode:%d", file_path, ret);
         libDefine->jniErrorCallback(VIDEO_STREAM_NOT_FOUNT, "Could not open input stream");
         return -1;
     }
     //3.查找文件的流信息
-    if (avformat_find_stream_info(pFormatCtx, nullptr) < 0) {
+    ret = avformat_find_stream_info(pFormatCtx, nullptr);
+    if (ret < 0) {
+        LOGE("Could not find stream information; errorCode:%d", ret);
         libDefine->jniErrorCallback(VIDEO_STREAM_NOT_FOUNT, "Could not find stream information");
         nativePlayer.findFileInfo_Ok = 1;
         return -1;
@@ -190,14 +176,17 @@ int NativePlayer::open_file(const char *file_path) {
     for (int index = 0; index < pFormatCtx->nb_streams; index++) {
         if (nativePlayer.videoIndex != -1 && nativePlayer.audioIndex != -1)break;
         if (pFormatCtx->streams[index]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO &&
-            nativePlayer.videoIndex == -1) {
+                nativePlayer.videoIndex == -1) {
             nativePlayer.videoIndex = index;
         } else if (pFormatCtx->streams[index]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO &&
-                   nativePlayer.audioIndex == -1) {
+                nativePlayer.audioIndex == -1) {
             nativePlayer.audioIndex = index;
         }
     }
     if (nativePlayer.videoIndex == -1 || nativePlayer.audioIndex == -1) {
+        LOGE("Could not find a video、audio stream; videoIndex:%d ;audioIndex:%d",
+             nativePlayer.videoIndex,
+             nativePlayer.audioIndex);
         libDefine->jniErrorCallback(VIDEO_STREAM_NOT_FOUNT, "Could not find a video、audio stream");
         return -1;
     }
@@ -219,11 +208,13 @@ int NativePlayer::open_file(const char *file_path) {
     }
     mWidth = vCodecCtx->width;
     mHeight = vCodecCtx->height;
-    if (nativeWindow== nullptr)throw "nativeWindow not null";
+    if (nativeWindow == nullptr) {
+        throwError("nativeWindow not null");
+    }
     //更改窗口缓冲区的格式和大小。
     if (ANativeWindow_setBuffersGeometry(nativeWindow, mWidth,
                                          mHeight, WINDOW_FORMAT_RGBA_8888) <
-        0) {
+            0) {
         LOGE("Could not set buffers geometry");
         ANativeWindow_release(nativeWindow);
         return -1;
@@ -407,7 +398,7 @@ int NativePlayer::getPlayStatus() const {
 }
 
 void NativePlayer::writeAudioData(AVPacket *packet, AVFrame *frame) {
-    int ret=0;
+    int ret = 0;
 //    if ((ret = avcodec_decode_audio4(audioCodecCtx, frame, &got_frame, packet)) < 0) {
 //        LOGE("avcodec_decode_audio4 fail:%d", ret);
 //        return;

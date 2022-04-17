@@ -27,7 +27,7 @@ typedef struct JniBeanNode {
 
   JniBeanNode(int code, const char *msg) {
     this->code = code;
-    checkUtf8Bytes((char *) msg);
+//    checkUtf8Bytes(msg);
     if (strlen(msg) == 0) {
       msg = "-";
     }
@@ -58,7 +58,7 @@ class FFmpegDecoderJni {
 
   void jniPlayStatusCallback(int status);
 
-  void jniErrorCallback(int errorCode, char *msg);
+  void jniErrorCallback(int errorCode, char const*msg);
 
   void onRelease();
 

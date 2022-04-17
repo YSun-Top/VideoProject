@@ -115,13 +115,7 @@
 #include "libavutil/avassert.h"
 #include <setjmp.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-#include "../ffmpeg_cmd.h"
-#ifdef __cplusplus
-}
-#endif
+#include "run_callback.h"
 
 jmp_buf jump_buf;
 
