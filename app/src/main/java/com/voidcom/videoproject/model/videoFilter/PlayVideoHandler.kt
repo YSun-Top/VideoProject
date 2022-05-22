@@ -2,7 +2,7 @@ package com.voidcom.videoproject.model.videoFilter
 
 import android.view.SurfaceHolder
 import com.voidcom.v_base.utils.AppCode
-import com.voidcom.v_base.utils.LogUtils
+import com.voidcom.v_base.utils.log.LogUtils
 import com.voidcom.videoproject.utils.FileAttributes
 import com.voidcom.videoproject.videoProcess.FFmpegDecoder
 

@@ -32,6 +32,12 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        viewBinding = true
+    }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -46,4 +52,5 @@ dependencies {
     api("com.squareup.okhttp3:okhttp:$rootProject.okhttp3.okhttp")
     api("com.squareup.okhttp3:okhttp-urlconnection:$rootProject.okhttp3.urlConnection")
     api("com.squareup.okio:okio:$rootProject.okhttp3.okio")
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 }

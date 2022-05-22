@@ -3,10 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.voidcom.videoproject">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA" />
-
     <application
         android:name=".VideoApplication"
         android:allowBackup="true"
@@ -20,9 +16,10 @@
         tools:targetApi="31">
         <activity
             android:name=".ui.videoFilter.VideoFiltersActivity"
+            android:exported="false"
             android:launchMode="singleInstance"
-            android:screenOrientation="landscape"
-            android:exported="false" />
+            android:permission="android.permission.READ_EXTERNAL_STORAGE"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".ui.VideoProcessActivity"
             android:exported="false" />
@@ -36,5 +33,9 @@
             </intent-filter>
         </activity>
     </application>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 </manifest>

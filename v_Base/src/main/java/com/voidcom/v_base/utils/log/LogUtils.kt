@@ -1,4 +1,4 @@
-package com.voidcom.v_base.utils
+package com.voidcom.v_base.utils.log
 
 import android.text.TextUtils
 import android.util.Log

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="requestPermissionTitle">请求权限</string>
+    <string name="requestPermission_readStorageMessage">读写权限以提供完整体验。</string>
+    <string name="requestPermission_readPhoneStateMessage">读取手机状态信息权限以提供完整体验。</string>
+    <string name="requestPermission_recordAudioMessage">录音权限以提供完整体验。</string>
+    <string name="requestPermission_audioSettingsMessage">音频设置权限以提供完整体验。</string>
+    <string name="requestPermission_cameraMessage">相机权限以提供完整体验。</string>
+    <string name="requestPermission_locationMessage">定位权限以提供完整体验。</string>
+    <string name="requestPermission_notFoundMessage">Not Found Message</string>
+    <string name="goToApprovePermissions">设置权限</string>
+    <string name="cancel">取消</string>
+    <string name="accept">确定</string>
+    <string name="goToSetting">已设置拒绝授予权限且不在显示，请前往设置手动设置权限</string>
+</resources>

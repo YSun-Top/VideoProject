@@ -1,6 +1,6 @@
 package com.voidcom.v_base.utils.net
 
-import com.voidcom.v_base.utils.LogUtils
+import com.voidcom.v_base.utils.log.LogUtils
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 

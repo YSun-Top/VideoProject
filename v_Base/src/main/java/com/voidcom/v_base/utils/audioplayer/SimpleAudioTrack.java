@@ -5,7 +5,7 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.util.Log;
 
-import com.voidcom.v_base.utils.KLog;
+import com.voidcom.v_base.utils.log.KLog;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -20,6 +20,7 @@ import java.io.IOException;
  * 这个类用于播放纯PCM音频数据
  */
 public class SimpleAudioTrack {
+    private final String TAG = SimpleAudioTrack.class.getSimpleName();
     private AudioTrack mAudioTrack;
     //采样率
     private int mFrequency;
@@ -68,7 +69,7 @@ public class SimpleAudioTrack {
 
     public void release() {
         if (!isPlayAudio) {
-            KLog.d("录音已经停止");
+            KLog.d(TAG, "录音已经停止");
             return;
         }
         isPlayAudio = false;
@@ -88,7 +89,7 @@ public class SimpleAudioTrack {
      */
     public void playAudio(File file) {
         if (isPlayAudio) {
-            KLog.d("请先暂停播放");
+            KLog.d(TAG, "请先暂停播放");
             return;
         }
         if (mAudioTrack.getState() != AudioTrack.STATE_INITIALIZED) return;

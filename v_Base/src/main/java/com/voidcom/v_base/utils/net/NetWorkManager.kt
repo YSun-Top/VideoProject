@@ -1,6 +1,6 @@
 package com.voidcom.v_base.utils.net
 
-import com.voidcom.v_base.utils.LogUtils
+import com.voidcom.v_base.utils.log.LogUtils
 import okhttp3.*
 import java.io.IOException
 import java.util.concurrent.LinkedBlockingDeque

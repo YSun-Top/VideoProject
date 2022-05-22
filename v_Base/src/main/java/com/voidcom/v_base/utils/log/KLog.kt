@@ -1,4 +1,4 @@
-package com.voidcom.v_base.utils
+package com.voidcom.v_base.utils.log
 
 import android.text.TextUtils
 import android.util.Log
@@ -31,7 +31,7 @@ import javax.xml.transform.stream.StreamSource
  * 16/6/15  扩展功能，添加不能关闭的KLog.debug(),用于发布版本的Log打印,优化部分代码
  */
 object KLog {
-    private val LINE_SEPARATOR = System.getProperty("line.separator")?:""
+    private val LINE_SEPARATOR = System.getProperty("line.separator") ?: ""
     private const val NULL_TIPS = "Log with null object"
     private const val DEFAULT_MESSAGE = "execute"
     private const val TAG_DEFAULT = "KLog"
@@ -50,20 +50,12 @@ object KLog {
     const val A = 0x6
 
     private const val JSON = 0x7
+
     //XML=JSON+E
     private const val XML = 0xC
 
     private var globalTag: String = TAG_DEFAULT
     private var isShowLog = true
-
-    /*
-     * init
-     * */
-    @JvmStatic
-    fun init(isShowLog: Boolean) {
-        KLog.isShowLog = isShowLog
-        File.separator
-    }
 
     @JvmStatic
     fun init(isShowLog: Boolean, tag: String?) {
@@ -78,122 +70,47 @@ object KLog {
      * base
      * */
     @JvmStatic
-    fun v() {
-        printLog(V, null, DEFAULT_MESSAGE)
-    }
-
-    @JvmStatic
-    fun v(msg: Any) {
-        printLog(V, null, msg)
-    }
-
-    @JvmStatic
-    fun v(tag: String, objects: Any) {
+    fun v(tag: String? = null, objects: Any) {
         printLog(V, tag, objects)
     }
 
     @JvmStatic
-    fun d() {
-        printLog(D, null, DEFAULT_MESSAGE)
-    }
-
-    @JvmStatic
-    fun d(msg: Any) {
-        printLog(D, null, msg)
-    }
-
-    @JvmStatic
-    fun d(tag: String, objects: Any) {
+    fun d(tag: String? = null, objects: Any) {
         printLog(D, tag, objects)
     }
 
     @JvmStatic
-    fun i() {
-        printLog(I, null, DEFAULT_MESSAGE)
-    }
-
-    @JvmStatic
-    fun i(msg: Any) {
-        printLog(I, null, msg)
-    }
-
-    @JvmStatic
-    fun i(tag: String, objects: Any) {
+    fun i(tag: String? = null, objects: Any) {
         printLog(I, tag, objects)
     }
 
     @JvmStatic
-    fun w() {
-        printLog(W, null, DEFAULT_MESSAGE)
-    }
-
-    @JvmStatic
-    fun w(msg: Any) {
-        printLog(W, null, msg)
-    }
-
-    @JvmStatic
-    fun w(tag: String, objects: Any) {
+    fun w(tag: String? = null, objects: Any) {
         printLog(W, tag, objects)
     }
 
     @JvmStatic
-    fun e() {
-        printLog(E, null, DEFAULT_MESSAGE)
-    }
-
-    @JvmStatic
-    fun e(msg: Any) {
-        printLog(E, null, msg)
-    }
-
-    @JvmStatic
-    fun e(tag: String, objects: Any) {
+    fun e(tag: String? = null, objects: Any) {
         printLog(E, tag, objects)
     }
 
     @JvmStatic
-    fun a() {
-        printLog(A, null, DEFAULT_MESSAGE)
-    }
-
-    @JvmStatic
-    fun a(msg: Any) {
-        printLog(A, null, msg)
-    }
-
-    @JvmStatic
-    fun a(tag: String, objects: Any) {
+    fun a(tag: String? = null, objects: Any) {
         printLog(A, tag, objects)
     }
 
     @JvmStatic
-    fun json(level: Int, jsonFormat: String) {
-        printLog(JSON + level, null, jsonFormat)
-    }
-
-    @JvmStatic
-    fun json(level: Int, tag: String, jsonFormat: String) {
+    fun json(level: Int, tag: String? = null, jsonFormat: String) {
         printLog(JSON + level, tag, jsonFormat)
     }
 
     @JvmStatic
-    fun xml(level: Int, xml: String) {
-        printLog(XML + level, null, xml)
-    }
-
-    @JvmStatic
-    fun xml(level: Int, tag: String, xml: String) {
+    fun xml(level: Int, tag: String? = null, xml: String) {
         printLog(XML + level, tag, xml)
     }
 
     @JvmStatic
-    fun map(level: Int, map: Map<String, Any>) {
-        printLog(JSON + level, null, map)
-    }
-
-    @JvmStatic
-    fun mapString(level: Int, tag: String, map: Map<String, String>) {
+    fun mapString(level: Int, tag: String? = null, map: Map<String, String>) {
         printLog(JSON + level, tag, map)
     }
 
@@ -216,39 +133,23 @@ object KLog {
     }
 
     @JvmStatic
-    fun file(targetDirectory: File, msg: Any) {
-        printFile(null, targetDirectory, null, msg)
-    }
-
-    @JvmStatic
-    fun file(tag: String, targetDirectory: File, msg: Any) {
-        printFile(tag, targetDirectory, null, msg)
-    }
-
-    @JvmStatic
-    fun file(tag: String, targetDirectory: File, fileName: String, msg: Any) {
+    fun file(tag: String, targetDirectory: File, fileName: String?=null, msg: Any) {
         printFile(tag, targetDirectory, fileName, msg)
     }
 
     @JvmStatic
-    fun debug() {
-        printDebug(null, DEFAULT_MESSAGE)
-    }
-
-    @JvmStatic
-    fun debug(msg: Any) {
-        printDebug(null, msg)
-    }
-
-    @JvmStatic
-    fun debug(tag: String, objects: Any) {
+    fun debug(tag: String?=null, objects: Any= DEFAULT_MESSAGE) {
         printDebug(tag, objects)
     }
 
     /*
      * log内容处理
      * */
-    private fun wrapperContent(stackTraceIndex: Int, tagStr: String?, objects: Any?): Array<String> {
+    private fun wrapperContent(
+        stackTraceIndex: Int,
+        tagStr: String?,
+        objects: Any?
+    ): Array<String> {
         val targetElement = Thread.currentThread().stackTrace[stackTraceIndex]
         val className = targetElement.fileName
         val methodName = targetElement.methodName
@@ -268,7 +169,7 @@ object KLog {
     /*
      * log输出
      * */
-    private fun printLog(type: Int, tagStr: String?, objects: Any?) {
+    private fun printLog(type: Int, tagStr: String?, objects: Any? = DEFAULT_MESSAGE) {
         if (!isShowLog) {
             return
         }
@@ -280,7 +181,12 @@ object KLog {
 
         when (type) {
             V, D, I, W, E, A -> checkLenPrint(type, tag, headString + msg)
-            JSON + V, JSON + D, JSON + I, JSON + W, JSON + E -> printJson(type, tag, msg, headString)
+            JSON + V, JSON + D, JSON + I, JSON + W, JSON + E -> printJson(
+                type,
+                tag,
+                msg,
+                headString
+            )
             XML + V, XML + D, XML + I, XML + W, XML + E -> printXml(type, tag, msg, headString)
         }
     }
@@ -331,20 +237,29 @@ object KLog {
     }
 
     private fun printJsonXml(level: Int, tag: String, msg: String, headString: String) {
-        print(level, tag, "╔═══════════════════════════════════════════════════════════════════════════════════════")
+        print(
+            level,
+            tag,
+            "╔═══════════════════════════════════════════════════════════════════════════════════════"
+        )
 
         val message = headString + LINE_SEPARATOR + msg
 
         if (message.length > MAX_LENGTH) {
             checkLenPrint(level, tag, message)
         } else {
-            val lines = message.split(LINE_SEPARATOR.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            val lines = message.split(LINE_SEPARATOR.toRegex()).dropLastWhile { it.isEmpty() }
+                .toTypedArray()
             for (line in lines) {
                 print(level, tag, "║ $line")
             }
         }
 
-        print(level, tag, "╚═══════════════════════════════════════════════════════════════════════════════════════")
+        print(
+            level,
+            tag,
+            "╚═══════════════════════════════════════════════════════════════════════════════════════"
+        )
     }
 
     /*
@@ -357,7 +272,12 @@ object KLog {
      * @param fileName
      * @param objectMsg
      */
-    private fun printFile(tagStr: String?, targetDirectory: File, fileName: String?, objectMsg: Any) {
+    private fun printFile(
+        tagStr: String?,
+        targetDirectory: File,
+        fileName: String?,
+        objectMsg: Any
+    ) {
         if (!isShowLog) {
             return
         }
@@ -376,14 +296,23 @@ object KLog {
      * @param headString
      * @param msg
      */
-    private fun printFile(tag: String, targetDirectory: File, fileName: String?, headString: String, msg: String) {
+    private fun printFile(
+        tag: String,
+        targetDirectory: File,
+        fileName: String?,
+        headString: String,
+        msg: String
+    ) {
         val formatter = SimpleDateFormat("yyyy-MM-dd_HH:mm:ss", Locale.CHINA)
         val nFileName =
-                if (TextUtils.isEmpty(fileName)) FILE_PREFIX + formatter.format(System.currentTimeMillis()) + FILE_FORMAT
-                else fileName!!
+            if (TextUtils.isEmpty(fileName)) FILE_PREFIX + formatter.format(System.currentTimeMillis()) + FILE_FORMAT
+            else fileName!!
 
         if (save(targetDirectory, nFileName, msg)) {
-            Log.d(tag, headString + " save log success ! location is >>>" + targetDirectory.absolutePath + "/" + nFileName)
+            Log.d(
+                tag,
+                headString + " save log success ! location is >>>" + targetDirectory.absolutePath + "/" + nFileName
+            )
         } else {
             Log.e(tag, headString + "save log fails !")
         }

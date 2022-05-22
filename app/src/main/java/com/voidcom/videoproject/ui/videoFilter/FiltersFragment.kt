@@ -3,7 +3,7 @@ package com.voidcom.videoproject.ui.videoFilter
 import android.widget.RadioGroup
 import com.voidcom.v_base.ui.BaseDefaultFragment
 import com.voidcom.v_base.utils.AppCode
-import com.voidcom.v_base.utils.LogUtils
+import com.voidcom.v_base.utils.log.LogUtils
 import com.voidcom.videoproject.R
 import com.voidcom.videoproject.databinding.FragmentFiltersBinding
 import com.voidcom.videoproject.viewModel.videoFilter.FiltersViewModel

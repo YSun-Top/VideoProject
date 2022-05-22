@@ -7,7 +7,7 @@ import android.os.Build
 import android.os.Process
 import com.voidcom.v_base.BuildConfig
 import com.voidcom.v_base.utils.AppCode
-import com.voidcom.v_base.utils.KLog
+import com.voidcom.v_base.utils.log.KLog
 import java.util.*
 
 /**
@@ -15,6 +15,8 @@ import java.util.*
  * 内置音频录制器
  */
 class InnerAudioRecorder {
+    private val TAG = InnerAudioRecorder::class.java.simpleName
+
     companion object {
         private var instance: InnerAudioRecorder? = null
             get() {
@@ -30,9 +32,9 @@ class InnerAudioRecorder {
 
     //缓冲区大小
     private val bufferSize: Int = AudioRecord.getMinBufferSize(
-            bufferSampleRate,
-            AudioFormat.CHANNEL_IN_MONO,
-            AudioFormat.ENCODING_PCM_16BIT
+        bufferSampleRate,
+        AudioFormat.CHANNEL_IN_MONO,
+        AudioFormat.ENCODING_PCM_16BIT
     )
 
     //音频录制器
@@ -44,7 +46,7 @@ class InnerAudioRecorder {
     //是否通过 listeners 向外输出音频
     private var outputAudioFlag = false
 
-        private val isDebug = BuildConfig.DEBUG
+    private val isDebug = BuildConfig.DEBUG
 //    private val isDebug = false
 
     //尝试重新获取麦克风的次数，当成功获取到麦克风或停止录音时，应当对这个值归0
@@ -66,23 +68,23 @@ class InnerAudioRecorder {
         audioRecorder = try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 AudioRecord.Builder()
-                        .setAudioFormat(
-                                AudioFormat.Builder()
-                                        .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
-                                        .setSampleRate(bufferSampleRate)
-                                        .setChannelMask(AudioFormat.CHANNEL_IN_MONO)
-                                        .build()
-                        )
-                        .setAudioSource(getAudioSource())
-                        .setBufferSizeInBytes(bufferSize)
-                        .build()
+                    .setAudioFormat(
+                        AudioFormat.Builder()
+                            .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
+                            .setSampleRate(bufferSampleRate)
+                            .setChannelMask(AudioFormat.CHANNEL_IN_MONO)
+                            .build()
+                    )
+                    .setAudioSource(getAudioSource())
+                    .setBufferSizeInBytes(bufferSize)
+                    .build()
             } else {
                 AudioRecord(
-                        getAudioSource(),
-                        bufferSampleRate,
-                        AudioFormat.CHANNEL_IN_MONO,
-                        AudioFormat.ENCODING_PCM_16BIT,
-                        bufferSize
+                    getAudioSource(),
+                    bufferSampleRate,
+                    AudioFormat.CHANNEL_IN_MONO,
+                    AudioFormat.ENCODING_PCM_16BIT,
+                    bufferSize
                 )
             }
         } catch (e: Exception) {
@@ -160,7 +162,7 @@ class InnerAudioRecorder {
     }
 
     private fun outLog(string: String) {
-        if (isDebug) KLog.d("系统音频录制器-$string")
+        if (isDebug) KLog.d(TAG, "系统音频录制器-$string")
     }
 
     interface AudioRecorderListener {
@@ -208,15 +210,18 @@ class InnerAudioRecorder {
                     readLength = audioRecorder?.read(buffer, 0, bufferSize) ?: -1
                     //打印运行日志
                     if (System.currentTimeMillis() - logTimeMark > 5000L) {
-                        outLog("Recorder thread is running\n" +
-                                "Pid:${Process.myPid()};\n" +
-                                "Tid:${Process.myTid()};\n" +
-                                "Tag:$threadTag")
+                        outLog(
+                            "Recorder thread is running\n" +
+                                    "Pid:${Process.myPid()};\n" +
+                                    "Tid:${Process.myTid()};\n" +
+                                    "Tag:$threadTag"
+                        )
                         logTimeMark = System.currentTimeMillis()
                     }
                     if (readLength == AudioRecord.ERROR_INVALID_OPERATION ||
-                            readLength == AudioRecord.ERROR_BAD_VALUE ||
-                            readLength == AudioRecord.ERROR) {
+                        readLength == AudioRecord.ERROR_BAD_VALUE ||
+                        readLength == AudioRecord.ERROR
+                    ) {
                         outLog("Error### System AudioRecord ERROR:$readLength")
                         tryReInitRecorder()
                         continue
