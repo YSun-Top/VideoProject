@@ -3,10 +3,13 @@ package com.voidcom.v_base.utils
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.text.TextUtils
+import android.util.ArrayMap
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import com.voidcom.v_base.R
 
 object PermissionsUtils {
@@ -47,6 +50,24 @@ object PermissionsUtils {
         }
     }
 
+    fun checkPermission(context: Context, type: Int): Map<String, Boolean> {
+        return checkPermission(context, getPermissionsFormRequestType(type))
+    }
+
+    fun checkPermission(context: Context, array: Array<String>): Map<String, Boolean> {
+        array.forEach {
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    it
+                ) == PackageManager.PERMISSION_DENIED
+            ) {
+                return ArrayMap<String, Boolean>().apply {
+                    set(it, false)
+                }
+            }
+        }
+        return emptyMap()
+    }
 
     /**
      * 跳转到miui的权限管理页面

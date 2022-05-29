@@ -48,7 +48,7 @@ class PermissionRequestActivity : BaseActivity<ActivityPermissionBinding, EmptyV
         permissions = intent.getStringArrayExtra(permissionsFlag)
         if (permissions == null || permissions?.isEmpty() == true)
             permissions = PermissionsUtils.getPermissionsFormRequestType(permissionRequestCode)
-        checkPermission(permissions)
+        permissions?.let { checkPermission(it) }
     }
 
     override fun onDestroy() {
@@ -56,31 +56,32 @@ class PermissionRequestActivity : BaseActivity<ActivityPermissionBinding, EmptyV
         if (permissionDialog?.isShowing == true) permissionDialog?.dismiss()
     }
 
-    private fun checkPermission(array: Array<String>?) {
-        array?.forEach {
+    private fun checkPermission(array: Array<String>) {
+        array.forEach {
             if (ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_DENIED) {
-                KLog.d(TAG, "没有读写或录音权限，请求权限")
-                createDialog(
-                    getString(R.string.requestPermissionTitle),
-                    PermissionsUtils.getStringFormRequestType(
-                        applicationContext,
-                        permissionRequestCode
-                    ),
-                    getString(R.string.goToApprovePermissions)
-                ) { _: DialogInterface?, _: Int ->
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, it)) {
-                        KLog.i(TAG, "已设置拒绝授予权限且不在显示，请前往设置手动设置权限:$it")
-                        createDialog(
-                            getString(R.string.requestPermissionTitle),
-                            getString(R.string.goToSetting),
-                            getString(R.string.accept)
-                        ) { _: DialogInterface?, _: Int ->
-                            PermissionsUtils.gotoPermissionSetting(
-                                applicationContext,
-                                BuildConfig.LIBRARY_PACKAGE_NAME
-                            )
-                        }
-                    } else {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, it)) {
+                    KLog.i(TAG, "已设置拒绝授予权限且不在显示，请前往设置手动设置权限:$it")
+                    createDialog(
+                        getString(R.string.requestPermissionTitle),
+                        getString(R.string.goToSetting),
+                        getString(R.string.accept)
+                    ) { _: DialogInterface?, _: Int ->
+                        PermissionsUtils.gotoPermissionSetting(
+                            applicationContext,
+                            BuildConfig.LIBRARY_PACKAGE_NAME
+                        )
+                    }
+                    backResult(false)
+                } else {
+                    KLog.d(TAG, "没有读写或录音权限，请求权限")
+                    createDialog(
+                        getString(R.string.requestPermissionTitle),
+                        PermissionsUtils.getStringFormRequestType(
+                            applicationContext,
+                            permissionRequestCode
+                        ),
+                        getString(R.string.goToApprovePermissions)
+                    ) { _: DialogInterface?, _: Int ->
                         registerPermission?.launch(array)
 //                        ActivityCompat.requestPermissions(this, array, permissionRequestCode)
                     }

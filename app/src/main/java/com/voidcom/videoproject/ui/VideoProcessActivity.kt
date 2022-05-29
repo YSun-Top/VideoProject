@@ -15,6 +15,7 @@ import com.voidcom.v_base.ui.EmptyViewModel
 import com.voidcom.v_base.ui.PermissionRequestActivity
 import com.voidcom.v_base.utils.AppCode
 import com.voidcom.v_base.utils.FileTools
+import com.voidcom.v_base.utils.PermissionsUtils
 import com.voidcom.v_base.utils.ToastUtils
 import com.voidcom.v_base.utils.log.KLog
 import com.voidcom.v_base.utils.log.LogUtils
@@ -59,8 +60,11 @@ class VideoProcessActivity : BaseActivity<ActivityVideoProcessBinding, EmptyView
     private val permissionCallback = ActivityResultCallback<ActivityResult> { result ->
         when (result.resultCode) {
             RESULT_FIRST_USER -> {
-                result.data?.getBooleanExtra(PermissionRequestActivity.permissionsResultStatus,false).let {
-                    if (it==false)finish()
+                result.data?.getBooleanExtra(
+                    PermissionRequestActivity.permissionsResultStatus,
+                    false
+                ).let {
+                    if (it == false) finish()
                 }
             }
         }
@@ -74,13 +78,15 @@ class VideoProcessActivity : BaseActivity<ActivityVideoProcessBinding, EmptyView
     override val mViewModel by viewModels<EmptyViewModel>()
 
     override fun onInitUI() {
-//        PermissionRequestActivity.newInstance(this, 1000, AppCode.requestReadStorage)
-        PermissionRequestActivity.newInstance(
-            registerForActivityResult(
-                ActivityResultContracts.StartActivityForResult(),
-                permissionCallback
-            ), 1000, AppCode.requestReadStorage
-        )
+        PermissionsUtils.checkPermission(applicationContext, AppCode.requestReadStorage).let {
+            if (it.isEmpty()) return@let
+            PermissionRequestActivity.newInstance(
+                registerForActivityResult(
+                    ActivityResultContracts.StartActivityForResult(),
+                    permissionCallback
+                ), 1000, AppCode.requestReadStorage
+            )
+        }
     }
 
     override fun onInitListener() {
