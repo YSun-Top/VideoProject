@@ -9,15 +9,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import com.voidcom.v_base.BuildConfig
 import com.voidcom.v_base.R
 import com.voidcom.v_base.databinding.ActivityPermissionBinding
 import com.voidcom.v_base.utils.AppCode
 import com.voidcom.v_base.utils.PermissionsUtils
-import com.voidcom.v_base.utils.ToastUtils
-import com.voidcom.v_base.utils.log.KLog
+import com.voidcom.v_base.utils.KLog
 
 class PermissionRequestActivity : BaseActivity<ActivityPermissionBinding, EmptyViewModel>() {
     private val TAG = PermissionRequestActivity::class.java.simpleName

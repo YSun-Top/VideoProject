@@ -79,6 +79,6 @@ public:
 
     int getPlayStatus() const;
 
-    void writeAudioData(AVPacket *packet, AVFrame *frame);
+    static void writeAudioData(AVPacket *packet, AVFrame *frame);
 };
 #endif //TESTEXAMPLE_NATIVEPLAYER_H

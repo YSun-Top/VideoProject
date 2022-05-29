@@ -24,7 +24,8 @@
     <!--滤镜单选按钮-->
     <style name="Filters_radio_button">
         <item name="android:gravity">center</item>
-        <item name="android:layout_width">@dimen/y150</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_weight">1</item>
         <item name="android:layout_height">@dimen/x100</item>
         <item name="android:button">@null</item>
         <item name="android:textColor">@color/white</item>

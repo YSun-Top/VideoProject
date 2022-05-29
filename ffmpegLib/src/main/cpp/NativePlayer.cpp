@@ -351,7 +351,7 @@ int NativePlayer::init_audio() {
     swr_alloc_set_opts(audio_swr_ctx,
                        out_ch_layout, out_sample_fmt, out_sample_rate,
                        in_ch_layout, in_sample_fmt, in_sample_rate,
-                       0, NULL);
+                       0, nullptr);
     swr_init(audio_swr_ctx);
     out_channel_nb = av_get_channel_layout_nb_channels(out_ch_layout);
 
@@ -391,6 +391,7 @@ void NativePlayer::setPlayStatus(int status) {
         pthread_create(&libDefine->pt[2], nullptr, &playVideo, nullptr);
     }
     playStatus = status;
+    LOGD("播放状态:%d", status);
 }
 
 int NativePlayer::getPlayStatus() const {
@@ -407,11 +408,11 @@ void NativePlayer::writeAudioData(AVPacket *packet, AVFrame *frame) {
     if (got_frame <= 0)return;
     swr_convert(audio_swr_ctx, &audio_out_Buffer, MAX_AUDIO_FRAME_SIZE,
                 (const uint8_t **) frame->data, frame->nb_samples);
-    int out_buffer_size = av_samples_get_buffer_size(NULL, out_channel_nb,
+    int out_buffer_size = av_samples_get_buffer_size(nullptr, out_channel_nb,
                                                      frame->nb_samples, out_sample_fmt, 1);
     JNIEnv *env = libDefine->get_env();
     jbyteArray audio_sample_array = env->NewByteArray(out_buffer_size);
-    jbyte *sample_byte_array = env->GetByteArrayElements(audio_sample_array, NULL);
+    jbyte *sample_byte_array = env->GetByteArrayElements(audio_sample_array, nullptr);
     memcpy(sample_byte_array, audio_out_Buffer, (size_t) out_buffer_size);
     env->ReleaseByteArrayElements(audio_sample_array, sample_byte_array, 0);
     env->CallIntMethod(libDefine->g_obj, libDefine->writeAudioDataMethod, audio_sample_array,

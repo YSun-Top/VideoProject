@@ -17,8 +17,6 @@ import com.voidcom.v_base.utils.AppCode
 import com.voidcom.v_base.utils.FileTools
 import com.voidcom.v_base.utils.PermissionsUtils
 import com.voidcom.v_base.utils.ToastUtils
-import com.voidcom.v_base.utils.log.KLog
-import com.voidcom.v_base.utils.log.LogUtils
 import com.voidcom.videoproject.R
 import com.voidcom.videoproject.databinding.ActivityVideoProcessBinding
 import com.voidcom.videoproject.ui.videoFilter.KEY_FILE_PATH
@@ -34,14 +32,8 @@ class VideoProcessActivity : BaseActivity<ActivityVideoProcessBinding, EmptyView
     private lateinit var register: ActivityResultLauncher<Intent>
     private val getFileUriCallback = ActivityResultCallback<ActivityResult> {
         when {
-            it.resultCode != RESULT_OK -> {
-                LogUtils.d(AppCode.log_videoProcess, "文件获取失败")
-                ToastUtils.showShort(applicationContext, "文件获取失败")
-            }
-            it.data == null -> {
-                LogUtils.d(AppCode.log_videoProcess, "文件路径为空")
-                ToastUtils.showShort(applicationContext, "文件路径为空")
-            }
+            it.resultCode != RESULT_OK -> ToastUtils.showShort(applicationContext, "文件获取失败")
+            it.data == null -> ToastUtils.showShort(applicationContext, "文件路径为空")
             else -> {
                 var path = ""
                 try {
@@ -113,7 +105,6 @@ class VideoProcessActivity : BaseActivity<ActivityVideoProcessBinding, EmptyView
                 addCategory(Intent.CATEGORY_OPENABLE)
             }, "选择视频文件"))
         } catch (ex: ActivityNotFoundException) {
-            KLog.i(AppCode.log_videoProcess, "没有找到文件管理器！")
             ToastUtils.showShort(applicationContext, "没有找到文件管理器！")
         }
     }

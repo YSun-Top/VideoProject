@@ -2,10 +2,12 @@ package com.voidcom.videoproject.videoProcess
 
 import android.os.Handler
 import android.os.Looper
+import android.text.TextUtils
 import android.view.SurfaceHolder
 import com.voidcom.ffmpeglib.FFmpegDecoderJni
 import com.voidcom.libsdkbase.JniCallback
 import com.voidcom.v_base.utils.ToastUtils
+import com.voidcom.v_base.utils.KLog
 import com.voidcom.videoproject.VideoApplication
 import com.voidcom.videoproject.model.videoFilter.PlayStateCallback
 import com.voidcom.videoproject.utils.FileAttributes
@@ -15,6 +17,7 @@ import com.voidcom.videoproject.utils.FileAttributes
  * Description:
  */
 class FFmpegDecoder(val callback: PlayStateCallback) : VideoDecoder(), JniCallback {
+    private val TAG = FFmpegDecoder::class.java.simpleName
     private val mHandler = Handler(Looper.getMainLooper())
 
     init {
@@ -50,10 +53,19 @@ class FFmpegDecoder(val callback: PlayStateCallback) : VideoDecoder(), JniCallba
 
     override fun isPlaying(): Boolean = FFmpegDecoderJni.newInstant.isPlaying()
 
-    override fun getPlayTimeIndex(type: Int): Long = if (type == 1) {
+    override fun getPlayTimeIndex(type: Int): Long = if (type == 0) {
         FFmpegDecoderJni.newInstant.getCurrentPosition()
     } else {
         FFmpegDecoderJni.newInstant.getDuration()
+    }
+
+    fun setFilter(value: String) {
+        if (TextUtils.isEmpty(value)) return
+        KLog.w(TAG, "设置滤镜：$value")
+        mHandler.removeCallbacksAndMessages(null)
+        mHandler.postDelayed({
+            FFmpegDecoderJni.newInstant.setFilter(value)
+        }, 1000)
     }
 
     override fun onPlayStatusCallback(status: Int) {
@@ -61,6 +73,7 @@ class FFmpegDecoder(val callback: PlayStateCallback) : VideoDecoder(), JniCallba
             when (status) {
                 0 -> callback.onPrepared()
                 5 -> {
+                    isFilterFinishChange = true
                     ToastUtils.showShort(VideoApplication.context, "滤镜切换成功")
                 }
             }
@@ -68,6 +81,8 @@ class FFmpegDecoder(val callback: PlayStateCallback) : VideoDecoder(), JniCallba
     }
 
     override fun onErrorCallback(errorCode: Int, msg: String) {
-        TODO("Not yet implemented")
+        when (errorCode) {
+            0x02 -> isFilterFinishChange = true
+        }
     }
 }

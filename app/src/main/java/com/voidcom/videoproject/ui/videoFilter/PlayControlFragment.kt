@@ -1,7 +1,15 @@
 package com.voidcom.videoproject.ui.videoFilter
 
+import android.os.Handler
+import android.os.Looper
+import android.view.View
 import com.voidcom.v_base.ui.BaseDefaultFragment
+import com.voidcom.v_base.utils.KLog
+import com.voidcom.v_base.utils.TimeUtils
+import com.voidcom.videoproject.R
 import com.voidcom.videoproject.databinding.FragmentPlayControlBinding
+import com.voidcom.videoproject.model.videoFilter.PlayVideoHandler
+import com.voidcom.videoproject.videoProcess.PlayStateListener
 import com.voidcom.videoproject.viewModel.videoFilter.PlayControlViewModel
 
 /**
@@ -9,7 +17,10 @@ import com.voidcom.videoproject.viewModel.videoFilter.PlayControlViewModel
  * Description:
  * 播放控制
  */
-class PlayControlFragment : BaseDefaultFragment<FragmentPlayControlBinding, PlayControlViewModel>() {
+class PlayControlFragment : BaseDefaultFragment<FragmentPlayControlBinding, PlayControlViewModel>(),
+    PlayStateListener, View.OnClickListener {
+    lateinit var playHandler: PlayVideoHandler
+    private val mHandler = Handler(Looper.getMainLooper())
 
     override val mViewModel: PlayControlViewModel by lazy { PlayControlViewModel() }
 
@@ -17,8 +28,63 @@ class PlayControlFragment : BaseDefaultFragment<FragmentPlayControlBinding, Play
     }
 
     override fun onInitListener() {
+        mBinding.playerBtn.setOnClickListener(this)
     }
 
     override fun onInitData() {
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.playerBtn -> {
+                //添加handler防止短时间内多次点击产生无效操作
+                mHandler.removeCallbacks(changePlayStatus)
+                mHandler.postDelayed(changePlayStatus, 200)
+            }
+        }
+    }
+
+    override fun onPlayStart() {
+        setPlayProgress()
+    }
+
+    override fun onPlayPaused() {
+    }
+
+    override fun onPlayStop() {
+    }
+
+    override fun onPlayEnd() {
+    }
+
+    override fun onPlayRelease() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onPlayTime(time: Long) {
+        KLog.d(tag,"time:$time")
+        setPlayProgress()
+    }
+
+    /**
+     * 设置播放进度
+     */
+    private fun setPlayProgress() {
+        if (!playHandler.isReadyPlay()) return
+        context?.let {
+            mBinding.videoInfoTv.text = it.getString(
+                R.string.playTime,
+                TimeUtils.formatTimeS(playHandler.getCurrentTime()),
+                TimeUtils.formatTimeS(playHandler.getMaxTime())
+            )
+        }
+    }
+
+    private val changePlayStatus = Runnable {
+        if (playHandler.isPlaying()) {
+            playHandler.plPause()
+        } else {
+            playHandler.plStart()
+        }
     }
 }

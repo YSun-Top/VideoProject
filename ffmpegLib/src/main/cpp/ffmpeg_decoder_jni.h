@@ -21,19 +21,21 @@ typedef struct JniBeanNode {
   const char *msg;
 
   JniBeanNode(int code) {
-    this->code = code;
-    this->msg = "-";
+      this->code = code;
+      this->msg = "-";
   }
 
   JniBeanNode(int code, const char *msg) {
-    this->code = code;
+      this->code = code;
 //    checkUtf8Bytes(msg);
-    if (strlen(msg) == 0) {
-      msg = "-";
-    }
-    this->msg = msg;
+      if (strlen(msg) == 0) {
+          msg = "-";
+      }
+      this->msg = msg;
   }
 } JniBean;
+
+extern JavaVM *g_jvm;
 
 class FFmpegDecoderJni {
  public:
@@ -44,7 +46,6 @@ class FFmpegDecoderJni {
   //线程指针数组
   pthread_t pt[10]{};
 
-  JavaVM *g_jvm = nullptr;
   jobject g_obj = nullptr;
   jmethodID playStatusCallback = nullptr;
   jmethodID errorCallback = nullptr;
@@ -56,25 +57,25 @@ class FFmpegDecoderJni {
 
   FFmpegDecoderJni();
 
-  void jniPlayStatusCallback(int status);
+  void jniPlayStatusCallback(int status) const;
 
-  void jniErrorCallback(int errorCode, char const*msg);
+  void jniErrorCallback(int errorCode, char const *msg) const;
 
   void onRelease();
 
   JNIEnv *get_env() {
-    if (g_jvm == nullptr)return nullptr;
-    JNIEnv *env = nullptr;
-    int status = g_jvm->GetEnv((void **) &env, JNI_VERSION_1_6);
-    if (status == JNI_EDETACHED || env == nullptr) {
-      status = g_jvm->AttachCurrentThread(&env, nullptr);
-      if (status < 0) env = nullptr;
-    }
-    return env;
+      if (g_jvm == nullptr)return nullptr;
+      JNIEnv *env = nullptr;
+      int status = g_jvm->GetEnv((void **) &env, JNI_VERSION_1_6);
+      if (status == JNI_EDETACHED || env == nullptr) {
+          status = g_jvm->AttachCurrentThread(&env, nullptr);
+          if (status < 0) env = nullptr;
+      }
+      return env;
   }
 
   void del_env() {
-    g_jvm->DetachCurrentThread();
+      g_jvm->DetachCurrentThread();
   }
 };
 

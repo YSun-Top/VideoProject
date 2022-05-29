@@ -1,4 +1,4 @@
-package com.voidcom.v_base.utils.log
+package com.voidcom.v_base.utils
 
 import android.text.TextUtils
 import android.util.Log
@@ -85,8 +85,8 @@ object KLog {
     }
 
     @JvmStatic
-    fun w(tag: String? = null, objects: Any) {
-        printLog(W, tag, objects)
+    fun w(tag: String? = null, msg: Any) {
+        printLog(W, tag, msg)
     }
 
     @JvmStatic

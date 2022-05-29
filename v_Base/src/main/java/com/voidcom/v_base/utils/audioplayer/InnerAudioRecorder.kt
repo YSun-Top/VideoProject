@@ -7,7 +7,7 @@ import android.os.Build
 import android.os.Process
 import com.voidcom.v_base.BuildConfig
 import com.voidcom.v_base.utils.AppCode
-import com.voidcom.v_base.utils.log.KLog
+import com.voidcom.v_base.utils.KLog
 import java.util.*
 
 /**

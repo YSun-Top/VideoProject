@@ -10,9 +10,12 @@
         android:id="@+id/video_info_tv"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_margin="@dimen/x20"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="10:10" />
 
     <Button
         android:id="@+id/playerBtn"

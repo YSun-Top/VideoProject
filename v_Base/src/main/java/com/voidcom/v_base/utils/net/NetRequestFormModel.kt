@@ -1,6 +1,6 @@
 package com.voidcom.v_base.utils.net
 
-import com.voidcom.v_base.utils.log.LogUtils
+import com.voidcom.v_base.utils.KLog
 import okhttp3.FormBody
 import okhttp3.RequestBody
 
@@ -30,7 +30,7 @@ class NetRequestFormModel(
     }.build()
 
     override fun printDetail() {
-        LogUtils.d("网络请求", StringBuilder().apply {
+        KLog.d("网络请求", StringBuilder().apply {
             append("\n")
             append("==============================================").append("\n")
             append("请求网址：").append(requestUrl()).append("\n")

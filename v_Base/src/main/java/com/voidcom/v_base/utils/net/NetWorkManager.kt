@@ -1,6 +1,6 @@
 package com.voidcom.v_base.utils.net
 
-import com.voidcom.v_base.utils.log.LogUtils
+import com.voidcom.v_base.utils.KLog
 import okhttp3.*
 import java.io.IOException
 import java.util.concurrent.LinkedBlockingDeque
@@ -83,7 +83,7 @@ class NetWorkManager : Callback {
                 requestList[call]?.requestCallback()?.onError(e)
                 requestList.remove(call)
             } else {
-                LogUtils.e(NetTAG, "一个没有被记录的网络请求！！并且请求失败了")
+                KLog.e(NetTAG, "一个没有被记录的网络请求！！并且请求失败了")
                 e.printStackTrace()
             }
         } catch (e: Exception) {
@@ -97,7 +97,7 @@ class NetWorkManager : Callback {
                 requestList[call]?.requestCallback()?.onSuccess(response)
                 requestList.remove(call)
             } else {
-                LogUtils.e(NetTAG, "一个没有被记录的网络请求！！" + response.message)
+                KLog.e(NetTAG, "一个没有被记录的网络请求！！" + response.message)
             }
         } catch (e: Exception) {
             e.printStackTrace()

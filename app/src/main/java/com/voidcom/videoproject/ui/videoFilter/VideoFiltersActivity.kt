@@ -3,6 +3,7 @@ package com.voidcom.videoproject.ui.videoFilter
 import android.text.TextUtils
 import androidx.activity.viewModels
 import com.voidcom.v_base.ui.BaseActivity
+import com.voidcom.videoproject.R
 import com.voidcom.videoproject.databinding.ActivityVideoFiltersBinding
 import com.voidcom.videoproject.model.videoFilter.PlayVideoHandler
 import com.voidcom.videoproject.viewModel.videoFilter.VideoFiltersViewModel
@@ -13,11 +14,15 @@ import kotlinx.coroutines.Runnable
  * Description:
  * 视频滤镜
  */
-const val KEY_FILE_PATH = "FILEPATH"
+const val KEY_FILE_PATH = "FILE_PATH"
 
 class VideoFiltersActivity : BaseActivity<ActivityVideoFiltersBinding, VideoFiltersViewModel>() {
     private val playHandler by lazy { PlayVideoHandler() }
+    private lateinit var filtersFragment: FiltersFragment
+    private lateinit var playControlFragment: PlayControlFragment
+
     private var pathStr = ""
+
     override val mViewModel: VideoFiltersViewModel by viewModels()
 
     override fun onInitUI() {
@@ -25,6 +30,12 @@ class VideoFiltersActivity : BaseActivity<ActivityVideoFiltersBinding, VideoFilt
         mBinding.surfaceView.holder.addCallback(playHandler)
         pathStr = intent.getStringExtra(KEY_FILE_PATH) ?: ""
         mHandle.postDelayed(onPlayRunnable, 1500)
+        filtersFragment =
+            supportFragmentManager.findFragmentById(R.id.filtersFragment) as FiltersFragment
+        playControlFragment =
+            supportFragmentManager.findFragmentById(R.id.playControlFragment) as PlayControlFragment
+        playControlFragment.playHandler = playHandler
+        playHandler.listener = playControlFragment
     }
 
     override fun onInitListener() {
@@ -33,9 +44,15 @@ class VideoFiltersActivity : BaseActivity<ActivityVideoFiltersBinding, VideoFilt
     override fun onInitData() {
     }
 
+    override fun onStop() {
+        super.onStop()
+        playHandler.stopTimeUpdateThread()
+        playHandler.release()
+        mHandle.removeCallbacks(onPlayRunnable)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        mHandle.removeCallbacks(onPlayRunnable)
         mBinding.surfaceView.holder.removeCallback(playHandler)
     }
 

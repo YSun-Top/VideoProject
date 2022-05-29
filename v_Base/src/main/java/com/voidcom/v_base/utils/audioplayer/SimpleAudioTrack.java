@@ -5,7 +5,7 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.util.Log;
 
-import com.voidcom.v_base.utils.log.KLog;
+import com.voidcom.v_base.utils.KLog;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
