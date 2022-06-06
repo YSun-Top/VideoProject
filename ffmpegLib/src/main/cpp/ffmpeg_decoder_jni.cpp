@@ -172,16 +172,21 @@ VIDEO_LIB_FUNC(void, setDisplay, jobject surface) {
 }
 
 VIDEO_LIB_FUNC(void, setDataSource, jstring vPath) {
-  if (libDefine->isRelease)return;
+    if (libDefine->isRelease)return;
     nativePlayer.file_name = env->GetStringUTFChars(vPath, nullptr);
-    nativePlayer.setPlayStatus(0);
+    nativePlayer.setPlayStatus(PLAY_STATUS_PREPARED);
     nativePlayer.init_player();
-    libDefine->jniPlayStatusCallback(0);
 }
 
 VIDEO_LIB_FUNC(long long, getCurrentPosition) {
     if (libDefine->isRelease)return 0;
-    return nativePlayer.getPlayProgress(0);
+    long long currentPosition = nativePlayer.getPlayProgress(0);
+    long long duration = nativePlayer.getPlayProgress(1);
+    if (currentPosition <= duration) {
+        return currentPosition;
+    } else {
+        return duration;
+    }
 }
 
 VIDEO_LIB_FUNC(long long, getDuration) {
@@ -210,9 +215,9 @@ VIDEO_LIB_FUNC(void, setPlayState, jint status) {
 VIDEO_LIB_FUNC(void, setFilter, jstring value) {
     nativePlayer.filter_descr = env->GetStringUTFChars(value, nullptr);
     LOGD("setFilter:%d", nativePlayer.getPlayStatus());
-    nativePlayer.setPlayStatus(2);
+    nativePlayer.setPlayStatus(PLAY_STATUS_STOP);
     usleep(50 * 1000);
-    nativePlayer.setPlayStatus(1);
+    nativePlayer.setPlayStatus(PLAY_STATUS_PREPARED);
 }
 
 VIDEO_LIB_FUNC(void, isPlayAudio, jboolean flag) {

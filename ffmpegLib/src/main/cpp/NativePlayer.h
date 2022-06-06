@@ -30,7 +30,7 @@ extern "C" {
 
 class NativePlayer {
 private:
-    //playStatus  -1=未知状态 0=准备 1=播放中 2=暂停中 3=播放完成 4=播放取消 5=释放资源
+    //详细设定请看：src/main/cpp/define/default_code.h
     int playStatus = -1;
 public:
     //播放进度(ms)
@@ -73,7 +73,8 @@ public:
     /**
      * 设置播放状态
      * 注：设置状态5后，该引用将失效，需要重新初始化。
-     * @param status -1=未知状态 0=准备 1=播放中 2=暂停中 3=播放完成 4=播放取消 5=释放资源
+     * //详细设定请看：src/main/cpp/define/default_code.h
+     * @param status
      */
     void setPlayStatus(int status);
 

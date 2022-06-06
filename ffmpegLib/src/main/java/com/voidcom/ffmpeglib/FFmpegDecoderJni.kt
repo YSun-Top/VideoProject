@@ -74,6 +74,7 @@ class FFmpegDecoderJni private constructor() {
     /**
      * c层播放状态回调
      * 注: 由c调用改方法
+     * 详细请查看状态定义文件：src/main/cpp/define/default_code.h
      * @param status 0=Prepared
      */
     fun jniPlayStatusCallback(status: Int) {

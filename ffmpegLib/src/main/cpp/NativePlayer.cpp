@@ -45,7 +45,7 @@ void *playVideo(void *arg) {
     if (ret < 0) {
         goto end_line;
     }
-
+    nativePlayer.setPlayStatus(PLAY_STATUS_PREPARING);
     ANativeWindow_Buffer windowBuffer;
     AVPacket avPacket;
     //读取帧
@@ -99,6 +99,7 @@ void *playVideo(void *arg) {
         av_packet_unref(&avPacket);
         av_frame_unref(filter_frame);
     }
+    nativePlayer.setPlayStatus(PLAY_STATUS_COMPLETE);
     //释放内存
     sws_freeContext(sws_ctx);
 
@@ -318,7 +319,7 @@ int NativePlayer::change_filter() const {
         snprintf(errorStr, sizeof(errorStr), "切换滤镜失败:%d", ret);
         libDefine->jniErrorCallback(FILTER_CHANGE_FAIL, errorStr);
     } else {
-        libDefine->jniPlayStatusCallback(5);
+        nativePlayer.setPlayStatus(PLAY_STATUS_UPDATE_FILTER);
         LOGD("切换滤镜完成");
     }
     return ret;
@@ -385,12 +386,13 @@ void NativePlayer::seekTo(int t) {
 }
 
 void NativePlayer::setPlayStatus(int status) {
-    if (status < -1 || status > 5)return;
+    if (status < PLAY_STATUS_UNKNOWN_STATUS)return;
     if (playStatus == status)return;
-    if (status == 1) {
+    if (status == PLAY_STATUS_PREPARED) {
         pthread_create(&libDefine->pt[2], nullptr, &playVideo, nullptr);
     }
     playStatus = status;
+    libDefine->jniPlayStatusCallback(status);
     LOGD("播放状态:%d", status);
 }
 
