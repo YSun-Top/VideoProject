@@ -53,6 +53,10 @@ class FFmpegDecoder(val callback: PlayStateCallback) : VideoDecoder(), JniCallba
 
     override fun isPlaying(): Boolean = FFmpegDecoderJni.newInstant.isPlaying()
 
+    /**
+     * 获取播放进度
+     * 时间单位：ms
+     */
     override fun getPlayTimeIndex(type: Int): Long = if (type == 0) {
         FFmpegDecoderJni.newInstant.getCurrentPosition()
     } else {
@@ -72,7 +76,9 @@ class FFmpegDecoder(val callback: PlayStateCallback) : VideoDecoder(), JniCallba
         mHandler.post {
             when (status) {
                 0 -> callback.onPrepared()
-                5 -> {
+                3 -> callback.onCompletion()
+                4 -> callback.onPlayCancel()
+                6 -> {
                     isFilterFinishChange = true
                     ToastUtils.showShort(VideoApplication.context, "滤镜切换成功")
                 }

@@ -92,6 +92,8 @@ void *playVideo(void *arg) {
                 } else {
                     LOGE("cannot lock window");
                 }
+                //应该根据1s有多少帧来进行休眠 todo
+                usleep(22222);
             }
         } else if (avPacket.stream_index == nativePlayer.audioIndex && nativePlayer.isPlayAudio) {
             nativePlayer.writeAudioData(&avPacket, vFrame);
@@ -250,7 +252,7 @@ int NativePlayer::change_filter() const {
     const AVFilter *buffersink = avfilter_get_by_name("buffersink");
     AVFilterInOut *outputs = avfilter_inout_alloc();
     AVFilterInOut *inputs = avfilter_inout_alloc();
-    if (videoIndex<0){
+    if (videoIndex < 0) {
         LOGE("videoIndex 不能为负数");
         return -1;
     }
@@ -390,21 +392,18 @@ void NativePlayer::seekTo(int t) {
 }
 
 void NativePlayer::setPlayStatus(int status) {
-    if (status < PLAY_STATUS_UNKNOWN_STATUS)return;
-    if (playStatus == status)return;
-//    if (status == PLAY_STATUS_PREPARING) {
-//        pthread_create(&libDefine->pt[2], nullptr, &playVideo, nullptr);
-//    }
+    if (status < PLAY_STATUS_UNKNOWN_STATUS || playStatus == status)return;
     playStatus = status;
     switch (status) {
         case PLAY_STATUS_PREPARED:
         case PLAY_STATUS_UPDATE_FILTER:
-            pthread_create(&libDefine->pt[2], nullptr, &playVideo, nullptr);
+            pthread_create(&libDefine->pt[2],
+                           nullptr,
+                           &playVideo,
+                           nullptr);
             break;
-        case PLAY_STATUS_RELEASE:
-            pthread_exit(&libDefine->pt[2]);
-        default:
-            break;
+        case PLAY_STATUS_RELEASE:pthread_exit(&libDefine->pt[2]);
+        default:break;
     }
     libDefine->jniPlayStatusCallback(status);
     LOGD("播放状态:%d", status);

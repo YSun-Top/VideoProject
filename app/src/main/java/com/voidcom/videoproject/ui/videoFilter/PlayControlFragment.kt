@@ -46,6 +46,7 @@ class PlayControlFragment : BaseDefaultFragment<FragmentPlayControlBinding, Play
 
     override fun onPlayStart() {
         setPlayProgress()
+        Thread(testTimeRunnable).start()
     }
 
     override fun onPlayPaused() {
@@ -55,14 +56,14 @@ class PlayControlFragment : BaseDefaultFragment<FragmentPlayControlBinding, Play
     }
 
     override fun onPlayEnd() {
+        KLog.d(tag,"-------"+TimeUtils.formatTimeS(timeID))
     }
 
     override fun onPlayRelease() {
-        TODO("Not yet implemented")
     }
 
     override fun onPlayTime(time: Long) {
-        KLog.d(tag,"time:$time")
+//        KLog.d(tag, "time:$time")
         mHandler.post {
             setPlayProgress()
         }
@@ -79,6 +80,7 @@ class PlayControlFragment : BaseDefaultFragment<FragmentPlayControlBinding, Play
                 TimeUtils.formatTimeS(playHandler.getCurrentTime()),
                 TimeUtils.formatTimeS(playHandler.getMaxTime())
             )
+            mBinding.timeTv.text = TimeUtils.formatTimeS(timeID)
         }
     }
 
@@ -87,6 +89,15 @@ class PlayControlFragment : BaseDefaultFragment<FragmentPlayControlBinding, Play
             playHandler.plPause()
         } else {
             playHandler.plStart()
+        }
+    }
+
+    @Volatile
+    private var timeID = 0L
+    val testTimeRunnable = Runnable {
+        while (true){
+            timeID += 1000
+            Thread.sleep(1000)
         }
     }
 }
