@@ -63,7 +63,9 @@ class PlayControlFragment : BaseDefaultFragment<FragmentPlayControlBinding, Play
 
     override fun onPlayTime(time: Long) {
         KLog.d(tag,"time:$time")
-        setPlayProgress()
+        mHandler.post {
+            setPlayProgress()
+        }
     }
 
     /**

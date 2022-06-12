@@ -115,7 +115,7 @@ class PlayVideoHandler : SurfaceHolder.Callback,
                 if (isStop) break
                 sleep(300)
                 if (!isPlaying()) continue
-                mHandler.post { listener.onPlayTime(getCurrentTime()) }
+                listener.onPlayTime(getCurrentTime())
             }
         }
     }

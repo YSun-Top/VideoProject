@@ -174,8 +174,8 @@ VIDEO_LIB_FUNC(void, setDisplay, jobject surface) {
 VIDEO_LIB_FUNC(void, setDataSource, jstring vPath) {
     if (libDefine->isRelease)return;
     nativePlayer.file_name = env->GetStringUTFChars(vPath, nullptr);
-    nativePlayer.setPlayStatus(PLAY_STATUS_PREPARED);
     nativePlayer.init_player();
+    nativePlayer.setPlayStatus(PLAY_STATUS_PREPARED);
 }
 
 VIDEO_LIB_FUNC(long long, getCurrentPosition) {
@@ -217,7 +217,7 @@ VIDEO_LIB_FUNC(void, setFilter, jstring value) {
     LOGD("setFilter:%d", nativePlayer.getPlayStatus());
     nativePlayer.setPlayStatus(PLAY_STATUS_STOP);
     usleep(50 * 1000);
-    nativePlayer.setPlayStatus(PLAY_STATUS_PREPARED);
+    nativePlayer.setPlayStatus(PLAY_STATUS_UPDATE_FILTER);
 }
 
 VIDEO_LIB_FUNC(void, isPlayAudio, jboolean flag) {

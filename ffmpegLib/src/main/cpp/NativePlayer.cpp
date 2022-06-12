@@ -250,6 +250,10 @@ int NativePlayer::change_filter() const {
     const AVFilter *buffersink = avfilter_get_by_name("buffersink");
     AVFilterInOut *outputs = avfilter_inout_alloc();
     AVFilterInOut *inputs = avfilter_inout_alloc();
+    if (videoIndex<0){
+        LOGE("videoIndex 不能为负数");
+        return -1;
+    }
     time_base = pFormatCtx->streams[videoIndex]->time_base;
     enum AVPixelFormat pix_fmts[] = {AV_PIX_FMT_YUV420P, AV_PIX_FMT_NONE};
 
@@ -319,7 +323,7 @@ int NativePlayer::change_filter() const {
         snprintf(errorStr, sizeof(errorStr), "切换滤镜失败:%d", ret);
         libDefine->jniErrorCallback(FILTER_CHANGE_FAIL, errorStr);
     } else {
-        nativePlayer.setPlayStatus(PLAY_STATUS_UPDATE_FILTER);
+        nativePlayer.setPlayStatus(PLAY_STATUS_PREPARING);
         LOGD("切换滤镜完成");
     }
     return ret;
@@ -388,10 +392,20 @@ void NativePlayer::seekTo(int t) {
 void NativePlayer::setPlayStatus(int status) {
     if (status < PLAY_STATUS_UNKNOWN_STATUS)return;
     if (playStatus == status)return;
-    if (status == PLAY_STATUS_PREPARED) {
-        pthread_create(&libDefine->pt[2], nullptr, &playVideo, nullptr);
-    }
+//    if (status == PLAY_STATUS_PREPARING) {
+//        pthread_create(&libDefine->pt[2], nullptr, &playVideo, nullptr);
+//    }
     playStatus = status;
+    switch (status) {
+        case PLAY_STATUS_PREPARED:
+        case PLAY_STATUS_UPDATE_FILTER:
+            pthread_create(&libDefine->pt[2], nullptr, &playVideo, nullptr);
+            break;
+        case PLAY_STATUS_RELEASE:
+            pthread_exit(&libDefine->pt[2]);
+        default:
+            break;
+    }
     libDefine->jniPlayStatusCallback(status);
     LOGD("播放状态:%d", status);
 }
