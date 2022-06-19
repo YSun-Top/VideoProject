@@ -15,4 +15,5 @@
     <string name="filters_5">矩形</string>
     <string name="filters_6">翻转</string>
     <string name="filters_7">锐化</string>
+    <string name="filters_8">文字</string>
 </resources>

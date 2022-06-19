@@ -42,6 +42,8 @@
 #define PLAY_STATUS_RELEASE 5
 //6=更新滤镜
 #define PLAY_STATUS_UPDATE_FILTER 6
+//7=更新滤镜成功
+#define PLAY_STATUS_UPDATE_FILTER_SUCCESS 7
 //endregion
 
 //inline void checkUtf8Bytes(char const*bytes);

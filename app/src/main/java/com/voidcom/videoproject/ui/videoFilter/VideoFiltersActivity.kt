@@ -14,8 +14,6 @@ import kotlinx.coroutines.Runnable
  * Description:
  * 视频滤镜
  */
-const val KEY_FILE_PATH = "FILE_PATH"
-
 class VideoFiltersActivity : BaseActivity<ActivityVideoFiltersBinding, VideoFiltersViewModel>() {
     private val playHandler by lazy { PlayVideoHandler() }
     private lateinit var filtersFragment: FiltersFragment
@@ -32,6 +30,7 @@ class VideoFiltersActivity : BaseActivity<ActivityVideoFiltersBinding, VideoFilt
         mHandle.postDelayed(onPlayRunnable, 1500)
         filtersFragment =
             supportFragmentManager.findFragmentById(R.id.filtersFragment) as FiltersFragment
+        filtersFragment.playHandler = playHandler
         playControlFragment =
             supportFragmentManager.findFragmentById(R.id.playControlFragment) as PlayControlFragment
         playControlFragment.playHandler = playHandler
@@ -60,5 +59,8 @@ class VideoFiltersActivity : BaseActivity<ActivityVideoFiltersBinding, VideoFilt
     private val onPlayRunnable = Runnable {
         if (TextUtils.isEmpty(pathStr)) return@Runnable
         playHandler.setDataPath(pathStr)
+    }
+    companion object{
+        const val KEY_FILE_PATH = "FILE_PATH"
     }
 }

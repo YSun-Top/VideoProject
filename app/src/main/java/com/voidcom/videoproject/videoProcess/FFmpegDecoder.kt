@@ -78,7 +78,7 @@ class FFmpegDecoder(val callback: PlayStateCallback) : VideoDecoder(), JniCallba
                 0 -> callback.onPrepared()
                 3 -> callback.onCompletion()
                 4 -> callback.onPlayCancel()
-                6 -> {
+                7 -> {
                     isFilterFinishChange = true
                     ToastUtils.showShort(VideoApplication.context, "滤镜切换成功")
                 }

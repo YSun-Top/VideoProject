@@ -1,7 +1,5 @@
 package com.voidcom.videoproject.ui.videoFilter
 
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import com.voidcom.v_base.ui.BaseDefaultFragment
 import com.voidcom.v_base.utils.KLog
@@ -20,7 +18,6 @@ import com.voidcom.videoproject.viewModel.videoFilter.PlayControlViewModel
 class PlayControlFragment : BaseDefaultFragment<FragmentPlayControlBinding, PlayControlViewModel>(),
     PlayStateListener, View.OnClickListener {
     lateinit var playHandler: PlayVideoHandler
-    private val mHandler = Handler(Looper.getMainLooper())
 
     override val mViewModel: PlayControlViewModel by lazy { PlayControlViewModel() }
 

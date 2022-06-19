@@ -94,7 +94,7 @@ void *playVideo(void *arg) {
                     LOGE("cannot lock window");
                 }
                 //应该根据1s有多少帧来进行休眠 todo
-                usleep(22222);
+                usleep(20000);
             }
         } else if (avPacket.stream_index == nativePlayer.audioIndex && nativePlayer.isPlayAudio) {
             //对音频帧进行解码
@@ -112,12 +112,12 @@ void *playVideo(void *arg) {
     //释放内存
     sws_freeContext(sws_ctx);
 
+    avfilter_free(buffersrc_ctx);
+    avfilter_free(buffersink_ctx);
     end_line:
     av_frame_free(&vFrame);
     av_frame_free(&pFrameRGBA);
     av_frame_free(&filter_frame);
-    avfilter_free(buffersrc_ctx);
-    avfilter_free(buffersink_ctx);
     avfilter_graph_free(&filter_graph);
     avcodec_close(videoCodecCtx);
     avcodec_close(audioCodecCtx);
@@ -329,7 +329,7 @@ int NativePlayer::change_filter() const {
         snprintf(errorStr, sizeof(errorStr), "切换滤镜失败:%d", ret);
         libDefine->jniErrorCallback(FILTER_CHANGE_FAIL, errorStr);
     } else {
-        nativePlayer.setPlayStatus(PLAY_STATUS_PREPARING);
+        nativePlayer.setPlayStatus(PLAY_STATUS_UPDATE_FILTER_SUCCESS);
         LOGD("切换滤镜完成");
     }
     return ret;
@@ -398,6 +398,8 @@ void NativePlayer::seekTo(int t) {
 void NativePlayer::setPlayStatus(int status) {
     if (status < PLAY_STATUS_UNKNOWN_STATUS || playStatus == status)return;
     playStatus = status;
+    libDefine->jniPlayStatusCallback(status);
+    LOGD("播放状态:%d", status);
     switch (status) {
         case PLAY_STATUS_PREPARED:
         case PLAY_STATUS_UPDATE_FILTER:
@@ -411,8 +413,6 @@ void NativePlayer::setPlayStatus(int status) {
             break;
         default:break;
     }
-    libDefine->jniPlayStatusCallback(status);
-    LOGD("播放状态:%d", status);
 }
 
 int NativePlayer::getPlayStatus() const {

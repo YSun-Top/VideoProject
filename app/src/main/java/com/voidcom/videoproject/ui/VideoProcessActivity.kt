@@ -19,7 +19,6 @@ import com.voidcom.v_base.utils.PermissionsUtils
 import com.voidcom.v_base.utils.ToastUtils
 import com.voidcom.videoproject.R
 import com.voidcom.videoproject.databinding.ActivityVideoProcessBinding
-import com.voidcom.videoproject.ui.videoFilter.KEY_FILE_PATH
 import com.voidcom.videoproject.ui.videoFilter.VideoFiltersActivity
 
 /**
@@ -44,7 +43,7 @@ class VideoProcessActivity : BaseActivity<ActivityVideoProcessBinding, EmptyView
                 }
                 if (TextUtils.isEmpty(path)) return@ActivityResultCallback
                 startActivity(Intent(this, VideoFiltersActivity::class.java).apply {
-                    putExtra(KEY_FILE_PATH, path)
+                    putExtra(VideoFiltersActivity.KEY_FILE_PATH, path)
                 })
             }
         }

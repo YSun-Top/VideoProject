@@ -1,6 +1,8 @@
 package com.voidcom.v_base.ui
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +16,7 @@ import com.voidcom.v_base.utils.BindingReflex
  *
  */
 abstract class BaseDefaultFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment() {
+    protected val mHandler = Handler(Looper.getMainLooper())
     protected lateinit var mBinding: VB
 
     protected abstract val mViewModel: VM
