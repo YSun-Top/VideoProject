@@ -201,15 +201,12 @@ VIDEO_LIB_FUNC(void, goSelectedTime, jint t) {
 
 VIDEO_LIB_FUNC(bool, isPlaying) {
     if (libDefine->isRelease)return false;
-    return nativePlayer.getPlayStatus() == 1;
+    return nativePlayer.getPlayStatus() == PLAY_STATUS_PREPARING;
 }
 
 VIDEO_LIB_FUNC(void, setPlayState, jint status) {
     if (libDefine->isRelease)return;
     nativePlayer.setPlayStatus(status);
-    libDefine->isRelease = status == 5;
-    if (status != 5)return;
-    libDefine->onRelease();
 }
 
 VIDEO_LIB_FUNC(void, setFilter, jstring value) {

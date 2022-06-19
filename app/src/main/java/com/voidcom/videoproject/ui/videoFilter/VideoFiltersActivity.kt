@@ -47,6 +47,7 @@ class VideoFiltersActivity : BaseActivity<ActivityVideoFiltersBinding, VideoFilt
     override fun onStop() {
         super.onStop()
         playHandler.stopTimeUpdateThread()
+        playHandler.plPause()
         playHandler.release()
         mHandle.removeCallbacks(onPlayRunnable)
     }

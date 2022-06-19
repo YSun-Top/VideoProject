@@ -23,7 +23,7 @@ class FFmpegDecoder(val callback: PlayStateCallback) : VideoDecoder(), JniCallba
     init {
         FFmpegDecoderJni.newInstant.callback = this
         FFmpegDecoderJni.newInstant.initJni()
-        FFmpegDecoderJni.newInstant.isPlayAudio(false)
+        FFmpegDecoderJni.newInstant.isPlayAudio(true)
     }
 
     override fun setDisPlay(holder: SurfaceHolder?, fileInfo: FileAttributes) {

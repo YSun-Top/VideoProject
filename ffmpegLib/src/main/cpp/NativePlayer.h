@@ -44,7 +44,9 @@ public:
     long jniMaxTime = 0;
     bool isPlayAudio = true;
 
+    //视频编解码器
     const AVCodec *vCodec = NULL;
+    //音频编解码器
     const AVCodec *aCodec = NULL;
 
     int init_player();
@@ -80,6 +82,6 @@ public:
 
     int getPlayStatus() const;
 
-    static void writeAudioData(AVPacket *packet, AVFrame *frame);
+    static int writeAudioData(AVPacket *packet, AVFrame *frame);
 };
 #endif //TESTEXAMPLE_NATIVEPLAYER_H
