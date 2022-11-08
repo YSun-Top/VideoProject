@@ -46,6 +46,7 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:$rootProject.androidx.lifecycle_livedata_ktx")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.androidx.lifecycle_viewModel_ktx")
     testImplementation("junit:junit:${rootProject.androidx.test_junit}")
+    testImplementation 'org.testng:testng:6.9.6'
     androidTestImplementation("androidx.test.ext:junit:${rootProject.androidx.ext_junit}")
     androidTestImplementation("androidx.test.espresso:espresso-core:${rootProject.androidx.espresso_core}") {
         exclude group: "javax.inject"

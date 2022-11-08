@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.voidcom.videoproject">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:name=".VideoApplication"
         android:allowBackup="true"
@@ -15,15 +19,6 @@
         android:theme="@style/Theme.VideoProject"
         tools:targetApi="31">
         <activity
-            android:name=".ui.videoFilter.VideoFiltersActivity"
-            android:exported="false"
-            android:launchMode="singleInstance"
-            android:permission="android.permission.READ_EXTERNAL_STORAGE"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".ui.VideoProcessActivity"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -32,10 +27,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.videoFilter.VideoFiltersActivity"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:permission="android.permission.READ_EXTERNAL_STORAGE"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".ui.VideoProcessActivity"
+            android:exported="false" />
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA" />
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 </manifest>

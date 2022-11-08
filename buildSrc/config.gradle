@@ -1,18 +1,17 @@
 ext {
     androidBuildTools = [
-            buildTools: "30.0.3",
             minSdk    : 21,
-            targetSdk : 31,
-            compileSdk: 31
+            targetSdk : 33,
+            compileSdk: 33
     ]
     androidx = [
             gradleVersion          : "4.1.0",
-            viewBinding            : "7.0.3",
-            recyclerview           : "1.3.0-alpha01",
-            appcompat              : "1.4.1",
-            constraintLayout       : "2.1.3",
-            core_ktx               : "1.7.0",
-            activity_ktx           : "1.4.0",
+            viewBinding            : "7.3.1",
+            recyclerview           : "1.3.0-rc01",
+            appcompat              : "1.5.1",
+            constraintLayout       : "2.1.4",
+            core_ktx               : "1.9.0",
+            activity_ktx           : "1.6.1",
             test_junit             : "4.13.2",
             ext_junit              : "1.1.3",
             runner                 : "1.4.0",
@@ -20,13 +19,13 @@ ext {
             espresso_intents       : "3.0.2",
             espresso_core          : "3.4.0",
             lifecycle_extensions   : "2.2.0",
-            lifecycle_livedata_ktx : "2.4.1",
-            lifecycle_viewModel_ktx: "2.4.1",
+            lifecycle_livedata_ktx : "2.5.1",
+            lifecycle_viewModel_ktx: "2.5.1",
     ]
     kotlin = [
-            kotlin_gradle_plugin    : "1.6.10",
-            kotlin_stdlib           : "1.6.10",
-            kotlin_stdlib_jdk8      : "1.6.10",
+            kotlin_gradle_plugin    : "1.7.20",
+            kotlin_stdlib           : "1.7.20",
+            kotlin_stdlib_jdk8      : "1.7.20",
             kotlinXCoroutinesCore   : "1.5.0",
             kotlinXCoroutinesAndroid: "1.5.0"
     ]
@@ -46,7 +45,7 @@ ext {
     ]
     googleCode = [
             google_gson: "2.8.9",
-            material   : "1.5.0",
+            material   : "1.7.0",
             exoplayer  : "2.16.1"
     ]
     dagger = [
