@@ -1,6 +1,7 @@
 
 #include "ffmpeg_cmd.h"
 
+extern "C"{
 VIDEO_PLAYER_FUNC(jint, executeFFmpeg, jobjectArray cmd_str) {
     av_log_set_level(AV_LOG_INFO);
     av_log_set_callback(log_callback);
@@ -27,6 +28,6 @@ VIDEO_PLAYER_FUNC(jint, executeFFmpeg, jobjectArray cmd_str) {
 
 VIDEO_PLAYER_FUNC(jint, executeFF, jstring cmd_str) {
     char *temp = (char *) env->GetStringUTFChars(cmd_str, 0);
-
     return 0;
+}
 }

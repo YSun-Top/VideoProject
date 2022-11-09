@@ -109,7 +109,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
     return JNI_VERSION_1_6;
 }
 
-VIDEO_LIB_FUNC(void, initJni) {
+FFMPEG_DECODER_JNI_FUNC(void, initJni) {
     libDefine = new FFmpegDecoderJni();
     jclass ffmpegDecoder = env->GetObjectClass(thiz);
     if (!ffmpegDecoder) {
@@ -161,7 +161,7 @@ VIDEO_LIB_FUNC(void, initJni) {
     pthread_create(&libDefine->pt[1], nullptr, &onErrorCallbackThread, nullptr);
 }
 
-VIDEO_LIB_FUNC(void, setDisplay, jobject surface) {
+FFMPEG_DECODER_JNI_FUNC(void, setDisplay, jobject surface) {
     ANativeWindow *nativeWindow = ANativeWindow_fromSurface(env, surface);
     if (nativeWindow == nullptr) {
         LOGE("Could not get native window from surface");
@@ -171,14 +171,14 @@ VIDEO_LIB_FUNC(void, setDisplay, jobject surface) {
     nativePlayer.setPlayInfo(nativeWindow);
 }
 
-VIDEO_LIB_FUNC(void, setDataSource, jstring vPath) {
+FFMPEG_DECODER_JNI_FUNC(void, setDataSource, jstring vPath) {
     if (libDefine->isRelease)return;
     nativePlayer.file_name = env->GetStringUTFChars(vPath, nullptr);
     nativePlayer.init_player();
     nativePlayer.setPlayStatus(PLAY_STATUS_PREPARED);
 }
 
-VIDEO_LIB_FUNC(long long, getCurrentPosition) {
+FFMPEG_DECODER_JNI_FUNC(long long, getCurrentPosition) {
     if (libDefine->isRelease)return 0;
     long long currentPosition = nativePlayer.getPlayProgress(0);
     long long duration = nativePlayer.getPlayProgress(1);
@@ -189,27 +189,27 @@ VIDEO_LIB_FUNC(long long, getCurrentPosition) {
     }
 }
 
-VIDEO_LIB_FUNC(long long, getDuration) {
+FFMPEG_DECODER_JNI_FUNC(long long, getDuration) {
     if (libDefine->isRelease)return 0;
     return nativePlayer.getPlayProgress(1);
 }
 
-VIDEO_LIB_FUNC(void, goSelectedTime, jint t) {
+FFMPEG_DECODER_JNI_FUNC(void, goSelectedTime, jint t) {
     if (libDefine->isRelease)return;
     return nativePlayer.seekTo(t);
 }
 
-VIDEO_LIB_FUNC(bool, isPlaying) {
+FFMPEG_DECODER_JNI_FUNC(bool, isPlaying) {
     if (libDefine->isRelease)return false;
     return nativePlayer.getPlayStatus() == PLAY_STATUS_PREPARING;
 }
 
-VIDEO_LIB_FUNC(void, setPlayState, jint status) {
+FFMPEG_DECODER_JNI_FUNC(void, setPlayState, jint status) {
     if (libDefine->isRelease)return;
     nativePlayer.setPlayStatus(status);
 }
 
-VIDEO_LIB_FUNC(void, setFilter, jstring value) {
+FFMPEG_DECODER_JNI_FUNC(void, setFilter, jstring value) {
     nativePlayer.filter_descr = env->GetStringUTFChars(value, nullptr);
     LOGD("setFilter:%d", nativePlayer.getPlayStatus());
     nativePlayer.setPlayStatus(PLAY_STATUS_STOP);
@@ -217,7 +217,7 @@ VIDEO_LIB_FUNC(void, setFilter, jstring value) {
     nativePlayer.setPlayStatus(PLAY_STATUS_UPDATE_FILTER);
 }
 
-VIDEO_LIB_FUNC(void, isPlayAudio, jboolean flag) {
+FFMPEG_DECODER_JNI_FUNC(void, isPlayAudio, jboolean flag) {
     nativePlayer.isPlayAudio = flag;
 }
 }

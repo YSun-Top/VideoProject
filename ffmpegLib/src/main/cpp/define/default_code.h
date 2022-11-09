@@ -9,19 +9,15 @@
 #include "logger.h"
 #include "ErrorCodeDefine.h"
 
-#define VIDEO_PLAYER_FUNC(RETURN_TYPE, FUNC_NAME, ...) \
+#define FFMPEG_CMD_FUNC(RETURN_TYPE, FUNC_NAME, ...) \
     JNIEXPORT RETURN_TYPE JNICALL Java_com_voidcom_ffmpeglib_FFmpegCmd_ ## FUNC_NAME \
     (JNIEnv *env, jclass thiz, ##__VA_ARGS__)\
 
-//#define VIDEO_LIB_FUNC(RETURN_TYPE, FUNC_NAME, ...) \
-//extern "C" { \
-//    JNIEXPORT RETURN_TYPE JNICALL Java_com_voidcom_ffmpeglib_FFMPEGDecoderJni_ ## FUNC_NAME \
-//    (JNIEnv *env, jclass thiz, ##__VA_ARGS__);\
-//}\
-//    JNIEXPORT RETURN_TYPE JNICALL Java_com_voidcom_ffmpeglib_FFMPEGDecoderJni_ ## FUNC_NAME \
-//    (JNIEnv *env, jclass thiz, ##__VA_ARGS__)
+#define FFPROBE_CMD_FUNC(RETURN_TYPE, FUNC_NAME, ...) \
+    JNIEXPORT RETURN_TYPE JNICALL Java_com_voidcom_ffmpeglib_FFprobeCmd_ ## FUNC_NAME \
+    (JNIEnv *env, jclass thiz, ##__VA_ARGS__)\
 
-#define VIDEO_LIB_FUNC(RETURN_TYPE, FUNC_NAME, ...) \
+#define FFMPEG_DECODER_JNI_FUNC(RETURN_TYPE, FUNC_NAME, ...) \
     JNIEXPORT RETURN_TYPE JNICALL Java_com_voidcom_ffmpeglib_FFmpegDecoderJni_ ## FUNC_NAME \
     (JNIEnv *env, jclass thiz, ##__VA_ARGS__)
 

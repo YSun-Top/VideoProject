@@ -2,22 +2,19 @@ package com.voidcom.ffmpeglib
 
 class FFmpegCmd private constructor() {
 
-    external fun executeFF(cmdStr: String): String
+    init {
+        System.loadLibrary("ffmpegSDK")
+    }
 
-    external fun executeFFmpeg(cmdStr: Array<String>)
+    external fun executeFF(cmdStr: String): Int
+
+    external fun executeFFmpeg(cmdStr: Array<String>): Int
+
+    fun executeFFmpeg(cmdStr: String): Int {
+        return executeFFmpeg(cmdStr.split(" ").toTypedArray())
+    }
 
     companion object {
-        private var cmd: FFmpegCmd? = null
-
-        init {
-            System.loadLibrary("ffmpegSDK")
-        }
-
-        fun getInstance(): FFmpegCmd {
-            if (cmd == null) {
-                cmd = FFmpegCmd()
-            }
-            return cmd as FFmpegCmd
-        }
+        val getInstance: FFmpegCmd by lazy { FFmpegCmd() }
     }
 }

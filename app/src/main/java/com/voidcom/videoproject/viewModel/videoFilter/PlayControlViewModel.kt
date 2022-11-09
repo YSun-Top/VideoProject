@@ -1,5 +1,7 @@
 package com.voidcom.videoproject.viewModel.videoFilter
 
+import android.content.Context
+import com.voidcom.v_base.ui.BaseModel
 import com.voidcom.v_base.ui.BaseViewModel
 
 /**
@@ -7,4 +9,11 @@ import com.voidcom.v_base.ui.BaseViewModel
  * Description:
  */
 class PlayControlViewModel : BaseViewModel() {
+    override fun getModel(): BaseModel? =null
+
+    override fun onInit(context: Context) {
+    }
+
+    override fun onInitData() {
+    }
 }

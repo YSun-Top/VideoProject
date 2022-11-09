@@ -2,10 +2,10 @@ package com.voidcom.videoproject.ui.videoFilter
 
 import android.text.TextUtils
 import androidx.activity.viewModels
-import com.voidcom.v_base.ui.BaseActivity
 import com.voidcom.videoproject.R
 import com.voidcom.videoproject.databinding.ActivityVideoFiltersBinding
 import com.voidcom.videoproject.model.videoFilter.PlayVideoHandler
+import com.voidcom.videoproject.ui.ReadStorageActivity
 import com.voidcom.videoproject.viewModel.videoFilter.VideoFiltersViewModel
 import kotlinx.coroutines.Runnable
 
@@ -14,20 +14,16 @@ import kotlinx.coroutines.Runnable
  * Description:
  * 视频滤镜
  */
-class VideoFiltersActivity : BaseActivity<ActivityVideoFiltersBinding, VideoFiltersViewModel>() {
+class VideoFiltersActivity : ReadStorageActivity<ActivityVideoFiltersBinding, VideoFiltersViewModel>() {
     private val playHandler by lazy { PlayVideoHandler() }
     private lateinit var filtersFragment: FiltersFragment
     private lateinit var playControlFragment: PlayControlFragment
 
-    private var pathStr = ""
-
     override val mViewModel: VideoFiltersViewModel by viewModels()
 
     override fun onInitUI() {
+        super.onInitUI()
         setFullscreen()
-        mBinding.surfaceView.holder.addCallback(playHandler)
-        pathStr = intent.getStringExtra(KEY_FILE_PATH) ?: ""
-        mHandle.postDelayed(onPlayRunnable, 1500)
         filtersFragment =
             supportFragmentManager.findFragmentById(R.id.filtersFragment) as FiltersFragment
         filtersFragment.playHandler = playHandler
@@ -38,13 +34,22 @@ class VideoFiltersActivity : BaseActivity<ActivityVideoFiltersBinding, VideoFilt
     }
 
     override fun onInitListener() {
+        mViewModel.getModel().register =getFilePathCallbackRegister()
     }
 
-    override fun onInitData() {
+    override fun onFilePathCallback(path: String) {
+        mViewModel.getModel().pathStr = path
+        mHandle.postDelayed(onPlayRunnable, 1500)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mBinding.surfaceView.holder.addCallback(playHandler)
     }
 
     override fun onStop() {
         super.onStop()
+        if (mViewModel.getModel().pathStr.isEmpty()) return
         playHandler.stopTimeUpdateThread()
         playHandler.plPause()
         playHandler.release()
@@ -57,10 +62,7 @@ class VideoFiltersActivity : BaseActivity<ActivityVideoFiltersBinding, VideoFilt
     }
 
     private val onPlayRunnable = Runnable {
-        if (TextUtils.isEmpty(pathStr)) return@Runnable
-        playHandler.setDataPath(pathStr)
-    }
-    companion object{
-        const val KEY_FILE_PATH = "FILE_PATH"
+        if (TextUtils.isEmpty(mViewModel.getModel().pathStr)) return@Runnable
+        playHandler.setDataPath(mViewModel.getModel().pathStr)
     }
 }

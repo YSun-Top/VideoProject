@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/video_info_tv"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="10:10" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/playerBtn"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -27,7 +27,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/time_tv"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

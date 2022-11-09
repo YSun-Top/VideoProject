@@ -1,5 +1,6 @@
 package com.voidcom.videoproject.viewModel.videoFilter
 
+import android.content.Context
 import com.voidcom.v_base.ui.BaseViewModel
 import com.voidcom.videoproject.model.videoFilter.FiltersModel
 
@@ -9,5 +10,13 @@ import com.voidcom.videoproject.model.videoFilter.FiltersModel
  */
 class FiltersViewModel : BaseViewModel() {
     private val filtersModel: FiltersModel by lazy { FiltersModel() }
+
+    override fun getModel(): FiltersModel = filtersModel
+
+    override fun onInit(context: Context) {
+    }
+
+    override fun onInitData() {
+    }
 
 }

@@ -21,14 +21,14 @@ abstract class BaseFrameActivity<VB : ViewBinding, VM : BaseViewModel> : AppComp
         setContentView(mBinding.root)
         onInitUI()
         onInitListener()
-        onInitData()
+        mViewModel.setActivity(this)
+        mViewModel.onInit(applicationContext)
+        mViewModel.onInitData()
     }
 
     abstract fun onInitUI()
 
     abstract fun onInitListener()
-
-    abstract fun onInitData()
 
     /**
      * 设置 ActionBar的标题和返回键

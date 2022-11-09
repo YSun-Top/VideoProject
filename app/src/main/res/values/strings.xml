@@ -3,6 +3,7 @@
     <string name="test_cmd">测试CMD命令</string>
     <string name="video_process">视频处理</string>
     <string name="video_filters">滤镜</string>
+    <string name="video_crop">视频裁剪</string>
     <string name="player_start">开始</string>
     <string name="player_stop">暂停</string>
     <string name="playTime">%s / %s</string>
