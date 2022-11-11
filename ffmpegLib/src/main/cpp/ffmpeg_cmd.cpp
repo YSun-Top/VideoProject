@@ -1,14 +1,14 @@
 
 #include "ffmpeg_cmd.h"
 
-extern "C"{
-VIDEO_PLAYER_FUNC(jint, executeFFmpeg, jobjectArray cmd_str) {
+extern "C" {
+FFMPEG_CMD_FUNC(jint, executeFFmpeg, jobjectArray cmd_str) {
     av_log_set_level(AV_LOG_INFO);
     av_log_set_callback(log_callback);
-    int argc = env->GetArrayLength(cmd_str);
-    char **argv = (char **) malloc(argc * sizeof(char *));
+    int length = env->GetArrayLength(cmd_str);
+    char **argv = (char **) malloc(length * sizeof(char *));
     int i;
-    for (i = 0; i < argc; i++) {
+    for (i = 0; i < length; i++) {
         jstring jstr = (jstring) env->GetObjectArrayElement(cmd_str, i);
         char *temp = (char *) env->GetStringUTFChars(jstr, 0);
         argv[i] = static_cast<char *>(malloc(1024));
@@ -16,18 +16,26 @@ VIDEO_PLAYER_FUNC(jint, executeFFmpeg, jobjectArray cmd_str) {
         env->ReleaseStringUTFChars(jstr, temp);
     }
     int result;
-    //execute ffprobe command
-    result = ffmpeg_run(argc, argv);
+    //execute ffmpeg command
+    result = ffmpeg_run(length, argv);
     //release memory
-    for (i = 0; i < argc; i++) {
+    for (i = 0; i < length; i++) {
         free(argv[i]);
     }
     free(argv);
     return result;
 }
 
-VIDEO_PLAYER_FUNC(jint, executeFF, jstring cmd_str) {
+FFMPEG_CMD_FUNC(jint, executeFF, jstring cmd_str) {
     char *temp = (char *) env->GetStringUTFChars(cmd_str, 0);
-    return 0;
+    int length = env->GetStringLength(cmd_str);
+    char **argv = (char **) malloc(length);
+    strcpy(argv[1], temp);
+    int result = ffmpeg_run(length, argv);
+    //release memory
+    free(argv[1]);
+    free(argv);
+    env->ReleaseStringUTFChars(cmd_str, temp);
+    return result;
 }
 }

@@ -23,6 +23,7 @@
 #define FFTOOLS_CMDUTILS_H
 
 #include <stdint.h>
+#include <setjmp.h>
 
 #include "config.h"
 #include "libavcodec/avcodec.h"
@@ -34,6 +35,7 @@
 #undef main /* We don't want SDL to override our main() */
 #endif
 
+extern jmp_buf jump_buf;
 /**
  * program name, defined by the program for show_version().
  */

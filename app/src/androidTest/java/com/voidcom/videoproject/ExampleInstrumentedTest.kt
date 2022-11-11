@@ -1,5 +1,7 @@
 package com.voidcom.videoproject
 
+import android.content.ContentProvider
+import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
@@ -19,6 +21,8 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        println("------------${appContext.filesDir.path}")
+
         assertEquals("com.voidcom.videoproject", appContext.packageName)
     }
 }

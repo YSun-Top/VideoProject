@@ -31,10 +31,12 @@
             android:name=".ui.videoFilter.VideoFiltersActivity"
             android:exported="false"
             android:launchMode="singleInstance"
-            android:permission="android.permission.READ_EXTERNAL_STORAGE"
             android:screenOrientation="landscape" />
         <activity
             android:name=".ui.VideoProcessActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.VideoCropActivity"
             android:exported="false" />
     </application>
 

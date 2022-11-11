@@ -1,5 +1,7 @@
 package com.voidcom.ffmpeglib
 
+import android.util.Log
+
 class FFmpegCmd private constructor() {
 
     init {
@@ -11,6 +13,7 @@ class FFmpegCmd private constructor() {
     external fun executeFFmpeg(cmdStr: Array<String>): Int
 
     fun executeFFmpeg(cmdStr: String): Int {
+        Log.d("-------",cmdStr)
         return executeFFmpeg(cmdStr.split(" ").toTypedArray())
     }
 

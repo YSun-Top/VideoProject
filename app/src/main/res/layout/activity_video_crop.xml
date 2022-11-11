@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.VideoCropActivity">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_fileName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/y60"
+        android:text="@string/fileName"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_frameImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/y100"
+        android:background="@color/black"
+        android:minHeight="@dimen/y400"
+        app:layout_constraintTop_toBottomOf="@id/tv_fileName" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/et_startTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/y100"
+        android:hint="@string/v_10"
+        android:inputType="number"
+        android:minWidth="@dimen/y200"
+        app:layout_constraintEnd_toStartOf="@id/et_endTime"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_frameImage" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/et_endTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/y100"
+        android:hint="@string/v_10"
+        android:inputType="number"
+        android:minWidth="@dimen/y200"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/et_startTime"
+        app:layout_constraintTop_toBottomOf="@id/iv_frameImage" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_execute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/player_start"
+        android:clickable="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_startTime" />
+</androidx.constraintlayout.widget.ConstraintLayout>

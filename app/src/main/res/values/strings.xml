@@ -7,6 +7,8 @@
     <string name="player_start">开始</string>
     <string name="player_stop">暂停</string>
     <string name="playTime">%s / %s</string>
+    <string name="fileName">文件名</string>
+    <string name="v_10">10</string>
 
     <!--滤镜类型-->
     <string name="filters_1">素描</string>

@@ -10,14 +10,18 @@ object AppCode {
 
     //region 权限
     const val requestReadStorage = 1001
-    const val requestReadPhoneState = 1002
-    const val requestRecordAudio = 1003
-    const val requestAudioSettings = 1004
-    const val requestCamera = 1005
-    const val requestLocation = 1006
+    const val requestWriteStorage = 1002
+    const val requestReadPhoneState = 1003
+    const val requestRecordAudio = 1004
+    const val requestAudioSettings = 1005
+    const val requestCamera = 1006
+    const val requestLocation = 1007
 
     val readStoragePermissions = arrayOf(
         Manifest.permission.READ_EXTERNAL_STORAGE
+    )
+    val writeStoragePermissions = arrayOf(
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
     val readPhoneStatePermissions = arrayOf(
         Manifest.permission.READ_PHONE_STATE

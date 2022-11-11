@@ -133,12 +133,12 @@ object KLog {
     }
 
     @JvmStatic
-    fun file(tag: String, targetDirectory: File, fileName: String?=null, msg: Any) {
+    fun file(tag: String, targetDirectory: File, fileName: String? = null, msg: Any) {
         printFile(tag, targetDirectory, fileName, msg)
     }
 
     @JvmStatic
-    fun debug(tag: String?=null, objects: Any= DEFAULT_MESSAGE) {
+    fun debug(tag: String? = null, objects: Any? = DEFAULT_MESSAGE) {
         printDebug(tag, objects)
     }
 
@@ -170,7 +170,7 @@ object KLog {
      * log输出
      * */
     private fun printLog(type: Int, tagStr: String?, objects: Any? = DEFAULT_MESSAGE) {
-        if (!isShowLog) {
+        if (!isShowLog || objects == null) {
             return
         }
 
@@ -191,7 +191,8 @@ object KLog {
         }
     }
 
-    private fun printDebug(tagStr: String?, objects: Any) {
+    private fun printDebug(tagStr: String?, objects: Any?) {
+        if (objects == null) return
         val contents = wrapperContent(STACK_TRACE_INDEX_5, tagStr, objects)
         val tag = contents[0]
         val msg = contents[1]

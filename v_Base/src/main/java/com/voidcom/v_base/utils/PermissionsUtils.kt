@@ -18,7 +18,8 @@ object PermissionsUtils {
 
     fun getStringFormRequestType(mContext: Context, type: Int): String {
         return when (type) {
-            AppCode.requestReadStorage -> mContext.getString(R.string.requestPermission_readStorageMessage)
+            AppCode.requestReadStorage,
+            AppCode.requestWriteStorage -> mContext.getString(R.string.requestPermission_readStorageMessage)
             AppCode.requestReadPhoneState -> mContext.getString(R.string.requestPermission_readPhoneStateMessage)
             AppCode.requestRecordAudio -> mContext.getString(R.string.requestPermission_recordAudioMessage)
             AppCode.requestAudioSettings -> mContext.getString(R.string.requestPermission_audioSettingsMessage)
@@ -31,6 +32,7 @@ object PermissionsUtils {
     fun getPermissionsFormRequestType(type: Int): Array<String> {
         return when (type) {
             AppCode.requestReadStorage -> AppCode.readStoragePermissions
+            AppCode.requestWriteStorage -> AppCode.writeStoragePermissions
             AppCode.requestReadPhoneState -> AppCode.readPhoneStatePermissions
             AppCode.requestRecordAudio -> AppCode.recordAudioPermissions
             AppCode.requestAudioSettings -> AppCode.audioSettingsPermissions

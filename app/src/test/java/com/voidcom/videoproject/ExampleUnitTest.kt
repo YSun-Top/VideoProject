@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import kotlinx.coroutines.*
 import okhttp3.Response
+import okhttp3.internal.toLongOrDefault
 import org.junit.Assert.*
 import org.junit.Test
 import java.io.IOException
@@ -23,12 +24,13 @@ class ExampleUnitTest {
 //        mHandler.removeCallbacks { runC() }
 //        mHandler.postDelayed({ runC() }, 500)
 //        Thread.sleep(1000000L)
-        val arr = intArrayOf(4, 2, 3, 0, 1)
-        sort(arr, 0, arr.size - 1)
-        //打印数组
-        arr.forEach {
-            println(it)
-        }
+//        val arr = intArrayOf(4, 2, 3, 0, 1)
+//        sort(arr, 0, arr.size - 1)
+//        //打印数组
+//        arr.forEach {
+//            println(it)
+//        }
+        println("".toFloatOrNull()?:0)
     }
     private fun guiBingPaiXu() {
     }
