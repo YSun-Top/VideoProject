@@ -14,7 +14,6 @@ class VideoFiltersViewModel : BaseViewModel() {
     override fun getModel(): VideoCropModel = filtersModel
 
     override fun onInit(context: Context) {
-        filtersModel.openSelectFileView(context)
     }
 
     override fun onInitData() {

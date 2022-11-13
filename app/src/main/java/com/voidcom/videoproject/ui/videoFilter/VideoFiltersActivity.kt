@@ -30,8 +30,8 @@ class VideoFiltersActivity : BaseActivity<ActivityVideoFiltersBinding, VideoFilt
 
     override fun onInitUI() {
         EasyPhotos.createAlbum(this, true, true, GlideEngine.newInstant)
-            .setFileProviderAuthority("com.huantansheng.easyphotos.demo.fileprovider")
-            .setCount(9)
+            .setFileProviderAuthority("com.voidcom.videoproject.fileprovider")
+            .setCount(1)
             .filter(Type.VIDEO)
             .start(SelectFileCallback())
         setFullscreen()
