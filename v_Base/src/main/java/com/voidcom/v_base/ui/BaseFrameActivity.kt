@@ -20,7 +20,6 @@ abstract class BaseFrameActivity<VB : ViewBinding, VM : BaseViewModel> : AppComp
         setContentView(mBinding.root)
         onInitUI()
         onInitListener()
-        mViewModel.setActivity(this)
         mViewModel.onInit(applicationContext)
         mViewModel.onInitData()
     }

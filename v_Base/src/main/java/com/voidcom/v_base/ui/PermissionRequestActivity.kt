@@ -23,6 +23,7 @@ class PermissionRequestActivity :
     override val mViewModel by viewModels<PermissionRequestViewModel>()
 
     override fun onInitUI() {
+        mViewModel.setActivity(this)
     }
 
     override fun onInitListener() {

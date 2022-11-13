@@ -9,8 +9,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.voidcom.v_base.BuildConfig
 import com.voidcom.v_base.R
+import com.voidcom.v_base.ui.BaseActivityViewModel
 import com.voidcom.v_base.ui.BaseModel
-import com.voidcom.v_base.ui.BaseViewModel
 import com.voidcom.v_base.ui.PermissionRequestActivity
 import com.voidcom.v_base.utils.KLog
 import com.voidcom.v_base.utils.PermissionsUtils
@@ -22,7 +22,7 @@ import com.voidcom.v_base.utils.PermissionsUtils
  * @CreateDate: 2022/11/11 12:13
  * @UpdateDate: 2022/11/11 12:13
  */
-class PermissionRequestViewModel : BaseViewModel() {
+class PermissionRequestViewModel : BaseActivityViewModel<PermissionRequestActivity>() {
     private val TAG = PermissionRequestViewModel::class.simpleName
     private lateinit var permissions: Array<String>
     private var permissionRequestCode = -1
@@ -58,33 +58,29 @@ class PermissionRequestViewModel : BaseViewModel() {
                 getActivity()?.let {activity->
                     if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permissionStr)) {
                         KLog.i(TAG, "已设置拒绝授予权限且不在显示，请前往设置手动设置权限:$permissionStr")
-                        (activity as PermissionRequestActivity).apply {
-                            createDialog(
-                                getString(R.string.requestPermissionTitle),
-                                getString(R.string.goToSetting),
-                                getString(R.string.accept)
-                            ) { _: DialogInterface?, _: Int ->
-                                PermissionsUtils.gotoPermissionSetting(
-                                    applicationContext,
-                                    BuildConfig.LIBRARY_PACKAGE_NAME
-                                )
-                            }
-                            backResult(false)
+                        activity.createDialog(
+                            activity.getString(R.string.requestPermissionTitle),
+                            activity.getString(R.string.goToSetting),
+                            activity.getString(R.string.accept)
+                        ) { _: DialogInterface?, _: Int ->
+                            PermissionsUtils.gotoPermissionSetting(
+                                activity.applicationContext,
+                                BuildConfig.LIBRARY_PACKAGE_NAME
+                            )
                         }
+                        backResult(false)
                     } else {
                         KLog.d(TAG, "没有读写或录音权限，请求权限")
-                        (activity as PermissionRequestActivity).apply {
-                            createDialog(
-                                getString(R.string.requestPermissionTitle),
-                                PermissionsUtils.getStringFormRequestType(
-                                    applicationContext,
-                                    permissionRequestCode
-                                ),
-                                getString(R.string.goToApprovePermissions)
-                            ) { _: DialogInterface?, _: Int ->
-                                activity.registerPermission?.launch(array)
+                        activity.createDialog(
+                            activity.getString(R.string.requestPermissionTitle),
+                            PermissionsUtils.getStringFormRequestType(
+                                activity.applicationContext,
+                                permissionRequestCode
+                            ),
+                            activity.getString(R.string.goToApprovePermissions)
+                        ) { _: DialogInterface?, _: Int ->
+                            activity.registerPermission?.launch(array)
 //                        ActivityCompat.requestPermissions(this, array, permissionRequestCode)
-                            }
                         }
                     }
                 }
