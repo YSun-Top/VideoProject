@@ -4,9 +4,13 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
+import com.huantansheng.easyphotos.callback.SelectCallback
+import com.huantansheng.easyphotos.models.album.entity.Photo
 import com.voidcom.v_base.ui.BaseModel
+import com.voidcom.v_base.utils.KLog
 import com.voidcom.v_base.utils.ToastUtils
 import java.io.File
+import java.util.ArrayList
 
 class VideoCropModel : BaseModel() {
     lateinit var register: ActivityResultLauncher<Intent>

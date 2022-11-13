@@ -10,11 +10,9 @@ class VideoCropViewModel : BaseViewModel() {
     override fun getModel(): VideoCropModel = m_Model
 
     override fun onInit(context: Context) {
-        getModel().openSelectFileView(context)
     }
 
     override fun onInitData() {
 
     }
-
 }

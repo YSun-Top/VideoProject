@@ -46,7 +46,8 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:$rootProject.androidx.lifecycle_livedata_ktx")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.androidx.lifecycle_viewModel_ktx")
     implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'com.github.HuanTanSheng:EasyPhotos:3.1.5'
     testImplementation("junit:junit:${rootProject.androidx.test_junit}")
     testImplementation 'org.testng:testng:6.9.6'
     androidTestImplementation("androidx.test.ext:junit:${rootProject.androidx.ext_junit}")
