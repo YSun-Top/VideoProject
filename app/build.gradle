@@ -22,6 +22,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    dexOptions {
+        preDexLibraries = true
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -40,15 +44,11 @@ android {
 dependencies {
     implementation project(":v_Base")
     implementation project(":ffmpegLib")
-    implementation("androidx.core:core-ktx:${rootProject.androidx.core_ktx}")
 
     implementation("androidx.constraintlayout:constraintlayout:$rootProject.androidx.constraintLayout")
-    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:$rootProject.androidx.lifecycle_livedata_ktx")
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.androidx.lifecycle_viewModel_ktx")
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.7.0'
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$rootProject.androidx.lifecycle_livedata_ktx")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.androidx.lifecycle_viewModel_ktx")
     implementation 'com.github.HuanTanSheng:EasyPhotos:3.1.5'
-    testImplementation("junit:junit:${rootProject.androidx.test_junit}")
     testImplementation 'org.testng:testng:6.9.6'
     androidTestImplementation("androidx.test.ext:junit:${rootProject.androidx.ext_junit}")
     androidTestImplementation("androidx.test.espresso:espresso-core:${rootProject.androidx.espresso_core}") {

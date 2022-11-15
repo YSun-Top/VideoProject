@@ -4,11 +4,12 @@ plugins {
 }
 
 android {
-    compileSdk = 33
+    val androidBuildTools: Map<*, *> = rootProject.ext["androidBuildTools"] as Map<*, *>
+    compileSdk = androidBuildTools["compileSdk"] as Int
 
     defaultConfig {
-        minSdk = 21
-        targetSdk = 33
+        minSdk = androidBuildTools["minSdk"] as Int
+        targetSdk = androidBuildTools["targetSdk"] as Int
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -33,11 +34,14 @@ android {
 }
 
 dependencies {
-
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.appcompat:appcompat:1.5.1")
-    implementation("com.google.android.material:material:1.7.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    val androidx: Map<*, *> = rootProject.ext["androidx"] as Map<*, *>
+    val googleCode: Map<*, *> = rootProject.ext["googleCode"] as Map<*, *>
+    api("androidx.core:core-ktx:${androidx["core_ktx"]}")
+    api("androidx.appcompat:appcompat:${androidx["appcompat"]}")
+    api("androidx.test:monitor:${androidx["monitor"]}")
+    api("androidx.test.ext:junit-ktx:${androidx["ext_junit_ktx"]}")
+    api("androidx.test.ext:junit:${androidx["ext_junit"]}")
+    api("androidx.test.espresso:espresso-core:${androidx["espresso_core"]}")
+    api("junit:junit:${androidx["test_junit"]}")
+    api("com.google.android.material:material:${googleCode["material"]}")
 }

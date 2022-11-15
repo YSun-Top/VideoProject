@@ -5,55 +5,48 @@ ext {
             compileSdk: 33
     ]
     androidx = [
-            gradleVersion          : "4.1.0",
-            viewBinding            : "7.3.1",
-            recyclerview           : "1.3.0-rc01",
-            appcompat              : "1.5.1",
-            constraintLayout       : "2.1.4",
-            core_ktx               : "1.9.0",
-            activity_ktx           : "1.6.1",
-            test_junit             : "4.13.2",
-            ext_junit              : "1.1.3",
-            runner                 : "1.4.0",
-            test_rules             : "1.0.2",
-            espresso_intents       : "3.0.2",
-            espresso_core          : "3.4.0",
-            lifecycle_extensions   : "2.2.0",
-            lifecycle_livedata_ktx : "2.5.1",
-            lifecycle_viewModel_ktx: "2.5.1",
+            viewBinding            : "7.3.1",       //androidx.databinding:viewbinding:
+            recyclerview           : "1.3.0-rc01",  //androidx.recyclerview:recyclerview:
+            appcompat              : "1.5.1",       //androidx.appcompat:appcompat:
+            constraintLayout       : "2.1.4",       //androidx.constraintlayout:constraintlayout:
+            core_ktx               : "1.9.0",       //androidx.core:core-ktx:
+            activity_ktx           : "1.6.1",       //androidx.activity:activity-ktx:
+            test_junit             : "4.13.2",      //junit:junit:
+            ext_junit              : "1.1.4",       //androidx.test.ext:junit:
+            espresso_core          : "3.5.0",       //androidx.test.espresso:espresso-core:
+            lifecycle_livedata_ktx : "2.5.1",       //androidx.lifecycle:lifecycle-livedata-ktx:
+            lifecycle_viewModel_ktx: "2.5.1",       //androidx.lifecycle:lifecycle-viewmodel-ktx:
+            monitor                : "1.6.0",       //androidx.test:monitor:
+            ext_junit_ktx          : "1.1.4"        //androidx.test.ext:junit-ktx:
     ]
     kotlin = [
-            kotlin_gradle_plugin    : "1.7.20",
-            kotlin_stdlib           : "1.7.20",
-            kotlin_stdlib_jdk8      : "1.7.20",
-            kotlinXCoroutinesCore   : "1.5.0",
-            kotlinXCoroutinesAndroid: "1.5.0"
+            kotlin_gradle_plugin: "1.7.20",     //org.jetbrains.kotlin:kotlin-gradle-plugin:
+            kotlin_stdlib       : "1.7.20",     //org.jetbrains.kotlin:kotlin-stdlib:
     ]
     okhttp3 = [
-            okhttp       : "5.0.0-alpha.3",
-            urlConnection: "3.11.0",
-            io           : "3.0.0"
+            okhttp       : "5.0.0-alpha.3",         //com.squareup.okhttp3:okhttp:
+            urlConnection: "3.11.0",                //com.squareup.okhttp3:okhttp-urlconnection:
     ]
     rxjava2 = [
-            rxJava2   : "2.2.8",
-            rxAndroid2: "2.1.0"
+            rxJava2   : "2.2.8",                    //
+            rxAndroid2: "2.1.0"                     //
     ]
     retrofit2 = [
-            retrofit2              : "2.4.0",
-            retrofit2AdapterRxJava2: "2.9.0",
-            retrofit2_gson         : "2.4.0"
+            retrofit2              : "2.4.0",       //
+            retrofit2AdapterRxJava2: "2.9.0",       //
+            retrofit2_gson         : "2.4.0"        //
     ]
     googleCode = [
-            google_gson: "2.8.9",
-            material   : "1.7.0",
-            exoplayer  : "2.16.1"
+            google_gson: "2.8.9",                   //com.google.code.gson:gson:
+            material   : "1.7.0",                   //com.google.android.material:material:
+            exoplayer  : "2.16.1"                   //
     ]
     dagger = [
-            dagger                : "2.35.1",
-            daggerCompiler        : "2.21",
-            daggerAndroid         : "2.35.1",
-            daggerAndroidSupport  : "2.35.1",
-            daggerAndroidProcessor: "2.35.1"
+            dagger                : "2.35.1",       //
+            daggerCompiler        : "2.21",         //
+            daggerAndroid         : "2.35.1",       //
+            daggerAndroidSupport  : "2.35.1",       //
+            daggerAndroidProcessor: "2.35.1"        //
     ]
 
     //com.github.bumptech.glide:glide:4.10.0
@@ -66,20 +59,4 @@ ext {
     photoview = "1.4"
     //cn.jzvd:jiaozivideoplayer:7.0.5
     jiaoziVideoPlayer = "7.0.5"
-
-    /**
-     * build.gradle应用插件
-     * @param project 目标模块
-     * @param isApp true：application，false：library
-     */
-    applyPlugin = { Project project, boolean isApp ->
-        if (isApp) {
-            project.plugins.apply('com.android.application')
-        } else {
-            project.plugins.apply('com.android.library')
-        }
-        project.plugins.apply('kotlin-android')
-        project.plugins.apply('kotlin-kapt')
-//        project.plugins.apply("androidx.navigation.safeargs")
-    }
 }
