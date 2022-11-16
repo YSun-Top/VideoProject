@@ -70,18 +70,18 @@ object KLog {
      * base
      * */
     @JvmStatic
-    fun v(tag: String? = null, objects: Any) {
-        printLog(V, tag, objects)
+    fun v(tag: String? = null, msg: Any) {
+        printLog(V, tag, msg)
     }
 
     @JvmStatic
-    fun d(tag: String? = null, objects: Any) {
-        printLog(D, tag, objects)
+    fun d(tag: String? = null, msg: Any) {
+        printLog(D, tag, msg)
     }
 
     @JvmStatic
-    fun i(tag: String? = null, objects: Any) {
-        printLog(I, tag, objects)
+    fun i(tag: String? = null, msg: Any) {
+        printLog(I, tag, msg)
     }
 
     @JvmStatic
@@ -90,13 +90,13 @@ object KLog {
     }
 
     @JvmStatic
-    fun e(tag: String? = null, objects: Any) {
-        printLog(E, tag, objects)
+    fun e(tag: String? = null, msg: Any) {
+        printLog(E, tag, msg)
     }
 
     @JvmStatic
-    fun a(tag: String? = null, objects: Any) {
-        printLog(A, tag, objects)
+    fun a(tag: String? = null, msg: Any) {
+        printLog(A, tag, msg)
     }
 
     @JvmStatic
@@ -116,13 +116,13 @@ object KLog {
 
     @JvmStatic
     fun map(level: Int, tag: String, map: Map<String, Any>?) {
-        if (map == null || map.isEmpty()) {
+        if (map.isNullOrEmpty()) {
             printLog(level, tag, null)
             return
         }
         val jsonObject = JSONObject()
         try {
-            for ((key, value) in map) {
+            map.forEach { (key, value) ->
                 jsonObject.put(key, value.toString())
             }
         } catch (e: JSONException) {
@@ -138,8 +138,8 @@ object KLog {
     }
 
     @JvmStatic
-    fun debug(tag: String? = null, objects: Any? = DEFAULT_MESSAGE) {
-        printDebug(tag, objects)
+    fun debug(tag: String? = null, msg: Any? = DEFAULT_MESSAGE) {
+        printDebug(tag, msg)
     }
 
     /*
@@ -148,56 +148,48 @@ object KLog {
     private fun wrapperContent(
         stackTraceIndex: Int,
         tagStr: String?,
-        objects: Any?
+        msg: Any?
     ): Array<String> {
         val targetElement = Thread.currentThread().stackTrace[stackTraceIndex]
         val className = targetElement.fileName
         val methodName = targetElement.methodName
         var lineNumber = targetElement.lineNumber
 
-        if (lineNumber < 0) {
-            lineNumber = 0
-        }
+        if (lineNumber < 0) lineNumber = 0
 
-        val tag = if (TextUtils.isEmpty(tagStr)) globalTag else tagStr!!
-        val msg = objects?.toString() ?: NULL_TIPS
-        val headString = "[($className:$lineNumber)#$methodName] "
-
-        return arrayOf(tag, msg, headString)
+        return arrayOf(
+            if (TextUtils.isEmpty(tagStr)) globalTag else tagStr ?: "",
+            msg?.toString() ?: NULL_TIPS,
+            "[($className:$lineNumber)#$methodName] "
+        )
     }
 
     /*
      * log输出
      * */
-    private fun printLog(type: Int, tagStr: String?, objects: Any? = DEFAULT_MESSAGE) {
-        if (!isShowLog || objects == null) {
-            return
-        }
+    private fun printLog(type: Int, tagStr: String?, msg: Any? = DEFAULT_MESSAGE) {
+        if (!isShowLog || msg == null) return
 
-        val contents = wrapperContent(STACK_TRACE_INDEX_5, tagStr, objects)
+        val contents = wrapperContent(STACK_TRACE_INDEX_5, tagStr, msg)
         val tag = contents[0]
-        val msg = contents[1]
+        val message = contents[1]
         val headString = contents[2]
-
         when (type) {
-            V, D, I, W, E, A -> checkLenPrint(type, tag, headString + msg)
+            V, D, I, W, E, A -> checkLenPrint(type, tag, headString + message)
             JSON + V, JSON + D, JSON + I, JSON + W, JSON + E -> printJson(
                 type,
                 tag,
-                msg,
+                message,
                 headString
             )
-            XML + V, XML + D, XML + I, XML + W, XML + E -> printXml(type, tag, msg, headString)
+            XML + V, XML + D, XML + I, XML + W, XML + E -> printXml(type, tag, message, headString)
         }
     }
 
-    private fun printDebug(tagStr: String?, objects: Any?) {
-        if (objects == null) return
-        val contents = wrapperContent(STACK_TRACE_INDEX_5, tagStr, objects)
-        val tag = contents[0]
-        val msg = contents[1]
-        val headString = contents[2]
-        checkLenPrint(D, tag, headString + msg)
+    private fun printDebug(tagStr: String?, msg: Any?) {
+        if (msg == null) return
+        val contents = wrapperContent(STACK_TRACE_INDEX_5, tagStr, msg)
+        checkLenPrint(D, contents[0], contents[2] + contents[1])
     }
 
     /**
@@ -210,16 +202,16 @@ object KLog {
     private fun checkLenPrint(type: Int, tag: String, msg: String) {
         val length = msg.length
         val countOfSub = length / MAX_LENGTH
-
         if (countOfSub == 0) {
             //length<MAX_LENGTH
             print(type, tag, msg)
             return
         }
         //length>MAX_LENGTH
+        var sub: String
         var index = 0
         for (i in 0 until countOfSub) {
-            val sub = msg.substring(index, index + MAX_LENGTH)
+            sub = msg.substring(index, index + MAX_LENGTH)
             print(type, tag, sub)
             index += MAX_LENGTH
         }
@@ -245,7 +237,6 @@ object KLog {
         )
 
         val message = headString + LINE_SEPARATOR + msg
-
         if (message.length > MAX_LENGTH) {
             checkLenPrint(level, tag, message)
         } else {
@@ -279,15 +270,9 @@ object KLog {
         fileName: String?,
         objectMsg: Any
     ) {
-        if (!isShowLog) {
-            return
-        }
+        if (!isShowLog) return
         val contents = wrapperContent(STACK_TRACE_INDEX_5, tagStr, objectMsg)
-        val tag = contents[0]
-        val msg = contents[1]
-        val headString = contents[2]
-
-        printFile(tag, targetDirectory, fileName, headString, msg)
+        printFile(contents[0], targetDirectory, fileName, contents[2], contents[1])
     }
 
     /**
@@ -305,17 +290,19 @@ object KLog {
         msg: String
     ) {
         val formatter = SimpleDateFormat("yyyy-MM-dd_HH:mm:ss", Locale.CHINA)
-        val nFileName =
-            if (TextUtils.isEmpty(fileName)) FILE_PREFIX + formatter.format(System.currentTimeMillis()) + FILE_FORMAT
-            else fileName!!
-
-        if (save(targetDirectory, nFileName, msg)) {
-            Log.d(
-                tag,
-                headString + " save log success ! location is >>>" + targetDirectory.absolutePath + "/" + nFileName
-            )
-        } else {
-            Log.e(tag, headString + "save log fails !")
+        val nFileName = if (TextUtils.isEmpty(fileName))
+            FILE_PREFIX + formatter.format(System.currentTimeMillis()) + FILE_FORMAT
+        else
+            fileName
+        nFileName?.let {
+            if (save(targetDirectory, nFileName, msg)) {
+                Log.d(
+                    tag,
+                    headString + " save log success ! location is >>>" + targetDirectory.absolutePath + "/" + nFileName
+                )
+            } else {
+                Log.e(tag, headString + "save log fails !")
+            }
         }
     }
 
@@ -326,10 +313,8 @@ object KLog {
      * @return
      */
     private fun save(dic: File, fileName: String, msg: String): Boolean {
-        val file = File(dic, fileName)
-
         return try {
-            val outputStream = FileOutputStream(file)
+            val outputStream = FileOutputStream(File(dic, fileName))
             val outputStreamWriter = OutputStreamWriter(outputStream, "UTF-8")
             outputStreamWriter.write(msg)
             outputStreamWriter.flush()
@@ -349,7 +334,7 @@ object KLog {
      * @param headString String
      */
     private fun printJson(type: Int, tag: String, msg: String, headString: String) {
-        val message: String = try {
+        val message = try {
             when {
                 msg.startsWith("{") -> JSONObject(msg).toString(JSON_INDENT)
                 msg.startsWith("[") -> JSONArray(msg).toString(JSON_INDENT)
@@ -358,7 +343,6 @@ object KLog {
         } catch (e: JSONException) {
             msg
         }
-
         printJsonXml(type - JSON, tag, message, headString)
     }
 
@@ -366,8 +350,7 @@ object KLog {
      * xml
      * */
     private fun printXml(type: Int, tag: String, xml: String, headString: String) {
-        var nXml = xml
-        nXml = if (TextUtils.isEmpty(nXml)) NULL_TIPS else formatXML(nXml)
+        val nXml = if (TextUtils.isEmpty(xml)) NULL_TIPS else formatXML(xml)
         printJsonXml(type - XML, tag, nXml, headString)
     }
 

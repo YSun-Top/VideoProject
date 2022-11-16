@@ -6,9 +6,7 @@ import android.text.TextUtils
 import android.view.SurfaceHolder
 import com.voidcom.ffmpeglib.FFmpegDecoderJni
 import com.voidcom.libsdkbase.JniCallback
-import com.voidcom.v_base.utils.ToastUtils
 import com.voidcom.v_base.utils.KLog
-import com.voidcom.videoproject.VideoApplication
 import com.voidcom.videoproject.model.videoFilter.PlayStateCallback
 import com.voidcom.videoproject.utils.FileAttributes
 
@@ -80,7 +78,7 @@ class FFmpegDecoder(val callback: PlayStateCallback) : VideoDecoder(), JniCallba
                 4 -> callback.onPlayCancel()
                 7 -> {
                     isFilterFinishChange = true
-                    ToastUtils.showShort(VideoApplication.context, "滤镜切换成功")
+                    KLog.d(msg = "滤镜切换成功")
                 }
             }
         }
