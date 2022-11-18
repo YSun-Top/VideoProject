@@ -1,13 +1,16 @@
-package com.voidcom.videoproject
+package com.voidcom.v_base
 
+import android.app.Application
 import android.util.DisplayMetrics
-import com.voidcom.v_base.BaseApplication
 
 /**
- * Created by voidcom on 2022/4/17 16:00
- * Description:
+ *
+ * @Description: java类作用描述
+ * @Author: Void
+ * @CreateDate: 2022/11/17 14:45
+ * @UpdateDate: 2022/11/17 14:45
  */
-class VideoApplication : BaseApplication() {
+open class BaseApplication: Application() {
     companion object {
         lateinit var displayMetrics: DisplayMetrics
     }

@@ -44,14 +44,13 @@ android {
 dependencies {
     implementation project(":v_Base")
     implementation project(":ffmpegLib")
-
-    implementation("androidx.constraintlayout:constraintlayout:$rootProject.androidx.constraintLayout")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$rootProject.androidx.lifecycle_livedata_ktx")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.androidx.lifecycle_viewModel_ktx")
-    implementation 'com.github.HuanTanSheng:EasyPhotos:3.1.5'
     testImplementation 'org.testng:testng:6.9.6'
     androidTestImplementation("androidx.test.ext:junit:${rootProject.androidx.ext_junit}")
     androidTestImplementation("androidx.test.espresso:espresso-core:${rootProject.androidx.espresso_core}") {
         exclude group: "javax.inject"
     }
+    implementation("androidx.constraintlayout:constraintlayout:$rootProject.androidx.constraintLayout")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$rootProject.androidx.lifecycle_livedata_ktx")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.androidx.lifecycle_viewModel_ktx")
+    implementation 'com.github.HuanTanSheng:EasyPhotos:3.1.5'
 }

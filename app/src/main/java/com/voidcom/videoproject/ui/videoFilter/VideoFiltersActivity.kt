@@ -51,7 +51,7 @@ class VideoFiltersActivity : BaseActivity<ActivityVideoFiltersBinding, VideoFilt
 
     override fun onStop() {
         super.onStop()
-        if (mViewModel.getModel().pathStr.isEmpty()) return
+        if (mViewModel.getModel().filePathStr.isEmpty()) return
         playHandler.stopTimeUpdateThread()
         playHandler.plPause()
         playHandler.release()
@@ -69,7 +69,7 @@ class VideoFiltersActivity : BaseActivity<ActivityVideoFiltersBinding, VideoFilt
                 ToastUtils.showShort(applicationContext, "文件获取失败")
                 return
             }
-            mViewModel.getModel().pathStr = photos[0].path
+            mViewModel.getModel().filePathStr = photos[0].path
             mHandle.postDelayed(onPlayRunnable, 1500)
         }
 
@@ -79,7 +79,7 @@ class VideoFiltersActivity : BaseActivity<ActivityVideoFiltersBinding, VideoFilt
     }
 
     private val onPlayRunnable = Runnable {
-        if (TextUtils.isEmpty(mViewModel.getModel().pathStr)) return@Runnable
-        playHandler.setDataPath(mViewModel.getModel().pathStr)
+        if (TextUtils.isEmpty(mViewModel.getModel().filePathStr)) return@Runnable
+        playHandler.setDataPath(mViewModel.getModel().filePathStr)
     }
 }

@@ -7,10 +7,10 @@
             android:name=".ui.PermissionRequestActivity"
             android:configChanges="keyboardHidden|screenSize"
             android:excludeFromRecents="true"
-            android:launchMode="singleInstance"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleInstance">
             <intent-filter>
-                <action android:name="com.voidcom.v_base.requestPermission"/>
+                <action android:name="com.voidcom.v_base.requestPermission" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

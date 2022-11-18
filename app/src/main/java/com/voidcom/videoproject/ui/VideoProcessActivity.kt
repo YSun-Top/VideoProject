@@ -52,7 +52,7 @@ class VideoProcessActivity : BaseActivity<ActivityVideoProcessBinding, EmptyView
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btn_video_filter -> startActivity(Intent(this, VideoFiltersActivity::class.java))
-            R.id.btn_video_crop -> startActivity(Intent(this, VideoCropActivity::class.java))
+            R.id.btn_video_crop -> startActivity(Intent(this, VideoCutActivity::class.java))
         }
     }
 

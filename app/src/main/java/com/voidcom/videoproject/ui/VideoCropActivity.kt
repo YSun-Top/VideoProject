@@ -15,14 +15,14 @@ import com.voidcom.v_base.utils.KLog
 import com.voidcom.v_base.utils.ToastUtils
 import com.voidcom.videoproject.GlideEngine
 import com.voidcom.videoproject.databinding.ActivityVideoCropBinding
-import com.voidcom.videoproject.viewModel.videoCrop.VideoCropViewModel
+import com.voidcom.videoproject.viewModel.videoCut.VideoCutViewModel
 import kotlin.concurrent.thread
 
-class VideoCropActivity : BaseActivity<ActivityVideoCropBinding, VideoCropViewModel>() {
+class VideoCropActivity : BaseActivity<ActivityVideoCropBinding, VideoCutViewModel>() {
     private val TAG = VideoCropActivity::class.simpleName
     private var timeDuration = 0f   //视频时长，单位s
 
-    override val mViewModel by viewModels<VideoCropViewModel>()
+    override val mViewModel by viewModels<VideoCutViewModel>()
 
     override fun onInitUI() {
         EasyPhotos.createAlbum(this, true, true, GlideEngine.newInstant)
@@ -46,7 +46,7 @@ class VideoCropActivity : BaseActivity<ActivityVideoCropBinding, VideoCropViewMo
     }
 
     private fun searchVideoDuration() {
-        val json = FFprobeCmd.getInstance.executeFFprobe(mViewModel.getModel().getVideoDuration())
+        val json = FFprobeCmd.getInstance.executeFFprobe(mViewModel.getModel().getVideoDurationCommand())
         if (json == null) {
             KLog.w(TAG, "获取视频时长失败，返回数据为空")
             return
@@ -63,10 +63,9 @@ class VideoCropActivity : BaseActivity<ActivityVideoCropBinding, VideoCropViewMo
         if (mViewModel.getModel().checkOutputFile(applicationContext)) {
             KLog.w(TAG, "删除旧视频预览图片文件")
         }
-        val result = FFmpegCmd.getInstance.executeFFmpeg(
-            mViewModel.getModel().getVideoFrameImage(10, applicationContext)
+        FFmpegCmd.getInstance.executeFFmpeg(
+            mViewModel.getModel().getVideoFrameImageCommand(10, applicationContext)
         )
-        if (result != 0) return
         mHandle.post {
             val uri =
                 Uri.parse(mViewModel.getModel().getVideoFrameOutputPath(applicationContext))
@@ -85,10 +84,10 @@ class VideoCropActivity : BaseActivity<ActivityVideoCropBinding, VideoCropViewMo
                 return
             }
             photos[0].run {
-                KLog.d(objects = "fileName:${name}; path:${path}")
+                KLog.d(msg = "fileName:${name}; path:${path}")
                 mBinding.tvFileName.text =
                     path.substring(path.indexOfLast { it == '/' } + 1, path.length)
-                mViewModel.getModel().pathStr = path
+                mViewModel.getModel().filePathStr = path
             }
             thread {
                 searchVideoDuration()

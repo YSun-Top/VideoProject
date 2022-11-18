@@ -25,7 +25,7 @@ object TimeUtils {
         return sb.toString()
     }
 
-    fun formatSeconds(seconds: Long, temp: Long, sb: StringBuffer) {
+    private fun formatSeconds(seconds: Long, temp: Long, sb: StringBuffer) {
         sb.append(if (temp < 10) "0$temp:" else "$temp:")
         val tmp: Int = (seconds % 3600 % 60).toInt()
         sb.append(if (tmp < 10) "0$tmp" else "" + tmp)

@@ -1,6 +1,7 @@
 package com.voidcom.ffmpeglib
 
 import android.util.Log
+import com.voidcom.ffmpeglib.callback.CommandModeCallback
 
 class FFmpegCmd private constructor() {
     private var callback: CommandModeCallback? = null
@@ -13,7 +14,7 @@ class FFmpegCmd private constructor() {
 
     fun executeFFmpeg(cmdStr: String, callback: CommandModeCallback? = null) {
         this.callback = callback
-        Log.d("-------", cmdStr)
+        Log.d("-FFmpegCmd-", cmdStr)
         executeFFCallback(cmdStr.split(" ").toTypedArray())
     }
 

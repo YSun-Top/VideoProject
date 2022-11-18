@@ -1,4 +1,4 @@
-package com.voidcom.ffmpeglib
+package com.voidcom.ffmpeglib.callback
 
 /**
  *

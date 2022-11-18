@@ -11,12 +11,12 @@ import java.lang.ref.WeakReference
  * @UpdateDate: 2022/11/13 17:40
  */
 abstract class BaseActivityViewModel<A : AppCompatActivity> : BaseViewModel() {
-    private lateinit var mActivity: WeakReference<A>
+    private var mActivity: WeakReference<A>?=null
     override fun getModel(): BaseModel? = null
 
     fun setActivity(activity: A) {
         mActivity = WeakReference(activity)
     }
 
-    fun getActivity(): A? = mActivity.get()
+    fun getActivity(): A? = mActivity?.get()
 }
