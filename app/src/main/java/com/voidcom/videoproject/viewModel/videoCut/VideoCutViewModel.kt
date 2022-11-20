@@ -7,9 +7,9 @@ import com.huantansheng.easyphotos.callback.SelectCallback
 import com.huantansheng.easyphotos.constant.Type
 import com.huantansheng.easyphotos.models.album.entity.Photo
 import com.voidcom.v_base.ui.BaseActivityViewModel
-import com.voidcom.videoproject.GlideEngine
+import com.voidcom.videoproject.utils.GlideEngine
 import com.voidcom.videoproject.model.videoCut.VideoCutModel
-import com.voidcom.videoproject.ui.VideoCutActivity
+import com.voidcom.videoproject.ui.videoCut.VideoCutActivity
 
 class VideoCutViewModel : BaseActivityViewModel<VideoCutActivity>() {
     private val m_Model: VideoCutModel by lazy { VideoCutModel() }

@@ -6,15 +6,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import android.text.TextUtils
 import android.util.ArrayMap
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.voidcom.v_base.R
 
 object PermissionsUtils {
     private val TAG = PermissionsUtils::class.java.simpleName
-    private var permissionDialog: AlertDialog? = null
 
     fun getStringFormRequestType(mContext: Context, type: Int): String {
         return when (type) {

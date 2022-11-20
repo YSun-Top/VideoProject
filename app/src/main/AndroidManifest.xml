@@ -38,10 +38,10 @@
             android:launchMode="singleInstance"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".ui.VideoCropActivity"
+            android:name=".ui.videoCut.VideoCropActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.VideoCutActivity"
+            android:name=".ui.videoCut.VideoCutActivity"
             android:exported="false"
             android:screenOrientation="landscape" />
 

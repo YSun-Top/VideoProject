@@ -1,4 +1,4 @@
-package com.voidcom.videoproject
+package com.voidcom.videoproject.utils
 
 import android.content.Context
 import android.graphics.Bitmap

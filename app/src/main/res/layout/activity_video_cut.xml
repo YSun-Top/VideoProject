@@ -1,0 +1,43 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:orientation="vertical"
+    android:weightSum="10"
+    tools:context=".ui.videoCut.VideoCutActivity">
+
+    <android.widget.VideoView
+        android:id="@+id/mVideoView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/y150" />
+
+    <!--为两端的空间增加蒙层start-->
+    <View
+        android:layout_width="20dp"
+        android:layout_height="@dimen/y150"
+        android:layout_gravity="start|bottom"
+        android:background="@color/shadow_color" />
+
+    <com.voidcom.videoproject.view.PreviewSeekbar
+        android:id="@+id/mPreviewSeekBarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/y50"
+        android:visibility="gone" />
+
+    <!--为两端的空间增加蒙层end-->
+    <View
+        android:layout_width="20dp"
+        android:layout_height="@dimen/y150"
+        android:layout_gravity="end|bottom"
+        android:background="@color/shadow_color" />
+
+    <ProgressBar
+        android:id="@+id/mProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+</FrameLayout>

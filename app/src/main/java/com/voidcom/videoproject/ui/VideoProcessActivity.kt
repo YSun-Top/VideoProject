@@ -15,6 +15,7 @@ import com.voidcom.v_base.utils.visible
 import com.voidcom.v_base.viewModel.PermissionRequestViewModel
 import com.voidcom.videoproject.R
 import com.voidcom.videoproject.databinding.ActivityVideoProcessBinding
+import com.voidcom.videoproject.ui.videoCut.VideoCutActivity
 import com.voidcom.videoproject.ui.videoFilter.VideoFiltersActivity
 
 /**

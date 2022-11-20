@@ -14,7 +14,6 @@ import com.voidcom.v_base.utils.dp2px
 import com.voidcom.v_base.utils.getColorValue
 import com.voidcom.v_base.utils.parcelable
 import com.voidcom.videoproject.R
-import com.voidcom.videoproject.ui.VideoCutActivity
 import java.text.DecimalFormat
 import kotlin.math.abs
 import kotlin.math.max
@@ -33,7 +32,7 @@ class RangeSeekBarView : View {
     private var mActivePointerId: Int = INVALID_POINTER_ID
     private var mMinShootTime = 3L * 1000//最小剪辑3s，默认
     private val absoluteMinValuePrim: Double = 0.0
-    private val absoluteMaxValuePrim: Double = VideoCutActivity.MAX_TIME * 1000.0
+    private val absoluteMaxValuePrim: Double = 10 * 1000.0
     private var normalizedMinValue = 0.0 //点坐标占总长度的比例值，范围从0-1
     private var normalizedMaxValue = 1.0 //点坐标占总长度的比例值，范围从0-1
     private var normalizedMinValueTime = 0.0

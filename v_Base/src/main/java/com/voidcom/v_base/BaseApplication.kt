@@ -12,7 +12,7 @@ import android.util.DisplayMetrics
  */
 open class BaseApplication: Application() {
     companion object {
-        lateinit var displayMetrics: DisplayMetrics
+        var displayMetrics: DisplayMetrics?=null
     }
 
     override fun onCreate() {

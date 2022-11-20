@@ -1,4 +1,4 @@
-package com.voidcom.videoproject.ui
+package com.voidcom.videoproject.ui.videoCut
 
 import android.net.Uri
 import android.view.View
@@ -7,13 +7,12 @@ import com.huantansheng.easyphotos.EasyPhotos
 import com.huantansheng.easyphotos.callback.SelectCallback
 import com.huantansheng.easyphotos.constant.Type
 import com.huantansheng.easyphotos.models.album.entity.Photo
-import com.voidcom.ffmpeglib.FFmpegCmd
 import com.voidcom.ffmpeglib.FFprobeCmd
 import com.voidcom.v_base.ui.BaseActivity
 import com.voidcom.v_base.utils.GsonUtils
 import com.voidcom.v_base.utils.KLog
 import com.voidcom.v_base.utils.ToastUtils
-import com.voidcom.videoproject.GlideEngine
+import com.voidcom.videoproject.utils.GlideEngine
 import com.voidcom.videoproject.databinding.ActivityVideoCropBinding
 import com.voidcom.videoproject.viewModel.videoCut.VideoCutViewModel
 import kotlin.concurrent.thread
@@ -63,9 +62,9 @@ class VideoCropActivity : BaseActivity<ActivityVideoCropBinding, VideoCutViewMod
         if (mViewModel.getModel().checkOutputFile(applicationContext)) {
             KLog.w(TAG, "删除旧视频预览图片文件")
         }
-        FFmpegCmd.getInstance.executeFFmpeg(
-            mViewModel.getModel().getVideoFrameImageCommand(10, applicationContext)
-        )
+//        FFmpegCmd.getInstance.executeFFmpeg(
+//            mViewModel.getModel().getVideoFrameImageCommand(10, applicationContext)
+//        )
         mHandle.post {
             val uri =
                 Uri.parse(mViewModel.getModel().getVideoFrameOutputPath(applicationContext))

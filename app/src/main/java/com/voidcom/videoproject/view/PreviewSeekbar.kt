@@ -6,12 +6,11 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.graphics.drawable.toBitmap
+import com.voidcom.v_base.utils.KLog
 import com.voidcom.v_base.utils.dp2px
 import com.voidcom.v_base.utils.getColorValue
 import com.voidcom.v_base.utils.getDrawableObj
 import com.voidcom.videoproject.R
-import kotlin.math.roundToInt
-
 
 /**
  *
@@ -30,15 +29,15 @@ class PreviewSeekbar : View {
     private var rightImg: Bitmap? = null
     private var maxValue: Int = 100
     private var minValue: Int = 0
-    private val bgHeight: Float = dp2px(2f) //设置背景下线条的高度
+    private var bgHeight: Float = 0f  //设置背景下线条的高度
+    private var defaultWidth: Float = 0f    //整个view的宽度
+    private var defaultHeight: Float = 0f   //整个view的高度
+    private var paddingLeft: Float = 0f
+    private var paddingRight: Float = 0f
+    private var defaultImgWidth: Float = 0f
+    private var defaultImgHeight: Float = 0f
     private var leftValue: Float = minValue.toFloat()
     private var rightValue: Float = maxValue.toFloat()
-    private var defaultWidth: Float = dp2px(100f)
-    private var defaultHeight: Float = dp2px(100f)
-    private val paddingLeft: Float = dp2px(16f)
-    private val paddingRight: Float = dp2px(16f)
-    private var defaultImgWidth = dp2px(50f)
-    private var defaultImgHeight = dp2px(50f)
     private var viewWidth = 0
     private var viewHeight = 0
     private var clickedType: ClickIconType = ClickIconType.UNKNOWN
@@ -59,24 +58,21 @@ class PreviewSeekbar : View {
 
     //左右按钮的开始x轴坐标值
     private var startLeftX = 0f
+    private var startY = 0f
     private var startRightX = 0f
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, def: Int) : super(context, attrs, def) {
         paintBg.color = resources.getColorValue(R.color.red)
-        paintBg2.color = resources.getColorValue(R.color.black)
-//        leftImg = AppCompatImageView(context)
-//        rightImg = AppCompatImageView(context)
-//        leftImg.setBackgroundColor(Color.YELLOW)
-//        rightImg.setBackgroundColor(Color.YELLOW)
-//        val layoutParams = FrameLayout.LayoutParams(context, attrs).apply {
-//            width = defaultImgWidth.toInt()
-//            height = defaultImgHeight.toInt()
-//            gravity = Gravity.CENTER
-//        }
-//        leftImg.layoutParams = layoutParams
-//        rightImg.layoutParams = layoutParams
+        paintBg2.color = resources.getColorValue(R.color.yellow)
+        bgHeight = dp2px(2f) //设置背景下线条的高度
+        defaultWidth = dp2px(100f)
+        defaultHeight = dp2px(100f)
+        paddingLeft = dp2px(16f)
+        paddingRight = dp2px(16f)
+        defaultImgWidth = dp2px(50f)
+        defaultImgHeight = dp2px(50f)
         setLayerType(LAYER_TYPE_HARDWARE, null)
     }
 
@@ -118,15 +114,17 @@ class PreviewSeekbar : View {
         //左右按钮的初始值位置计算
         startLeftX = 0 + paddingLeft - leftIcon.width / 2
         startRightX = viewWidth - paddingRight - rightIcon.width / 2
+        startY = viewHeight - bgHeight - paddingLeft
         indexLeft[0] = startLeftX
-        indexLeft[1] = viewHeight / 2 - bgHeight / 2 - leftIcon.height / 2
+        indexLeft[1] = startY - leftIcon.height / 2
         indexRight[0] = startRightX
-        indexRight[1] = viewHeight / 2 - bgHeight / 2 - rightIcon.height / 2
+        indexRight[1] = startY - rightIcon.height / 2
         leftValue = (maxValue - minValue) * (indexLeft[0] - startLeftX) / (startRightX - startLeftX)
         rightValue =
             (maxValue - minValue) * (indexRight[0] - startLeftX) / (startRightX - startLeftX)
         indexImage[0] = indexLeft[0] - defaultImgWidth / 2
         indexImage[1] = indexLeft[1] - defaultImgHeight
+        indexImage[1] = indexLeft[1]
         indexImage[2] = indexRight[0] - defaultImgWidth / 2
         indexImage[3] = indexRight[1] - defaultImgHeight
     }
@@ -134,7 +132,6 @@ class PreviewSeekbar : View {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         drawBg(canvas)
-        drawClickIcon(canvas)
         drawClickIcon(canvas)
     }
 
@@ -146,6 +143,7 @@ class PreviewSeekbar : View {
             }
             MotionEvent.ACTION_UP -> {
                 clickedType = ClickIconType.UNKNOWN
+                listener?.onChangeComplete(leftValue, rightValue)
                 postInvalidate()
             }
             MotionEvent.ACTION_MOVE -> if (handleMoveEvent(event)) {
@@ -206,16 +204,11 @@ class PreviewSeekbar : View {
             if (x > indexLeft[0] + rightIcon.width && x < startRightX) { //右按钮的范围大于左按钮的位置，小于初始值位置
                 indexRight[0] = x
                 (indexRight[0] - defaultImgWidth / 2).let { v1 ->
-                    (startRightX - defaultImgWidth / 2).let { v2 ->
+                    (startRightX - defaultImgWidth).let { v2 ->
                         if (x > v2)
                             indexImage[2] = v2
                         else
                             indexImage[2] = v1
-                    }
-                }
-                (startRightX - defaultImgWidth).let {
-                    if (indexImage[2] > it) {
-                        indexImage[2] = it
                     }
                 }
             }
@@ -238,14 +231,14 @@ class PreviewSeekbar : View {
         //画两端的半圆
         val circleLeftCenterX = 0 + paddingLeft
         val circleRightCenterX = viewWidth - paddingRight
-        canvas.drawCircle(circleLeftCenterX, viewHeight / 2f, bgHeight / 2, paintBg)
-        canvas.drawCircle(circleRightCenterX, viewHeight / 2f, bgHeight / 2, paintBg)
+        canvas.drawCircle(circleLeftCenterX, viewHeight.toFloat(), bgHeight / 2, paintBg)
+        canvas.drawCircle(circleRightCenterX, viewHeight.toFloat(), bgHeight / 2, paintBg)
         canvas.drawRect(
             RectF(
                 circleLeftCenterX,
-                viewHeight / 2 - bgHeight / 2,
+                startY,
                 circleRightCenterX,
-                viewHeight / 2 + bgHeight / 2
+                viewHeight - paddingLeft
             ), paintBg
         )
 
@@ -253,29 +246,29 @@ class PreviewSeekbar : View {
         val centerLeftIconX = indexLeft[0] + leftIcon.width / 2 //左按钮图标的中心点
         val centerRightIconX = indexRight[0] + rightIcon.width / 2 //右按钮图标的中心点
         if (centerLeftIconX > circleLeftCenterX) {
-            canvas.drawCircle(circleLeftCenterX, viewHeight / 2f, bgHeight / 2, paintBg2)
+            canvas.drawCircle(circleLeftCenterX, viewHeight.toFloat(), bgHeight / 2, paintBg2)
             canvas.drawRect(
                 RectF(
                     circleLeftCenterX,
-                    viewHeight / 2 - bgHeight / 2,
+                    startY,
                     centerLeftIconX,
-                    viewHeight / 2 + bgHeight / 2
+                    viewHeight - paddingLeft
                 ), paintBg2
             )
         }
         if (centerRightIconX < circleRightCenterX) {
             canvas.drawCircle(
                 circleRightCenterX,
-                viewHeight / 2f,
+                viewHeight.toFloat(),
                 bgHeight / 2,
                 paintBg2
             )
             canvas.drawRect(
                 RectF(
                     centerRightIconX,
-                    viewHeight / 2 - bgHeight / 2,
+                    startY,
                     circleRightCenterX,
-                    viewHeight / 2 + bgHeight / 2
+                    viewHeight - paddingLeft
                 ), paintBg2
             )
         }
@@ -319,45 +312,26 @@ class PreviewSeekbar : View {
 
     }
 
+    /**
+     * 通过filePath获取预览图bitmap
+     * 注：因为预览图每一秒都是不一样的，所以需要实时获取
+     */
     private fun getImgBitmap(index: Int): Bitmap? {
-        if (filePathArrays.isEmpty()) return null
-        if (index < 0 || index >= filePathArrays.size) return null
-        val option = BitmapFactory.Options()
-        option.inJustDecodeBounds = true
-        BitmapFactory.decodeFile(filePathArrays[index], option)
-        option.inSampleSize = computeScale(option, defaultImgWidth, defaultImgHeight)
-        option.inJustDecodeBounds = false
-        return BitmapFactory.decodeFile(filePathArrays[index], option)
-    }
-
-    private fun computeScale(
-        options: BitmapFactory.Options,
-        viewWidth: Float,
-        viewHeight: Float
-    ): Int {
-        var inSampleSize = 1
-        if (viewWidth == 0f || viewHeight == 0f) return inSampleSize
-        val bitmapWidth = options.outWidth
-        val bitmapHeight = options.outHeight
-
-        //假如Bitmap的宽度或高度大于我们设定图片的View的宽高，则计算缩放比例
-        if (bitmapWidth > viewWidth || bitmapHeight > viewWidth) {
-            val widthScale = (bitmapWidth.toFloat() / viewWidth).roundToInt()
-            val heightScale = (bitmapHeight.toFloat() / viewWidth).roundToInt()
-
-            //为了保证图片不缩放变形，我们取宽高比例最小的那个
-            inSampleSize = if (widthScale < heightScale) widthScale else heightScale
+        if (filePathArrays.isEmpty() || index < 0 || index >= filePathArrays.size || filePathArrays[index].isEmpty()) return null
+        val name = filePathArrays[index]
+        KLog.d(TAG, "getImgBitmap-fileName:$name")
+        BitmapFactory.decodeFile(name).let { oldBitmap ->
+            val mWidth = oldBitmap.width
+            val mHeight = oldBitmap.height
+            val scaleWidth = defaultImgWidth / mWidth
+            val scaleHeight = defaultImgHeight / mHeight
+            val matrix = Matrix()
+            matrix.postScale(scaleWidth, scaleHeight)
+            return Bitmap.createBitmap(oldBitmap, 0, 0, mWidth, mHeight, matrix, false).apply {
+                indexImage[1] = indexLeft[1] - this.height
+                indexImage[2] = indexRight[1] - this.height
+            }
         }
-        return inSampleSize
-    }
-
-    fun setMaxValue(value: Int) {
-        this.maxValue = if (value < 0)
-            0
-        else if (value < minValue)
-            minValue
-        else
-            value
     }
 
     fun setMinValue(value: Int) {
@@ -367,6 +341,17 @@ class PreviewSeekbar : View {
             maxValue
         else
             value
+        leftValue = maxValue.toFloat()
+    }
+
+    fun setMaxValue(value: Int) {
+        this.maxValue = if (value < 0)
+            0
+        else if (value < minValue)
+            minValue
+        else
+            value
+        rightValue = maxValue.toFloat()
     }
 
     fun setLeftIconValue(value: Float) {
@@ -383,22 +368,16 @@ class PreviewSeekbar : View {
         this.listener = callback
     }
 
+    @Synchronized
     fun setFilePathArray(list: List<String>) {
         filePathArrays.clear()
         filePathArrays.addAll(list)
-        getImgBitmap(0)
-        getImgBitmap(filePathArrays.size - 1)
     }
 
-    fun setPreviewImgWidth(width: Float) {
+    fun setPreviewImgWidth(width: Float = 50f, height: Float = 50f) {
         defaultImgWidth = dp2px(width)
-        defaultWidth = dp2px(100f + width)
-        postInvalidate()
-    }
-
-    fun setPreviewImgHeight(height: Float) {
         defaultImgHeight = dp2px(height)
-        defaultHeight = dp2px(30f + height)
+        defaultHeight = dp2px(100f + height)
         postInvalidate()
     }
 
@@ -407,7 +386,7 @@ class PreviewSeekbar : View {
      */
     interface SeekbarChangeListener {
         fun onChange(type: ClickIconType, leftValue: Float, rightValue: Float)
-        fun onChangeComplete(leftValue: Int, rightValue: Int)
+        fun onChangeComplete(leftValue: Float, rightValue: Float)
     }
 
     enum class ClickIconType {

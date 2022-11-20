@@ -8,7 +8,7 @@ import com.huantansheng.easyphotos.constant.Type
 import com.huantansheng.easyphotos.models.album.entity.Photo
 import com.voidcom.v_base.ui.BaseActivity
 import com.voidcom.v_base.utils.ToastUtils
-import com.voidcom.videoproject.GlideEngine
+import com.voidcom.videoproject.utils.GlideEngine
 import com.voidcom.videoproject.R
 import com.voidcom.videoproject.databinding.ActivityVideoFiltersBinding
 import com.voidcom.videoproject.model.videoFilter.PlayVideoHandler

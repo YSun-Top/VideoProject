@@ -10,9 +10,14 @@ object FFmpegCommand {
      * 将视频指定时间的图像转为图片
      * 注意：指定的时间不能大于视频时长
      */
-    fun getVideoFrameImageCommand(pathStr: String, time: Int, outputPath: String): String {
+    fun getVideoFrameImageCommand(
+        pathStr: String,
+        time: Int,
+        frameSize: String,
+        outputPath: String
+    ): String {
         if (imageFormatCheck(outputPath)) {
-            return "ffmpeg -i $pathStr -threads 2 -ss $time -f image2 -r 1 -vframes 1 -y $outputPath"
+            return "ffmpeg -i $pathStr -ss $time -s $frameSize -f image2 -preset ultrafast -vframes 1 -y $outputPath"
         }
         throw IllegalArgumentException("outputPath 路径不完整!")
     }
