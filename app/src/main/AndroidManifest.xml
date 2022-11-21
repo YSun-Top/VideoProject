@@ -19,6 +19,13 @@
         android:theme="@style/Theme.VideoProject"
         tools:targetApi="31">
         <activity
+            android:name=".OutputVideoInfoActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:screenOrientation="fullSensor">
@@ -37,6 +44,7 @@
             android:exported="false"
             android:launchMode="singleInstance"
             android:screenOrientation="landscape" />
+        <activity android:name=".ui.OutputVideoInfoActivity" />
         <activity
             android:name=".ui.videoCut.VideoCropActivity"
             android:exported="false" />

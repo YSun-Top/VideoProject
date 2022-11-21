@@ -17,12 +17,21 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_output_file_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/output_file_info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_test_cmd" />
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_video_process"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/video_process"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_test_cmd" />
+        app:layout_constraintTop_toBottomOf="@id/btn_output_file_info" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
