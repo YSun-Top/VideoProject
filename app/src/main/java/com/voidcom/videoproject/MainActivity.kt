@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import com.voidcom.v_base.ui.BaseActivity
 import com.voidcom.v_base.ui.EmptyViewModel
 import com.voidcom.videoproject.databinding.ActivityMainBinding
+import com.voidcom.videoproject.ui.VideoPlayerActivity
 import com.voidcom.videoproject.ui.videoCut.VideoCutActivity
 import com.voidcom.videoproject.ui.VideoProcessActivity
 
@@ -15,7 +16,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, EmptyViewModel>(), View.O
     override val mViewModel by viewModels<EmptyViewModel>()
 
     override fun onInitUI() {
-        startActivity(Intent(this, VideoCutActivity::class.java))
+//        startActivity(Intent(this, VideoCutActivity::class.java))
     }
 
     override fun onInitListener() {

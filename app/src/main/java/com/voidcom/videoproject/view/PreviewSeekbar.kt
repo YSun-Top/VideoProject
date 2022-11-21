@@ -318,9 +318,7 @@ class PreviewSeekbar : View {
      */
     private fun getImgBitmap(index: Int): Bitmap? {
         if (filePathArrays.isEmpty() || index < 0 || index >= filePathArrays.size || filePathArrays[index].isEmpty()) return null
-        val name = filePathArrays[index]
-        KLog.d(TAG, "getImgBitmap-fileName:$name")
-        BitmapFactory.decodeFile(name).let { oldBitmap ->
+        BitmapFactory.decodeFile(filePathArrays[index]).let { oldBitmap ->
             val mWidth = oldBitmap.width
             val mHeight = oldBitmap.height
             val scaleWidth = defaultImgWidth / mWidth

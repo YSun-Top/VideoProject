@@ -31,11 +31,7 @@ class VideoCutModel : BaseModel() {
      * @param time 获取视频帧的时间，单位s
      */
     fun getVideoFrameImageCommand(context: Context, time: Int, width: Int, height: Int): String {
-        val folderPath = getVideoFrameImagePath(context)
-        val folder = File(folderPath)
-        if (!folder.exists()) {
-            folder.mkdirs()
-        }
+        val folderPath = createFolder(getVideoFrameImagePath(context))
         return FFmpegCommand.getVideoFrameImageCommand2(
             filePathStr,
             "${width}x${height}",
@@ -44,11 +40,7 @@ class VideoCutModel : BaseModel() {
     }
 
     fun getVideoFrameImageCommand(context: Context, width: Int, height: Int): String {
-        val folderPath = getVideoFrameImagePath(context)
-        val folder = File(folderPath)
-        if (!folder.exists()) {
-            folder.mkdirs()
-        }
+        val folderPath = createFolder(getVideoFrameImagePath(context))
         return FFmpegCommand.getVideoFrameImageCommand2(
             filePathStr,
             "${width}x${height}",
@@ -56,31 +48,39 @@ class VideoCutModel : BaseModel() {
         )
     }
 
+    fun videoCutCommand(context: Context, leftTime: Long, rightTime: Long): String {
+        val folderPath = createFolder(getVideoCutPath(context))
+        return FFmpegCommand.videoCutCommand(
+            filePathStr,
+            leftTime,
+            rightTime,
+            "$folderPath/cutVideoFile.mp4"
+        )
+    }
+
     fun getVideoFrameImagePath(context: Context) =
         "${context.externalCacheDir?.path}/VideoFrameImage"
 
-    fun getVideoFrameOutputPath(context: Context): String =
-        "${context.externalCacheDir?.path}/001.jpeg"
+    fun getVideoCutPath(context: Context) = "${context.externalCacheDir?.path}/VideoCut"
 
-    fun checkOutputFile(context: Context): Boolean {
-        val outFile = File(getVideoFrameOutputPath(context))
-        if (outFile.exists()) {
-            return outFile.delete()
+    fun createFolder(path: String): String {
+        val folder = File(path)
+        if (!folder.exists()) {
+            folder.mkdirs()
         }
-        return false
+        return path
     }
 
-    fun deleteVideoFrameImageCache(context: Context) {
-        val folderPath = getVideoFrameImagePath(context)
-        val folder = File(folderPath)
-        if (!folder.exists()) return
-        folder.listFiles()?.forEach {
-            it.delete()
-        }
-        //如果文件夹为空，删除改文件
-        if (folder.list()?.isEmpty() == true) {
-            folder.delete()
+    fun deleteFileAndFolder(path: String) {
+        val file = File(path)
+        if (!file.exists()) return
+        if (file.isFile) {
+            file.delete()
+        } else {
+            file.listFiles()?.forEach {
+                it.delete()
+            }
+            file.delete()
         }
     }
-
 }

@@ -1,14 +1,19 @@
 package com.voidcom.videoproject.ui.videoCut
 
+import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import android.util.Log
+import android.view.View
+import android.view.View.OnClickListener
 import com.voidcom.ffmpeglib.FFmpegCmd
 import com.voidcom.ffmpeglib.callback.CommandModeCallback
 import com.voidcom.v_base.ui.BaseActivity
 import com.voidcom.v_base.utils.*
+import com.voidcom.videoproject.R
 import com.voidcom.videoproject.databinding.ActivityVideoCutBinding
+import com.voidcom.videoproject.ui.VideoPlayerActivity
 import com.voidcom.videoproject.view.PreviewSeekbar
 import com.voidcom.videoproject.viewModel.videoCut.VideoCutViewModel
 import java.io.File
@@ -22,7 +27,7 @@ import kotlin.concurrent.thread
  * @UpdateDate: 2022/11/13 21:06
  */
 class VideoCutActivity : BaseActivity<ActivityVideoCutBinding, VideoCutViewModel>(),
-    PreviewSeekbar.SeekbarChangeListener {
+    PreviewSeekbar.SeekbarChangeListener, OnClickListener {
     private var TAG = VideoCutActivity::class.java.name
     private var mp: MediaPlayer? = null
     private var mFrames = 0
@@ -44,12 +49,16 @@ class VideoCutActivity : BaseActivity<ActivityVideoCutBinding, VideoCutViewModel
         super.onInitListener()
         mBinding.mVideoView.setOnPreparedListener(mediaListener)
         mBinding.mPreviewSeekBarView.setChangeListener(this)
+        mBinding.btnCut.setOnClickListener(this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         ThreadPoolManager.instance.executeTask({
-            mViewModel.getModel().deleteVideoFrameImageCache(applicationContext)
+            mViewModel.getModel().let {
+                it.deleteFileAndFolder(it.getVideoFrameImagePath(applicationContext))
+//                it.deleteFileAndFolder(it.getVideoCutPath(applicationContext))
+            }
         })
     }
 
@@ -59,10 +68,16 @@ class VideoCutActivity : BaseActivity<ActivityVideoCutBinding, VideoCutViewModel
     override fun onChangeComplete(leftValue: Float, rightValue: Float) {
         leftProcess = leftValue.toLong()
         rightProcess = rightValue.toLong()
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            mp?.seekTo(leftProcess*1000,MediaPlayer.SEEK_CLOSEST)
-        }else{
-            mp?.seekTo((leftProcess*1000).toInt())
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mp?.seekTo(leftProcess * 1000, MediaPlayer.SEEK_CLOSEST)
+        } else {
+            mp?.seekTo((leftProcess * 1000).toInt())
+        }
+    }
+
+    override fun onClick(v: View?) {
+        if (v?.id == R.id.btn_cut) {
+            trimVideo()
         }
     }
 
@@ -103,6 +118,7 @@ class VideoCutActivity : BaseActivity<ActivityVideoCutBinding, VideoCutViewModel
             }
 
             override fun onError(msg: String) {
+                ToastUtils.showShortInMainThread(applicationContext, "获取预览图片失败")
             }
 
         })
@@ -112,35 +128,29 @@ class VideoCutActivity : BaseActivity<ActivityVideoCutBinding, VideoCutViewModel
      * 执行剪辑视频；作
      */
     private fun trimVideo() {
-//        if (mCurrentSubscriber != null && !mCurrentSubscriber?.isDisposed!!) {
-//            mCurrentSubscriber?.dispose()
-//        }
-
-//        var outfile = "$mCacheRootPath/${Utils.getFileName(resouce.name)}_trim.mp4 "
-//        var start: Float = mMinTime / 1000f
-//        var end: Float = mMaxTime / 1000f
-//        var cmd =
-//            "ffmpeg -ss " + start + " -to " + end + " -accurate_seek" + " -i " + resouce?.path + " -to " + (end - start) + " -preset " + "superfast" + " -crf 23 -c:a copy -avoid_negative_ts 0 -y " + outfile;
-//        val commands = cmd.split(" ").toTypedArray()
-        try {
-//            RxFFmpegInvoke.getInstance()
-//                .runCommandRxJava(commands)
-//                .subscribe(object : MyRxFFmpegSubscriber() {
-//                    override fun onFinish() {
-//                        if (loadingDialog != null && loadingDialog?.isShowing!!) {
-//                            loadingDialog?.dismiss()
-//                        }
-//                        finish()
-//                        Log.d("yanjin", "$TAG 完成截取 outfile = ${outfile}")
-//                    }
-//
-//                    override fun onProgress(progress: Int, progressTime: Long) {
-//                        Log.d("yanjin", "$TAG 截取进度 progress = ${progress}")
-//                    }
-//                })
-        } catch (e: Exception) {
-            e.printStackTrace()
+        mBinding.mProgressBar.visible()
+        val cmd = mViewModel.getModel().run {
+            //如果文件存在，删除该视频文件
+            this.deleteFileAndFolder(this.getVideoCutPath(applicationContext))
+            this.videoCutCommand(applicationContext, leftProcess, rightProcess)
         }
+        thread {
+            FFmpegCmd.getInstance.executeFFmpeg(cmd, object : CommandModeCallback {
+                override fun onFinish() {
+                    mHandle.post(videoCutRunnable)
+                }
+
+                override fun onError(msg: String) {
+                    ToastUtils.showShortInMainThread(applicationContext, "视频剪辑失败")
+                }
+            })
+        }
+    }
+
+    private val mediaListener = MediaPlayer.OnPreparedListener {
+        mp = it
+        //解析视频画面帧
+        analysisVideo()
     }
 
     private val updatePreviewListRunnable = Runnable {
@@ -161,9 +171,14 @@ class VideoCutActivity : BaseActivity<ActivityVideoCutBinding, VideoCutViewModel
         mBinding.mPreviewSeekBarView.setFilePathArray(pathList)
     }
 
-    private val mediaListener = MediaPlayer.OnPreparedListener {
-        mp = it
-        //解析视频画面帧
-        analysisVideo()
+    private val videoCutRunnable = Runnable {
+        mBinding.mProgressBar.gone()
+        ToastUtils.showShort(applicationContext, "视频剪辑成功")
+        startActivity(Intent(this, VideoPlayerActivity::class.java).apply {
+            putExtra(
+                VideoPlayerActivity.PATH,
+                mViewModel.getModel().getVideoCutPath(applicationContext) + "/cutVideoFile.mp4"
+            )
+        })
     }
 }

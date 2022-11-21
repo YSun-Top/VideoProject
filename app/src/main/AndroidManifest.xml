@@ -30,8 +30,8 @@
         </activity>
         <activity
             android:name=".ui.VideoProcessActivity"
-            android:screenOrientation="fullSensor"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".ui.videoFilter.VideoFiltersActivity"
             android:exported="false"
@@ -42,6 +42,10 @@
             android:exported="false" />
         <activity
             android:name=".ui.videoCut.VideoCutActivity"
+            android:exported="false"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".ui.VideoPlayerActivity"
             android:exported="false"
             android:screenOrientation="landscape" />
 

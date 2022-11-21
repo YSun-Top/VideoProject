@@ -45,7 +45,8 @@ class VideoCropActivity : BaseActivity<ActivityVideoCropBinding, VideoCutViewMod
     }
 
     private fun searchVideoDuration() {
-        val json = FFprobeCmd.getInstance.executeFFprobe(mViewModel.getModel().getVideoDurationCommand())
+        val json =
+            FFprobeCmd.getInstance.executeFFprobe(mViewModel.getModel().getVideoDurationCommand())
         if (json == null) {
             KLog.w(TAG, "获取视频时长失败，返回数据为空")
             return
@@ -59,7 +60,8 @@ class VideoCropActivity : BaseActivity<ActivityVideoCropBinding, VideoCutViewMod
                 mBinding.etEndTime.hint = timeDuration.toString()
             }
         }
-        if (mViewModel.getModel().checkOutputFile(applicationContext)) {
+        mViewModel.getModel().let {
+            it.deleteFileAndFolder(it.getVideoFrameImagePath(applicationContext) + "/001.jpg")
             KLog.w(TAG, "删除旧视频预览图片文件")
         }
 //        FFmpegCmd.getInstance.executeFFmpeg(
@@ -67,7 +69,9 @@ class VideoCropActivity : BaseActivity<ActivityVideoCropBinding, VideoCutViewMod
 //        )
         mHandle.post {
             val uri =
-                Uri.parse(mViewModel.getModel().getVideoFrameOutputPath(applicationContext))
+                Uri.parse(
+                    mViewModel.getModel().getVideoFrameImagePath(applicationContext) + "/001.jpg"
+                )
             mBinding.ivFrameImage.setImageURI(uri)
         }
 

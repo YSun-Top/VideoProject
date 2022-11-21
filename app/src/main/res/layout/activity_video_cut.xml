@@ -13,27 +13,19 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/y150" />
 
-    <!--为两端的空间增加蒙层start-->
-    <View
-        android:layout_width="20dp"
-        android:layout_height="@dimen/y150"
-        android:layout_gravity="start|bottom"
-        android:background="@color/shadow_color" />
-
     <com.voidcom.videoproject.view.PreviewSeekbar
         android:id="@+id/mPreviewSeekBarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/y50"
-        android:visibility="gone" />
+        android:layout_marginBottom="@dimen/y100" />
 
-    <!--为两端的空间增加蒙层end-->
-    <View
-        android:layout_width="20dp"
-        android:layout_height="@dimen/y150"
-        android:layout_gravity="end|bottom"
-        android:background="@color/shadow_color" />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_cut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/video_crop"
+        android:layout_gravity="bottom|center_horizontal" />
 
     <ProgressBar
         android:id="@+id/mProgressBar"

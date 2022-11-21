@@ -16,10 +16,8 @@ object FFmpegCommand {
         frameSize: String,
         outputPath: String
     ): String {
-        if (imageFormatCheck(outputPath)) {
-            return "ffmpeg -i $pathStr -ss $time -s $frameSize -f image2 -preset ultrafast -vframes 1 -y $outputPath"
-        }
-        throw IllegalArgumentException("outputPath 路径不完整!")
+        if (!imageFormatCheck(outputPath)) throw IllegalArgumentException("outputPath 路径不完整!")
+        return "ffmpeg -i $pathStr -ss $time -s $frameSize -f image2 -preset ultrafast -vframes 1 -y $outputPath"
     }
 
     /**
@@ -27,10 +25,8 @@ object FFmpegCommand {
      * @param frameSize 分辨率(WxH)
      */
     fun getVideoFrameImageCommand2(pathStr: String, frameSize: String, outputPath: String): String {
-        if (imageFormatCheck(outputPath)) {
-            return "ffmpeg -i $pathStr -threads 2 -s $frameSize -f image2 -r 1 -preset ultrafast -y $outputPath"
-        }
-        throw IllegalArgumentException("outputPath 路径不完整!")
+        if (!imageFormatCheck(outputPath)) throw IllegalArgumentException("outputPath 路径不完整!")
+        return "ffmpeg -i $pathStr -threads 2 -s $frameSize -f image2 -r 1 -preset ultrafast -y $outputPath"
     }
 
     /**
@@ -43,10 +39,21 @@ object FFmpegCommand {
         outputPath: String,
         fps: Int
     ): String {
-        if (imageFormatCheck(outputPath)) {
-            return "ffmpeg -i $pathStr -threads 2 -s $frameSize -f image2 -preset ultrafast -vf fps=(1/$fps) -y $outputPath"
-        }
-        throw IllegalArgumentException("outputPath 路径不完整!")
+        if (!imageFormatCheck(outputPath)) throw IllegalArgumentException("outputPath 路径不完整!")
+        return "ffmpeg -i $pathStr -threads 2 -s $frameSize -f image2 -preset ultrafast -vf fps=(1/$fps) -y $outputPath"
+    }
+    //ffmpeg -i input.mp4 -ss 10 -t 80 -vcodec copy -acodec copy output.mp4
+    /**
+     * 在指定时间段剪辑视频一份新的视频
+     */
+    fun videoCutCommand(
+        pathStr: String,
+        leftTime: Long,
+        rightTime: Long,
+        outputPath: String
+    ): String {
+        if (!videoFormatCheck(outputPath)) throw IllegalArgumentException("outputPath 路径不完整!")
+        return "ffmpeg -i $pathStr -ss $leftTime -t $rightTime -vcodec copy -acodec copy $outputPath"
     }
     //endregion
 
@@ -66,9 +73,14 @@ object FFmpegCommand {
      */
     private fun imageFormatCheck(outputPath: String): Boolean {
         arrayOf(".jpeg", ".jpg", ".img", ".png").forEach {
-            if (outputPath.endsWith(it)) {
-                return true
-            }
+            if (outputPath.endsWith(it)) return true
+        }
+        return false
+    }
+
+    private fun videoFormatCheck(outputPath: String): Boolean {
+        arrayOf(".avi", ".mp4").forEach {
+            if (outputPath.endsWith(it)) return true
         }
         return false
     }
