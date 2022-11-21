@@ -45,5 +45,6 @@
     <androidx.appcompat.widget.AppCompatRadioButton
         android:id="@+id/filter_8"
         style="@style/Filters_radio_button"
-        android:text="@string/filters_8" />
+        android:text="@string/filters_8"
+        android:visibility="gone" />
 </RadioGroup>
