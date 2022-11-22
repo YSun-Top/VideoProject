@@ -7,9 +7,8 @@ import com.voidcom.v_base.ui.BaseActivity
 import com.voidcom.v_base.ui.EmptyViewModel
 import com.voidcom.videoproject.databinding.ActivityMainBinding
 import com.voidcom.videoproject.ui.OutputVideoInfoActivity
-import com.voidcom.videoproject.ui.VideoPlayerActivity
-import com.voidcom.videoproject.ui.videoCut.VideoCutActivity
 import com.voidcom.videoproject.ui.VideoProcessActivity
+import com.voidcom.videoproject.ui.videoCut.VideoCutActivity
 
 class MainActivity : BaseActivity<ActivityMainBinding, EmptyViewModel>(), View.OnClickListener {
     private val filePathList = arrayListOf<String>()
