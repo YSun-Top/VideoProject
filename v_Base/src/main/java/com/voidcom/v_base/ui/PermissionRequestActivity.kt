@@ -9,13 +9,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import com.voidcom.v_base.R
-import com.voidcom.v_base.databinding.ActivityPermissionBinding
+import com.voidcom.v_base.databinding.ActivityEmptyBinding
 import com.voidcom.v_base.utils.AppCode
 import com.voidcom.v_base.utils.PermissionsUtils
 import com.voidcom.v_base.viewModel.PermissionRequestViewModel
 
 class PermissionRequestActivity :
-    BaseActivity<ActivityPermissionBinding, PermissionRequestViewModel>() {
+    BaseActivity<ActivityEmptyBinding, PermissionRequestViewModel>() {
     private val TAG = PermissionRequestActivity::class.java.simpleName
     private var permissionDialog: AlertDialog? = null
     var registerPermission: ActivityResultLauncher<Array<String>>? = null
@@ -71,9 +71,9 @@ class PermissionRequestActivity :
         ) {
             ActivityCompat.startActivityForResult(activity, Intent().apply {
                 action = AppCode.requestPermissionsAction
-                putExtra(PermissionRequestViewModel.permissionsRequestCodeFlag, requestCode)
-                putExtra(PermissionRequestViewModel.requestCodeFlag, permissionRequestCode)
-                putExtra(PermissionRequestViewModel.permissionsFlag, permissions)
+                putExtra(PermissionRequestViewModel.REQUEST_CODE_FLAG, requestCode)
+                putExtra(PermissionRequestViewModel.PERMISSIONS_REQUEST_CODE_FLAG, permissionRequestCode)
+                putExtra(PermissionRequestViewModel.PERMISSIONS_FLAG, permissions)
             }, requestCode, null)
         }
 
@@ -87,9 +87,9 @@ class PermissionRequestActivity :
         ) {
             launcher.launch(Intent().apply {
                 action = AppCode.requestPermissionsAction
-                putExtra(PermissionRequestViewModel.permissionsRequestCodeFlag, requestCode)
-                putExtra(PermissionRequestViewModel.requestCodeFlag, permissionRequestCode)
-                putExtra(PermissionRequestViewModel.permissionsFlag, permissions)
+                putExtra(PermissionRequestViewModel.REQUEST_CODE_FLAG, requestCode)
+                putExtra(PermissionRequestViewModel.PERMISSIONS_REQUEST_CODE_FLAG, permissionRequestCode)
+                putExtra(PermissionRequestViewModel.PERMISSIONS_FLAG, permissions)
             })
         }
     }

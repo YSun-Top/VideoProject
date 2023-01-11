@@ -60,7 +60,7 @@ class VideoProcessActivity : BaseActivity<ActivityVideoProcessBinding, EmptyView
     private val permissionCallback = ActivityResultCallback<ActivityResult> { result ->
         if (result.resultCode == RESULT_FIRST_USER) {
             result.data?.getBooleanExtra(
-                PermissionRequestViewModel.permissionsResultStatus,
+                PermissionRequestViewModel.PERMISSIONS_REQUEST_STATUS,
                 false
             ).let {
                 if (it == false)
