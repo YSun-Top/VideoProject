@@ -155,7 +155,7 @@ class RangeSeekBarView : View {
         canvas.drawBitmap(
             if (pressed) thumbPressedImage else if (isLeft) thumbImageLeft else thumbImageRight,
             screenCoord - if (isLeft) 0f else thumbWidth,
-            mPaddingTop,
+            mPaddingTop.toFloat(),
             paint
         )
     }
