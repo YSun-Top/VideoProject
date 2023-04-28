@@ -34,4 +34,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_output_file_info" />
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_push_rtmp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/push_rtmp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_video_process" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
