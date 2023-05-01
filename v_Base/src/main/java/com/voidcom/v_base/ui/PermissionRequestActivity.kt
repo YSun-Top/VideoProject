@@ -14,6 +14,22 @@ import com.voidcom.v_base.utils.AppCode
 import com.voidcom.v_base.utils.PermissionsUtils
 import com.voidcom.v_base.viewModel.PermissionRequestViewModel
 
+/**
+ * 用于权限请求的Activity
+ *
+ * 使用方法：
+ * PermissionRequestActivity.newInstance(
+ *     registerForActivityResult(
+ *         ActivityResultContracts.StartActivityForResult(),
+ *         permissionCallback
+ *     ),1000,AppCode.requestCamera
+ * )
+ * private val permissionCallback = ActivityResultCallback<ActivityResult> { result ->
+ *     if (result.resultCode == RESULT_FIRST_USER) {
+ *
+ *     }
+ * }
+ */
 class PermissionRequestActivity :
     BaseActivity<ActivityEmptyBinding, PermissionRequestViewModel>() {
     private val TAG = PermissionRequestActivity::class.java.simpleName
@@ -77,6 +93,9 @@ class PermissionRequestActivity :
             }, requestCode, null)
         }
 
+        /**
+         * @param permissionRequestCode {@link com.voidcom.v_base.utils.AppCode}
+         */
         fun newInstance(
             launcher: ActivityResultLauncher<Intent>,
             requestCode: Int,
