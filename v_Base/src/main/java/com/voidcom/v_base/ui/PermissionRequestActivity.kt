@@ -1,6 +1,7 @@
 package com.voidcom.v_base.ui
 
 import android.app.Activity
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
@@ -81,14 +82,26 @@ class PermissionRequestActivity :
             activity: Activity,
             requestCode: Int,
             permissionRequestCode: Int,
-            permissions: Array<String>? = PermissionsUtils.getPermissionsFormRequestType(
-                permissionRequestCode
-            )
         ) {
+            newInstance(
+                activity, requestCode, PermissionsUtils.getPermissionsFormRequestType(
+                    permissionRequestCode
+                )
+            )
+        }
+
+        fun newInstance(
+            activity: Activity,
+            requestCode: Int,
+            permissions: Array<String>
+        ) {
+            PermissionsUtils.checkPermission(activity, AppCode.requestReadStorage).let {
+                //有权限不需要再申请
+                if (it.isEmpty()) return
+            }
             ActivityCompat.startActivityForResult(activity, Intent().apply {
                 action = AppCode.requestPermissionsAction
                 putExtra(PermissionRequestViewModel.REQUEST_CODE_FLAG, requestCode)
-                putExtra(PermissionRequestViewModel.PERMISSIONS_REQUEST_CODE_FLAG, permissionRequestCode)
                 putExtra(PermissionRequestViewModel.PERMISSIONS_FLAG, permissions)
             }, requestCode, null)
         }
@@ -97,17 +110,30 @@ class PermissionRequestActivity :
          * @param permissionRequestCode {@link com.voidcom.v_base.utils.AppCode}
          */
         fun newInstance(
+            context: Context,
             launcher: ActivityResultLauncher<Intent>,
             requestCode: Int,
-            permissionRequestCode: Int,
-            permissions: Array<String>? = PermissionsUtils.getPermissionsFormRequestType(
-                permissionRequestCode
-            )
+            permissionRequestCode: Int
         ) {
+            newInstance(
+                context, launcher, requestCode, PermissionsUtils.getPermissionsFormRequestType(
+                    permissionRequestCode
+                )
+            )
+        }
+
+        fun newInstance(
+            context: Context,
+            launcher: ActivityResultLauncher<Intent>,
+            requestCode: Int,
+            permissions: Array<String>
+        ) {
+            PermissionsUtils.checkPermission(context, AppCode.requestReadStorage).let {
+                if (it.isEmpty()) return
+            }
             launcher.launch(Intent().apply {
                 action = AppCode.requestPermissionsAction
                 putExtra(PermissionRequestViewModel.REQUEST_CODE_FLAG, requestCode)
-                putExtra(PermissionRequestViewModel.PERMISSIONS_REQUEST_CODE_FLAG, permissionRequestCode)
                 putExtra(PermissionRequestViewModel.PERMISSIONS_FLAG, permissions)
             })
         }

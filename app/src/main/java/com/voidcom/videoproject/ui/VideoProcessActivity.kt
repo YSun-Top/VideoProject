@@ -37,6 +37,7 @@ class VideoProcessActivity : BaseActivity<ActivityVideoProcessBinding, EmptyView
                 return@let
             }
             PermissionRequestActivity.newInstance(
+                this,
                 registerForActivityResult(
                     ActivityResultContracts.StartActivityForResult(),
                     permissionCallback

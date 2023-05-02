@@ -17,27 +17,6 @@ object AppCode {
     const val requestCamera = 1006
     const val requestLocation = 1007
 
-    val readStoragePermissions = arrayOf(
-        Manifest.permission.READ_EXTERNAL_STORAGE
-    )
-    val writeStoragePermissions = arrayOf(
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
-    )
-    val readPhoneStatePermissions = arrayOf(
-        Manifest.permission.READ_PHONE_STATE
-    )
-    val recordAudioPermissions = arrayOf(
-        Manifest.permission.RECORD_AUDIO
-    )
-    val audioSettingsPermissions = arrayOf(
-        Manifest.permission.MODIFY_AUDIO_SETTINGS
-    )
-    val cameraPermissions = arrayOf(
-        Manifest.permission.CAMERA
-    )
-    val locationPermission = arrayOf(
-        Manifest.permission.ACCESS_COARSE_LOCATION
-    )
     //endregion
 
     //region ------------------ 一些通用的值

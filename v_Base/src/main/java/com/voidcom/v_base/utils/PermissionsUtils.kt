@@ -1,5 +1,6 @@
 package com.voidcom.v_base.utils
 
+import android.Manifest
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -26,17 +27,21 @@ object PermissionsUtils {
         }
     }
 
-    fun getPermissionsFormRequestType(type: Int): Array<String> {
-        return when (type) {
-            AppCode.requestReadStorage -> AppCode.readStoragePermissions
-            AppCode.requestWriteStorage -> AppCode.writeStoragePermissions
-            AppCode.requestReadPhoneState -> AppCode.readPhoneStatePermissions
-            AppCode.requestRecordAudio -> AppCode.recordAudioPermissions
-            AppCode.requestAudioSettings -> AppCode.audioSettingsPermissions
-            AppCode.requestCamera -> AppCode.cameraPermissions
-            AppCode.requestLocation -> AppCode.locationPermission
-            else -> arrayOf("")
+    fun getPermissionsFormRequestType(vararg type: Int): Array<String> {
+        val array = Array(type.size, init = { "" })
+        for (i in type.indices) {
+            array[i] = when (type[i]) {
+                AppCode.requestReadStorage -> Manifest.permission.READ_EXTERNAL_STORAGE
+                AppCode.requestWriteStorage -> Manifest.permission.WRITE_EXTERNAL_STORAGE
+                AppCode.requestReadPhoneState -> Manifest.permission.READ_PHONE_STATE
+                AppCode.requestRecordAudio -> Manifest.permission.RECORD_AUDIO
+                AppCode.requestAudioSettings -> Manifest.permission.MODIFY_AUDIO_SETTINGS
+                AppCode.requestCamera -> Manifest.permission.CAMERA
+                AppCode.requestLocation -> Manifest.permission.ACCESS_COARSE_LOCATION
+                else -> continue
+            }
         }
+        return array
     }
 
     fun gotoPermissionSetting(context: Context, applicationID: String) {
@@ -53,6 +58,9 @@ object PermissionsUtils {
         return checkPermission(context, getPermissionsFormRequestType(type))
     }
 
+    /**
+     * 当有权限时返回空map，其他情况都是没有权限或部分没有权限
+     */
     fun checkPermission(context: Context, array: Array<String>): Map<String, Boolean> {
         array.forEach {
             if (ContextCompat.checkSelfPermission(

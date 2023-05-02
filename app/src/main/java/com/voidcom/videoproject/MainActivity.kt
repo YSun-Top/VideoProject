@@ -1,8 +1,6 @@
 package com.voidcom.videoproject
 
 import android.content.Intent
-import android.net.Uri
-import android.os.Build
 import android.view.View
 import androidx.activity.viewModels
 import com.voidcom.v_base.ui.BaseActivity
@@ -29,16 +27,16 @@ class MainActivity : BaseActivity<ActivityMainBinding, EmptyViewModel>(), View.O
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btn_test_cmd -> {
-                val intent = Intent(Intent.ACTION_VIEW)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                    intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-                }
-                intent.setDataAndType(
-                    Uri.parse("content://media/external/video/media/59"),
-                    "video/mp4"
-                )
-                startActivity(intent)
+//                val intent = Intent(Intent.ACTION_VIEW)
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+//                    intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+//                }
+//                intent.setDataAndType(
+//                    Uri.parse("content://media/external/video/media/59"),
+//                    "video/mp4"
+//                )
+//                startActivity(intent)
             }
 
             R.id.btn_output_file_info -> startActivity(

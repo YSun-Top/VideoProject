@@ -2,7 +2,7 @@ package com.voidcom.v_base.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.viewbinding.ViewBinding
 import com.voidcom.v_base.utils.BindingReflex
@@ -43,7 +43,7 @@ abstract class BaseFrameActivity<VB : ViewBinding, VM : BaseViewModel> : AppComp
      * 设置全屏显示
      */
     fun setFullscreen() {
-        ViewCompat.getWindowInsetsController(mBinding.root)?.let {
+        WindowCompat.getInsetsController(window,mBinding.root).let {
             it.hide(WindowInsetsCompat.Type.statusBars())
         }
     }

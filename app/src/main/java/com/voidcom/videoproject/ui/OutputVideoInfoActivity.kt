@@ -19,6 +19,7 @@ class OutputVideoInfoActivity : BaseActivity<ActivityOutputVideoInfoBinding, Emp
     override fun onInitUI() {
         super.onInitUI()
         mBinding.btnSelectFile.setOnClickListener {
+            //EasyPhotos内部做了权限处理，这里不需要申请权限
             EasyPhotos.createAlbum(this, true, true, GlideEngine.newInstant)
                 .setCount(1)
                 .filter(Type.VIDEO)

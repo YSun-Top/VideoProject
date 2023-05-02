@@ -31,7 +31,6 @@ class PermissionRequestViewModel : BaseActivityViewModel<PermissionRequestActivi
     override fun getModel(): BaseModel? = null
 
     override fun onInit(context: Context) {
-
     }
 
     override fun onInitData() {
@@ -41,9 +40,6 @@ class PermissionRequestViewModel : BaseActivityViewModel<PermissionRequestActivi
                 return@let
             }
             requestCodeFlag = it.intent.getIntExtra(REQUEST_CODE_FLAG, -1)
-            permissionRequestCode = it.intent.getIntExtra(PERMISSIONS_REQUEST_CODE_FLAG, -1)
-            if (permissionRequestCode == -1)
-                throw RuntimeException("请通过 newInstance 跳转该页面")
             permissions = it.intent.getStringArrayExtra(PERMISSIONS_FLAG).run {
                 if (!this.isNullOrEmpty()) return@run this
                 PermissionsUtils.getPermissionsFormRequestType(permissionRequestCode)
@@ -106,13 +102,9 @@ class PermissionRequestViewModel : BaseActivityViewModel<PermissionRequestActivi
     }
 
     companion object {
-        //请求权限代码，一个代码代表一组array权限。不能用该值判断是哪条请求
-        const val PERMISSIONS_REQUEST_CODE_FLAG = "PERMISSIONS_REQUEST_CODE"
-
         //请求代码，会随Result一起传回回调。应该用该值在回调中判断是哪条请求
         const val REQUEST_CODE_FLAG = "REQUEST_CODE"
         const val PERMISSIONS_FLAG = "PERMISSIONS"
-        const val PERMISSIONS_RESULT_CODE_FLAG = 0x01
         const val PERMISSIONS_REQUEST_STATUS = "PERMISSIONS_RESULT_STATUS"
     }
 }
