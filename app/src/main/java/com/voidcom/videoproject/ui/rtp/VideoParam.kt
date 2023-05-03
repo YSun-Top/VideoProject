@@ -1,5 +1,8 @@
 package com.voidcom.videoproject.ui.rtp
 
+/**
+ * 推流视频配置信息
+ */
 data class VideoParam(
     var width: Int,
     var height: Int,

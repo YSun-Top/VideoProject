@@ -11,14 +11,17 @@ import android.view.TextureView
 import android.view.TextureView.SurfaceTextureListener
 import java.lang.ref.WeakReference
 
-val TAG = "VideoStreamNew"
-
 class VideoStreamNew(
     val callback: AudioStream.OnFrameDataCallback,
     val mTextureView: TextureView,
     val videoParam: VideoParam,
     val context: WeakReference<Activity>
 ) : VideoStreamBase(), SurfaceTextureListener, Camera2Listener {
+    /**
+     * 当前屏幕的一个旋转状态，如果屏幕没有旋转是默认的状态，值为{@link Surface#ROTATION_0}。
+     * 当屏幕旋转了90°，则返回值{@link Surface#ROTATION_90}或{@link Surface#ROTATION_270}，
+     * 这取决于旋转的方向
+     */
     private var rotation = 0
     private lateinit var camera2Helper: Camera2Helper
 
@@ -59,6 +62,7 @@ class VideoStreamNew(
     }
 
     override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
+        Log.i(TAG, "onSurfaceTextureDestroyed...")
         stopPreview()
         return false
     }
@@ -68,6 +72,7 @@ class VideoStreamNew(
     }
 
     override fun onCameraOpened(previewSize: Size?, displayOrientation: Int) {
+        Log.i(TAG, "onCameraOpened previewSize=" + previewSize.toString())
 
     }
 
@@ -87,9 +92,9 @@ class VideoStreamNew(
         rotation = context.get()?.windowManager?.defaultDisplay?.rotation ?: 0
         camera2Helper = Camera2Helper(
             previewDisplayView = mTextureView,
-            cameraId = Camera2Helper.CAMERA_ID_BACK,
+            specificCameraId = Camera2Helper.CAMERA_ID_BACK,
             camera2Listener = this,
-            previewViewSize = Point(videoParam.width, videoParam.height),
+            previewViewSize = Size(videoParam.width, videoParam.height),
             rotation = rotation,
             rotateDegree = getPreviewDegree(rotation),
             context = context
@@ -101,7 +106,7 @@ class VideoStreamNew(
         camera2Helper.stop()
     }
 
-    private fun getPreviewDegree(rotation: Int): Int {
+    private fun getPreviewDegree( rotation: Int): Int {
         return when (rotation) {
             Surface.ROTATION_0 -> 90
             Surface.ROTATION_90 -> 0
@@ -109,6 +114,10 @@ class VideoStreamNew(
             Surface.ROTATION_270 -> 180
             else -> -1
         }
+    }
+
+    companion object{
+        private const val TAG = "VideoStreamNew"
     }
 
 }

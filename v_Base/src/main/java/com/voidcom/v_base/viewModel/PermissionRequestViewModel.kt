@@ -3,10 +3,7 @@ package com.voidcom.v_base.viewModel
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.voidcom.v_base.BuildConfig
 import com.voidcom.v_base.R
 import com.voidcom.v_base.ui.BaseActivityViewModel
@@ -23,7 +20,6 @@ import com.voidcom.v_base.utils.PermissionsUtils
  * @UpdateDate: 2022/11/11 12:13
  */
 class PermissionRequestViewModel : BaseActivityViewModel<PermissionRequestActivity>() {
-    private val TAG = PermissionRequestViewModel::class.simpleName
     private lateinit var permissions: Array<String>
     private var permissionRequestCode = -1
     private var requestCodeFlag = -1
@@ -50,16 +46,8 @@ class PermissionRequestViewModel : BaseActivityViewModel<PermissionRequestActivi
 
     private fun checkPermission(activity: PermissionRequestActivity, array: Array<String>) {
         array.forEach { permissionStr ->
-            if (ContextCompat.checkSelfPermission(
-                    activity.applicationContext,
-                    permissionStr
-                ) == PackageManager.PERMISSION_DENIED
-            ) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(
-                        activity,
-                        permissionStr
-                    )
-                ) {
+            if (PermissionsUtils.checkPermission(activity, arrayOf(permissionStr)).isNotEmpty()) {
+                if (PermissionsUtils.doNotShowAgain(activity,permissionStr)) {
                     KLog.i(TAG, "已设置拒绝授予权限且不在显示，请前往设置手动设置权限:$permissionStr")
                     activity.createDialog(
                         activity.getString(R.string.requestPermissionTitle),
@@ -102,6 +90,7 @@ class PermissionRequestViewModel : BaseActivityViewModel<PermissionRequestActivi
     }
 
     companion object {
+        private val TAG = PermissionRequestViewModel::class.simpleName
         //请求代码，会随Result一起传回回调。应该用该值在回调中判断是哪条请求
         const val REQUEST_CODE_FLAG = "REQUEST_CODE"
         const val PERMISSIONS_FLAG = "PERMISSIONS"
