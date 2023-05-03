@@ -1,6 +1,7 @@
 package com.voidcom.v_base.utils
 
 import android.Manifest
+import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -8,8 +9,10 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.util.ArrayMap
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.voidcom.v_base.R
+import java.util.Arrays
 
 object PermissionsUtils {
     private val TAG = PermissionsUtils::class.java.simpleName
@@ -18,6 +21,7 @@ object PermissionsUtils {
         return when (type) {
             AppCode.requestReadStorage,
             AppCode.requestWriteStorage -> mContext.getString(R.string.requestPermission_readStorageMessage)
+
             AppCode.requestReadPhoneState -> mContext.getString(R.string.requestPermission_readPhoneStateMessage)
             AppCode.requestRecordAudio -> mContext.getString(R.string.requestPermission_recordAudioMessage)
             AppCode.requestAudioSettings -> mContext.getString(R.string.requestPermission_audioSettingsMessage)
@@ -59,7 +63,7 @@ object PermissionsUtils {
     }
 
     /**
-     * 当有权限时返回空map，其他情况都是没有权限或部分没有权限
+     * @return 如果返回的是空map，表示有权限。其他情况都是没有权限或部分没有权限
      */
     fun checkPermission(context: Context, array: Array<String>): Map<String, Boolean> {
         array.forEach {
@@ -75,6 +79,13 @@ object PermissionsUtils {
         }
         return emptyMap()
     }
+
+    /**
+     * @param
+     * @return true 不再显示请求权限信息
+     */
+    fun doNotShowAgain(context: Activity, s: String): Boolean =
+        ActivityCompat.shouldShowRequestPermissionRationale(context, s)
 
     /**
      * 跳转到miui的权限管理页面

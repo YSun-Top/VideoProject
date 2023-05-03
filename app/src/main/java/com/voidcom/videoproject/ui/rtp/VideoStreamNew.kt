@@ -68,6 +68,7 @@ class VideoStreamNew(
     }
 
     override fun onCameraOpened(previewSize: Size?, displayOrientation: Int) {
+        Log.i(TAG, "onCameraOpened previewSize=" + previewSize.toString())
 
     }
 
@@ -87,7 +88,7 @@ class VideoStreamNew(
         rotation = context.get()?.windowManager?.defaultDisplay?.rotation ?: 0
         camera2Helper = Camera2Helper(
             previewDisplayView = mTextureView,
-            cameraId = Camera2Helper.CAMERA_ID_BACK,
+            specificCameraId = Camera2Helper.CAMERA_ID_BACK,
             camera2Listener = this,
             previewViewSize = Point(videoParam.width, videoParam.height),
             rotation = rotation,

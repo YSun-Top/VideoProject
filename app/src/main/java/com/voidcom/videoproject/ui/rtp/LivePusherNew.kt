@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import android.view.SurfaceHolder
 import android.view.TextureView
 import androidx.core.app.ActivityCompat
+import com.voidcom.v_base.utils.AppCode
+import com.voidcom.v_base.utils.PermissionsUtils
 import java.lang.ref.WeakReference
 
 class LivePusherNew(
@@ -16,18 +18,13 @@ class LivePusherNew(
     cameraType: CameraType
 ) : AudioStream.OnFrameDataCallback {
     private var audioStream: AudioStream? = null
-    private lateinit var videoStream: VideoStreamBase
+    private var videoStream = VideoStreamNew(this, view, videoParam, WeakReference(activity))
 
     init {
 //        native_init()
-        if (ActivityCompat.checkSelfPermission(
-                activity,
-                Manifest.permission.RECORD_AUDIO
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
+        if (PermissionsUtils.checkPermission(activity,AppCode.requestRecordAudio).isEmpty()) {
             audioStream = AudioStream(this, audioParam)
         }
-        videoStream = VideoStreamNew(this, view, videoParam, WeakReference(activity))
     }
 
     override fun getInputSamples(): Int {

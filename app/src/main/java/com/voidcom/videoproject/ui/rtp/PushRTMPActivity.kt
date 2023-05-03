@@ -1,21 +1,13 @@
 package com.voidcom.videoproject.ui.rtp
 
 import android.media.AudioFormat
-import android.os.Bundle
-import android.view.View
-import android.view.View.OnClickListener
 import android.widget.CompoundButton
 import android.widget.CompoundButton.OnCheckedChangeListener
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import com.voidcom.v_base.ui.BaseActivity
 import com.voidcom.v_base.ui.EmptyViewModel
-import com.voidcom.v_base.ui.PermissionRequestActivity
 import com.voidcom.v_base.utils.AppCode
 import com.voidcom.v_base.utils.PermissionsUtils
-import com.voidcom.v_base.utils.visible
-import com.voidcom.v_base.viewModel.PermissionRequestViewModel
 import com.voidcom.videoproject.R
 import com.voidcom.videoproject.databinding.ActivityPushRtmpBinding
 
@@ -25,28 +17,33 @@ import com.voidcom.videoproject.databinding.ActivityPushRtmpBinding
  */
 class PushRTMPActivity : BaseActivity<ActivityPushRtmpBinding, EmptyViewModel>(),
     OnCheckedChangeListener {
-    private var livePusher: LivePusherNew? = null
+    private lateinit var livePusher: LivePusherNew
 
     override val mViewModel: EmptyViewModel by lazy { EmptyViewModel() }
 
     override fun onInitUI() {
         super.onInitUI()
         supportActionBar?.hide()
-        val requestArray = PermissionsUtils.getPermissionsFormRequestType(
-            AppCode.requestCamera, AppCode.requestRecordAudio
-        )
-        PermissionsUtils.checkPermission(this, AppCode.requestReadStorage).let {
-            if (it.isEmpty()){
+        PermissionsUtils.checkPermission(this, AppCode.requestCamera).let {
+            if (it.isEmpty()) {
                 initPusher()
                 return
             }
-            //请求权限
-            PermissionRequestActivity.newInstance(
-                this,
-                registerForActivityResult(
-                    ActivityResultContracts.StartActivityForResult(),
-                    permissionCallback
-                ), 1000, requestArray
+            //请求权限,registerForActivityResult必须这种onStart()之前执行
+            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
+                for (i in result.iterator()) {
+                    //摄像头和音频有一个权限没拿到就放弃继续
+                    if (!i.value) {
+                        finish()
+                        return@registerForActivityResult
+                    }
+                }
+                //推流初始化只能在权限拿到后才能开始
+                initPusher()
+            }.launch(
+                PermissionsUtils.getPermissionsFormRequestType(
+                    AppCode.requestCamera, AppCode.requestRecordAudio
+                )
             )
         }
     }
@@ -54,7 +51,7 @@ class PushRTMPActivity : BaseActivity<ActivityPushRtmpBinding, EmptyViewModel>()
     override fun onInitListener() {
         super.onInitListener()
         mBinding.btnSwitchCamera.setOnClickListener {
-            livePusher?.switchCamera()
+            livePusher.switchCamera()
         }
         mBinding.tgBtnControl.setOnCheckedChangeListener(this)
         mBinding.tgBtnMute.setOnCheckedChangeListener(this)
@@ -73,20 +70,5 @@ class PushRTMPActivity : BaseActivity<ActivityPushRtmpBinding, EmptyViewModel>()
             AudioParam(44100, AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT, 2)
         livePusher =
             LivePusherNew(this, videoParam, audioParam, mBinding.surfaceView, CameraType.CAMERA2)
-    }
-
-    private val permissionCallback = ActivityResultCallback<ActivityResult> { result ->
-        if (result.resultCode != RESULT_FIRST_USER) return@ActivityResultCallback
-        result.data?.getBooleanExtra(
-            PermissionRequestViewModel.PERMISSIONS_REQUEST_STATUS,
-            false
-        ).let {
-            if (it == false) {
-                finish()
-            } else {
-                //推流初始化只能在权限拿到后才能开始
-                initPusher()
-            }
-        }
     }
 }
