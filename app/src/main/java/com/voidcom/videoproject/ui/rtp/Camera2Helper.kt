@@ -274,19 +274,17 @@ class Camera2Helper(
     }
 
     private fun getCameraOrientation(rotation: Int, cameraId: String): Int {
-        val degree = when (rotation * 90) {
+        val degree = when (rotation) {
             Surface.ROTATION_0 -> 0
             Surface.ROTATION_90 -> 90
             Surface.ROTATION_180 -> 180
             Surface.ROTATION_270 -> 270
             else -> rotation * 90
         }
-        var result: Int
-        if (CAMERA_ID_FRONT == cameraId) {
-            result = (mSensorOrientation + degree) % 360
-            result = (360 - result) % 360
+        val result = if (CAMERA_ID_FRONT == cameraId) {
+            (360 - (mSensorOrientation + degree) % 360) % 360
         } else {
-            result = (mSensorOrientation - degree + 360) % 360
+            (mSensorOrientation - degree + 360) % 360
         }
         Log.i(TAG, "getCameraOrientation, result=$result")
         return result
@@ -333,35 +331,29 @@ class Camera2Helper(
         override fun onImageAvailable(reader: ImageReader) {
             val image = reader.acquireNextImage()
             if (image.format == ImageFormat.YUV_420_888) {
+                //获取图像的像素平面数组，平面数量由图像格式决定。使用错误的格式有可能返回空数组
                 val planes = image.planes
                 lock.lock()
-                var offset = 0
-                val width = image.width
-                val height = image.height
-                val len = width * height
+                val len = image.width * image.height
                 yuvData = ByteArray(len * 3 / 2)
-                planes[0].buffer[yuvData, offset, len]
-                offset += len
-                for (i in 1 until planes.size) {
+                planes[0].buffer[yuvData, 0, len]
+                var offset = len
+                for (i in planes.iterator()) {
                     var srcIndex = 0
                     var dstIndex = 0
-                    val rowStride = planes[i].rowStride
-                    val pixelsStride = planes[i].pixelStride
-                    val buffer = planes[i].buffer
-                    if (temp?.size != buffer.capacity()) {
-                        temp = ByteArray(buffer.capacity())
+                    if (temp?.size != i.buffer.capacity()) {
+                        temp = ByteArray(i.buffer.capacity())
                     }
                     temp?.let {
-                        buffer[it]
-                        for (j in 0 until height / 2) {
-                            for (k in 0 until width / 2) {
+                        i.buffer[it]
+                        for (j in 0 until image.height / 2) {
+                            for (k in 0 until image.width / 2) {
                                 yuvData[offset + dstIndex++] = it[srcIndex]
-                                srcIndex += pixelsStride
+                                srcIndex += i.pixelStride
                             }
-                            if (pixelsStride == 2) {
-                                srcIndex += rowStride - width
-                            } else if (pixelsStride == 1) {
-                                srcIndex += rowStride - width / 2
+                            when (i.pixelStride) {
+                                1 -> srcIndex += i.rowStride - image.width / 2
+                                2 -> srcIndex += i.rowStride - image.width
                             }
                         }
                     }
@@ -373,9 +365,9 @@ class Camera2Helper(
                     }
                     dstData?.let {
                         if (rotateDegree == 90) {
-                            YUVUtil.YUV420pRotate90(it, yuvData, width, height)
+                            YUVUtil.YUV420pRotate90(it, yuvData, image.width, image.height)
                         } else {
-                            YUVUtil.YUV420pRotate180(it, yuvData, width, height)
+                            YUVUtil.YUV420pRotate180(it, yuvData, image.width, image.height)
                         }
                     }
                     camera2Listener?.onPreviewFrame(dstData)
