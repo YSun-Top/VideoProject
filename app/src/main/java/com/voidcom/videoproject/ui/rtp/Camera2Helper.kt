@@ -12,8 +12,11 @@ import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraDevice
 import android.hardware.camera2.CameraManager
 import android.hardware.camera2.CaptureRequest
+import android.hardware.camera2.params.OutputConfiguration
+import android.hardware.camera2.params.SessionConfiguration
 import android.media.ImageReader
 import android.media.ImageReader.OnImageAvailableListener
+import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
@@ -23,6 +26,7 @@ import android.view.TextureView
 import com.voidcom.v_base.utils.AppCode
 import com.voidcom.v_base.utils.PermissionsUtils
 import java.lang.ref.WeakReference
+import java.util.concurrent.Executors
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
@@ -35,7 +39,6 @@ import kotlin.math.abs
  * @param camera2Listener 摄像头回调，如开启、关闭、错误等
  * @param previewViewSize
  * @param rotation 角度信息，默认为0，当设备旋转了值不为零
- * @param rotateDegree 角度信息，和 rotation 参数有关系
  */
 class Camera2Helper(
     val previewDisplayView: TextureView,
@@ -43,7 +46,6 @@ class Camera2Helper(
     val camera2Listener: Camera2Listener? = null,
     val previewViewSize: Size,
     val rotation: Int = 0,
-    val rotateDegree: Int = 0,
     val context: WeakReference<Activity>
 ) {
     private var mCameraDevice: CameraDevice? = null
@@ -263,24 +265,42 @@ class Camera2Helper(
             mPreviewRequestBuilder?.addTarget(mImageReader.surface)
 
             // Here, we create a CameraCaptureSession for camera preview.
-            mCameraDevice?.createCaptureSession(
-                listOf(surface, mImageReader.surface),
-                cameraStateCallback,
-                mBackgroundHandler
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                mCameraDevice?.createCaptureSession(
+                    SessionConfiguration(
+                        SessionConfiguration.SESSION_REGULAR,
+                        listOf(
+                            OutputConfiguration(surface),
+                            OutputConfiguration(mImageReader.surface)
+                        ),
+                        Executors.newSingleThreadExecutor(),
+                        cameraStateCallback
+                    )
+                )
+            } else {
+                mCameraDevice?.createCaptureSession(
+                    listOf(surface, mImageReader.surface),
+                    cameraStateCallback,
+                    mBackgroundHandler
+                )
+            }
         } catch (e: CameraAccessException) {
             e.printStackTrace()
         }
     }
 
-    private fun getCameraOrientation(rotation: Int, cameraId: String): Int {
-        val degree = when (rotation) {
-            Surface.ROTATION_0 -> 0
-            Surface.ROTATION_90 -> 90
-            Surface.ROTATION_180 -> 180
-            Surface.ROTATION_270 -> 270
+    private fun getPreviewDegree(rotation: Int): Int {
+        return when (rotation) {
+            Surface.ROTATION_0 -> 90
+            Surface.ROTATION_90 -> 0
+            Surface.ROTATION_180 -> 270
+            Surface.ROTATION_270 -> 180
             else -> rotation * 90
         }
+    }
+
+    private fun getCameraOrientation(rotation: Int, cameraId: String): Int {
+        val degree = getPreviewDegree(rotation)
         val result = if (CAMERA_ID_FRONT == cameraId) {
             (360 - (mSensorOrientation + degree) % 360) % 360
         } else {
@@ -323,12 +343,13 @@ class Camera2Helper(
      * 通过ImageReader获得摄像头数据，然后将得到的帧数据通过Camera2Listener接口传递给推流
      */
     private val imageAvailableListenerImpl = object : OnImageAvailableListener {
-        private var temp: ByteArray? = null
+        private var temp = ByteArray(0)
         private lateinit var yuvData: ByteArray
         private var dstData: ByteArray? = null
         private val lock = ReentrantLock()
 
         override fun onImageAvailable(reader: ImageReader) {
+            //获取一个完整图形缓冲数据，可以理解为一帧图像数据
             val image = reader.acquireNextImage()
             if (image.format == ImageFormat.YUV_420_888) {
                 //获取图像的像素平面数组，平面数量由图像格式决定。使用错误的格式有可能返回空数组
@@ -338,27 +359,31 @@ class Camera2Helper(
                 yuvData = ByteArray(len * 3 / 2)
                 planes[0].buffer[yuvData, 0, len]
                 var offset = len
-                for (i in planes.iterator()) {
+                for (i in 1 until planes.size) {
                     var srcIndex = 0
                     var dstIndex = 0
-                    if (temp?.size != i.buffer.capacity()) {
-                        temp = ByteArray(i.buffer.capacity())
+                    val rowStride = planes[i].rowStride
+                    val pixelsStride = planes[i].pixelStride
+                    val buffer = planes[i].buffer
+                    if (temp.size != buffer.capacity()) {
+                        temp = ByteArray(buffer.capacity())
                     }
-                    temp?.let {
-                        i.buffer[it]
-                        for (j in 0 until image.height / 2) {
-                            for (k in 0 until image.width / 2) {
-                                yuvData[offset + dstIndex++] = it[srcIndex]
-                                srcIndex += i.pixelStride
-                            }
-                            when (i.pixelStride) {
-                                1 -> srcIndex += i.rowStride - image.width / 2
-                                2 -> srcIndex += i.rowStride - image.width
-                            }
+                    buffer[temp]
+                    //逐个复制像素
+                    for (j in 0 until image.height / 2) {
+                        for (k in 0 until image.width / 2) {
+                            yuvData[offset + dstIndex++] = temp[srcIndex]
+                            srcIndex += pixelsStride
+                        }
+                        when (pixelsStride) {
+                            1 -> srcIndex += rowStride - image.width / 2
+                            2 -> srcIndex += rowStride - image.width
                         }
                     }
                     offset += len / 4
                 }
+                val rotateDegree=getPreviewDegree(rotation)
+                //如果设备旋转了，还需要对数据处理，使之显示正常
                 if (rotateDegree == 90 || rotateDegree == 180) {
                     if (dstData == null) {
                         dstData = ByteArray(len * 3 / 2)
@@ -369,8 +394,8 @@ class Camera2Helper(
                         } else {
                             YUVUtil.YUV420pRotate180(it, yuvData, image.width, image.height)
                         }
+                        camera2Listener?.onPreviewFrame(it)
                     }
-                    camera2Listener?.onPreviewFrame(dstData)
                 } else {
                     camera2Listener?.onPreviewFrame(yuvData)
                 }
@@ -378,7 +403,6 @@ class Camera2Helper(
             }
             image.close()
         }
-
     }
 
     private lateinit var mCaptureSession: CameraCaptureSession

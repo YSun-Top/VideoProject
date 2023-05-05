@@ -6,7 +6,7 @@ interface Camera2Listener {
 
     fun onCameraOpened(previewSize: Size?, displayOrientation: Int)
 
-    fun onPreviewFrame(yuvData: ByteArray?)
+    fun onPreviewFrame(yuvData: ByteArray)
 
     fun onCameraClosed()
 

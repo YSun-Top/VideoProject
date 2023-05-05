@@ -1,5 +1,8 @@
 package com.voidcom.videoproject.ui.rtp
 
+/**
+ * 对应{@link ImageFormat.YUV_XXX}图像格式工具
+ */
 object YUVUtil {
     fun YUV420pRotate90(dst: ByteArray, src: ByteArray, width: Int, height: Int) {
         var n = 0

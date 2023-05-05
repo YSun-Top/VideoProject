@@ -76,12 +76,4 @@ class AudioStream @RequiresPermission(android.Manifest.permission.RECORD_AUDIO) 
     fun setMute(isMute: Boolean) {
         this.isMute = isMute
     }
-
-    interface OnFrameDataCallback {
-        fun getInputSamples(): Int
-        fun onAudioFrame(pcm: ByteArray?)
-        fun onAudioCodecInfo(sampleRate: Int, channelCount: Int)
-        fun onVideoFrame(yuv: ByteArray?, cameraType: Int)
-        fun onVideoCodecInfo(width: Int, height: Int, frameRate: Int, bitrate: Int)
-    }
 }

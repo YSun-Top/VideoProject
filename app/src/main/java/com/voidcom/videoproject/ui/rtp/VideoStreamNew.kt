@@ -1,18 +1,16 @@
 package com.voidcom.videoproject.ui.rtp
 
 import android.app.Activity
-import android.graphics.Point
 import android.graphics.SurfaceTexture
 import android.util.Log
 import android.util.Size
-import android.view.Surface
 import android.view.SurfaceHolder
 import android.view.TextureView
 import android.view.TextureView.SurfaceTextureListener
 import java.lang.ref.WeakReference
 
 class VideoStreamNew(
-    val callback: AudioStream.OnFrameDataCallback,
+    val callback: OnFrameDataCallback,
     val mTextureView: TextureView,
     val videoParam: VideoParam,
     val context: WeakReference<Activity>
@@ -23,6 +21,7 @@ class VideoStreamNew(
      * 这取决于旋转的方向
      */
     private var rotation = 0
+    private var isLiving = false
     private lateinit var camera2Helper: Camera2Helper
 
     init {
@@ -76,8 +75,10 @@ class VideoStreamNew(
 
     }
 
-    override fun onPreviewFrame(yuvData: ByteArray?) {
-
+    override fun onPreviewFrame(yuvData: ByteArray) {
+        if (isLiving){
+            callback.onVideoFrame(yuvData,2)
+        }
     }
 
     override fun onCameraClosed() {
@@ -91,29 +92,18 @@ class VideoStreamNew(
     private fun startPreview() {
         rotation = context.get()?.windowManager?.defaultDisplay?.rotation ?: 0
         camera2Helper = Camera2Helper(
-            previewDisplayView = mTextureView,
-            specificCameraId = Camera2Helper.CAMERA_ID_BACK,
-            camera2Listener = this,
-            previewViewSize = Size(videoParam.width, videoParam.height),
-            rotation = rotation,
-            rotateDegree = getPreviewDegree(rotation),
-            context = context
+            mTextureView,
+            Camera2Helper.CAMERA_ID_BACK,
+            this,
+            Size(videoParam.width, videoParam.height),
+            rotation,
+            context
         )
         camera2Helper.start()
     }
 
     private fun stopPreview() {
         camera2Helper.stop()
-    }
-
-    private fun getPreviewDegree( rotation: Int): Int {
-        return when (rotation) {
-            Surface.ROTATION_0 -> 90
-            Surface.ROTATION_90 -> 0
-            Surface.ROTATION_180 -> 270
-            Surface.ROTATION_270 -> 180
-            else -> -1
-        }
     }
 
     companion object{

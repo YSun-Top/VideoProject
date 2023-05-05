@@ -13,7 +13,7 @@ class LivePusherNew(
     audioParam: AudioParam,
     view: TextureView,
     cameraType: CameraType
-) : AudioStream.OnFrameDataCallback {
+) : OnFrameDataCallback {
     private var audioStream: AudioStream? = null
     private var videoStream = VideoStreamNew(this, view, videoParam, WeakReference(activity))
 
@@ -35,6 +35,7 @@ class LivePusherNew(
     }
 
     override fun onVideoFrame(yuv: ByteArray?, cameraType: Int) {
+
     }
 
     override fun onVideoCodecInfo(width: Int, height: Int, frameRate: Int, bitrate: Int) {
@@ -47,6 +48,8 @@ class LivePusherNew(
     fun switchCamera() {
         videoStream.switchCamera()
     }
+
+    private external fun native_init()
 }
 
 enum class CameraType {
