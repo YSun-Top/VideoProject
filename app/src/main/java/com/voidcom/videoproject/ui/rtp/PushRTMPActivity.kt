@@ -18,6 +18,7 @@ import com.voidcom.videoproject.databinding.ActivityPushRtmpBinding
 class PushRTMPActivity : BaseActivity<ActivityPushRtmpBinding, EmptyViewModel>(),
     OnCheckedChangeListener {
     private lateinit var livePusher: LivePusherNew
+    private var isPushing = false
 
     override val mViewModel: EmptyViewModel by lazy { EmptyViewModel() }
 
@@ -57,9 +58,22 @@ class PushRTMPActivity : BaseActivity<ActivityPushRtmpBinding, EmptyViewModel>()
         mBinding.tgBtnMute.setOnCheckedChangeListener(this)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if (isPushing){
+            isPushing=false
+            livePusher.stopPush()
+        }
+        livePusher.release()
+    }
+
     override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
         when (buttonView?.id) {
-            R.id.tgBtn_control -> {}
+            R.id.tgBtn_control -> {
+                if (isChecked){
+                    livePusher
+                }
+            }
             R.id.tgBtn_Mute -> {}
         }
     }
@@ -68,7 +82,9 @@ class PushRTMPActivity : BaseActivity<ActivityPushRtmpBinding, EmptyViewModel>()
         val videoParam = VideoParam(640, 480, Camera2Helper.CAMERA_ID_BACK.toInt(), 800000, 10)
         val audioParam =
             AudioParam(44100, AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT, 2)
-        livePusher =
-            LivePusherNew(this, videoParam, audioParam, mBinding.surfaceView, CameraType.CAMERA2)
+        if (PermissionsUtils.checkPermission(this,AppCode.requestRecordAudio).isEmpty()) {
+            livePusher =
+                LivePusherNew(this, videoParam, audioParam, mBinding.surfaceView, CameraType.CAMERA2)
+        }
     }
 }

@@ -8,10 +8,8 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
-class AudioStream @RequiresPermission(android.Manifest.permission.RECORD_AUDIO) constructor(
-    callback: OnFrameDataCallback,
-    audioParam: AudioParam
-) {
+class AudioStream @RequiresPermission(android.Manifest.permission.RECORD_AUDIO)
+constructor(callback: OnFrameDataCallback, audioParam: AudioParam) {
     private var isMute = false
     private var isLiving = false
     private val inputSamples: Int

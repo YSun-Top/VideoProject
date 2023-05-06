@@ -25,7 +25,7 @@
     <string name="push_rtmp">RTMP推流</string>
     <string name="switchCamera">切换摄像头</string>
     <string name="tgBtn_start">开始</string>
-    <string name="tgBtn_stop">开始</string>
+    <string name="tgBtn_stop">停止</string>
     <string name="btn_mute">静音</string>
     <string name="btn_cancel_mute">取消静音</string>
 </resources>
