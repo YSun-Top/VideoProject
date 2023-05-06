@@ -22,7 +22,7 @@ class VideoStreamNew(
      */
     private var rotation = 0
     private var isLiving = false
-    private lateinit var camera2Helper: Camera2Helper
+    private var camera2Helper: Camera2Helper?=null
 
     init {
         mTextureView.surfaceTextureListener = this
@@ -36,7 +36,7 @@ class VideoStreamNew(
     }
 
     override fun switchCamera() {
-        camera2Helper.switchCamera()
+        camera2Helper?.switchCamera()
     }
 
     override fun stopLive() {
@@ -98,12 +98,11 @@ class VideoStreamNew(
             Size(videoParam.width, videoParam.height),
             rotation,
             context
-        )
-        camera2Helper.start()
+        ).apply { start() }
     }
 
     private fun stopPreview() {
-        camera2Helper.stop()
+        camera2Helper?.stop()
     }
 
     companion object{

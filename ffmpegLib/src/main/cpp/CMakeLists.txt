@@ -49,10 +49,7 @@ set_target_properties(ffmpeg
 #set_target_properties(x264
 #        PROPERTIES IMPORTED_LOCATION
 #        ${SO_DIR}/libx264.so)
-# 日志库
-find_library(
-        log-lib
-        log)
+
 # 将其他库链接到目标库ffmpegSDK
 target_link_libraries(
         ffmpegSDK
@@ -62,4 +59,4 @@ target_link_libraries(
         -landroid #native_window
         -ljnigraphics #bitmap
         -lOpenSLES #openSLES
-        ${log-lib})
+        log)

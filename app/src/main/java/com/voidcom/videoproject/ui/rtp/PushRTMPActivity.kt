@@ -1,6 +1,7 @@
 package com.voidcom.videoproject.ui.rtp
 
 import android.media.AudioFormat
+import android.util.Log
 import android.widget.CompoundButton
 import android.widget.CompoundButton.OnCheckedChangeListener
 import androidx.activity.result.contract.ActivityResultContracts
@@ -60,8 +61,8 @@ class PushRTMPActivity : BaseActivity<ActivityPushRtmpBinding, EmptyViewModel>()
 
     override fun onDestroy() {
         super.onDestroy()
-        if (isPushing){
-            isPushing=false
+        if (isPushing) {
+            isPushing = false
             livePusher.stopPush()
         }
         livePusher.release()
@@ -70,11 +71,19 @@ class PushRTMPActivity : BaseActivity<ActivityPushRtmpBinding, EmptyViewModel>()
     override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
         when (buttonView?.id) {
             R.id.tgBtn_control -> {
-                if (isChecked){
-                    livePusher
+                isPushing = if (isChecked) {
+                    livePusher.startPush(LIVE_URL, callback)
+                    true
+                } else {
+                    livePusher.stopPush()
+                    false
                 }
             }
-            R.id.tgBtn_Mute -> {}
+
+            R.id.tgBtn_Mute -> {
+                Log.i(TAG, "isChecked=$isChecked")
+                livePusher.setMute(isChecked)
+            }
         }
     }
 
@@ -82,9 +91,26 @@ class PushRTMPActivity : BaseActivity<ActivityPushRtmpBinding, EmptyViewModel>()
         val videoParam = VideoParam(640, 480, Camera2Helper.CAMERA_ID_BACK.toInt(), 800000, 10)
         val audioParam =
             AudioParam(44100, AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT, 2)
-        if (PermissionsUtils.checkPermission(this,AppCode.requestRecordAudio).isEmpty()) {
+        if (PermissionsUtils.checkPermission(this, AppCode.requestRecordAudio).isEmpty()) {
             livePusher =
-                LivePusherNew(this, videoParam, audioParam, mBinding.surfaceView, CameraType.CAMERA2)
+                LivePusherNew(
+                    this,
+                    videoParam,
+                    audioParam,
+                    mBinding.surfaceView,
+                    CameraType.CAMERA2
+                )
         }
+    }
+
+    private val callback = object : LivePusherNew.LiveErrorCallback {
+        override fun onError(msg: String) {
+            Log.e(TAG, "onError:$msg")
+        }
+    }
+
+    companion object {
+        private val TAG = PushRTMPActivity::class.java.simpleName
+        private const val LIVE_URL = "rtmp://192.168.20.141/live/stream"
     }
 }

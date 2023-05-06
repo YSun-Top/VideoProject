@@ -21,7 +21,7 @@ android {
         ndk {
             abiFilters.add("armeabi-v7a")
             abiFilters.add("arm64-v8a")
-            abiFilters.add("x86_64")
+//            abiFilters.add("x86_64")
         }
     }
 
@@ -40,7 +40,7 @@ android {
             version = "3.18.1"
         }
     }
-//    ndkVersion = "21.4.7075529"
+    ndkVersion = "21.4.7075529"
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8

@@ -5,9 +5,9 @@
 #ifndef VIDEOPROJECT_AUDIOSTREAM_H
 #define VIDEOPROJECT_AUDIOSTREAM_H
 
-#include "rtmp/rtmp.h"
-#include "include/faac/faac.h"
 #include <sys/types.h>
+#include "include/faac/faac.h"
+#include "rtmp/rtmp.h"
 
 class AudioStream {
     typedef void (*AudioCallback)(RTMPPacket *packet);

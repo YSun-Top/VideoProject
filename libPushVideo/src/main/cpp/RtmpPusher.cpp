@@ -1,12 +1,12 @@
-#include <jni.h>
-#include "define/logger.h"
-#include "VideoStream.h"
-#include "AudioStream.h"
-#include "PacketQueue.h"
-
 //
 // Created by Void on 2023/5/5.
 //
+#include <jni.h>
+#include "VideoStream.h"
+#include "AudioStream.h"
+#include "PacketQueue.h"
+#include "PushInterface.h"
+
 #define RTMP_PUSHER_FUNC(RETURN_TYPE, FUNC_NAME, ...) \
     extern "C" \
     JNIEXPORT RETURN_TYPE JNICALL Java_com_voidcom_videoproject_ui_rtp_LivePusherNew_ ## FUNC_NAME \
@@ -22,6 +22,12 @@ uint32_t start_time;
 
 JavaVM *javaVM;
 jobject jobject_error;
+
+//when calling System.loadLibrary, will callback it
+jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
+    javaVM = vm;
+    return JNI_VERSION_1_6;
+}
 
 //callback error to java
 void throwErrToJava(int error_code) {
