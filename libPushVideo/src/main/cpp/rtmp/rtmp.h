@@ -40,10 +40,6 @@ extern "C"
 #define RTMP_PACKET_SIZE_SMALL    2
 #define RTMP_PACKET_SIZE_MINIMUM  3
 
-extern int RTMP_ctrlC;
-
-uint32_t RTMP_GetTime(void);
-
 #define RTMP_PACKET_TYPE_AUDIO 0x08
 #define RTMP_PACKET_TYPE_VIDEO 0x09
 #define RTMP_PACKET_TYPE_INFO  0x12
@@ -214,6 +210,10 @@ typedef struct RTMP
   RTMPSockBuf m_sb;
   RTMP_LNK Link;
 } RTMP;
+
+extern int RTMP_ctrlC;
+
+uint32_t RTMP_GetTime(void);
 
 int RTMP_ParseURL(const char *url, int *protocol, AVal *host,
                   unsigned int *port, AVal *playpath, AVal *app);

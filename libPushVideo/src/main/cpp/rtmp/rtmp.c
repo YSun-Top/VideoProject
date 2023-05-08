@@ -2429,6 +2429,9 @@ RTMP_Connect0(RTMP *r, struct sockaddr *service) {
                 (r->m_sb.sb_socket, SOL_SOCKET, SO_SNDTIMEO, (char *) &tv, sizeof(tv))) {
             RTMP_Log(RTMP_LOGERROR, "%s, Setting socket timeout to %ds failed!",
                      __FUNCTION__, r->Link.timeout);
+
+            LOGE("%s, Setting socket timeout to %ds failed!",
+                 __FUNCTION__, r->Link.timeout);
         }
 
         if (connect(r->m_sb.sb_socket, service, sizeof(struct sockaddr)) < 0) {
@@ -2436,6 +2439,8 @@ RTMP_Connect0(RTMP *r, struct sockaddr *service) {
             RTMP_Log(RTMP_LOGERROR, "%s, failed to connect socket. %d (%s)",
                      __FUNCTION__, err, strerror(err));
             RTMP_Close(r);
+            LOGE("%s, failed to connect socket. %d (%s)",
+                 __FUNCTION__, err, strerror(err));
             return FALSE;
         }
 
@@ -2444,12 +2449,15 @@ RTMP_Connect0(RTMP *r, struct sockaddr *service) {
             if (!SocksNegotiate(r)) {
                 RTMP_Log(RTMP_LOGERROR, "%s, SOCKS negotiation failed.", __FUNCTION__);
                 RTMP_Close(r);
+                LOGE("%s, SOCKS negotiation failed.", __FUNCTION__);
                 return FALSE;
             }
         }
     } else {
         RTMP_Log(RTMP_LOGERROR, "%s, failed to create socket. Error: %d", __FUNCTION__,
                  GetSockError());
+        LOGE("%s, failed to create socket. Error: %d", __FUNCTION__,
+             GetSockError());
         return FALSE;
     }
 
@@ -2514,24 +2522,32 @@ RTMP_Connect1(RTMP *r, RTMPPacket *cp) {
 int
 RTMP_Connect(RTMP *r, RTMPPacket *cp) {
     struct sockaddr_in service;
-    if (!r->Link.hostname.av_len)
+    if (!r->Link.hostname.av_len){
+        LOGE("av_len: %d",r->Link.hostname.av_len);
         return FALSE;
+    }
 
     memset(&service, 0, sizeof(struct sockaddr_in));
     service.sin_family = AF_INET;
 
     if (r->Link.socksport) {
         /* Connect via SOCKS */
-        if (!add_addr_info(&service, &r->Link.sockshost, r->Link.socksport))
+        if (!add_addr_info(&service, &r->Link.sockshost, r->Link.socksport)){
+            LOGE("add_addr_info");
             return FALSE;
+        }
     } else {
         /* Connect directly */
-        if (!add_addr_info(&service, &r->Link.hostname, r->Link.port))
+        if (!add_addr_info(&service, &r->Link.hostname, r->Link.port)){
+            LOGE("add_addr_info_directly");
             return FALSE;
+        }
     }
 
-    if (!RTMP_Connect0(r, (struct sockaddr *) &service))
+    if (!RTMP_Connect0(r, (struct sockaddr *) &service)){
+        LOGE("RTMP_Connect0");
         return FALSE;
+    }
 
     r->m_bSendCounter = TRUE;
 

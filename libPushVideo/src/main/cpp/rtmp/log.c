@@ -29,6 +29,7 @@
 
 #include "rtmp_sys.h"
 #include "log.h"
+#include "../define/logger.h"
 
 #define MAX_PRINT_LEN	2048
 

@@ -54,7 +54,6 @@ void releasePackets(RTMPPacket *&packet) {
     }
 }
 void *start(void *args) {
-
     char *url = static_cast<char *>(args);
     RTMP *rtmp;
     do {

@@ -43,7 +43,7 @@ import kotlin.math.abs
 class Camera2Helper(
     val previewDisplayView: TextureView,
     var specificCameraId: String,
-    val camera2Listener: Camera2Listener? = null,
+    var camera2Listener: Camera2Listener? = null,
     val previewViewSize: Size,
     val rotation: Int = 0,
     val context: WeakReference<Activity>
@@ -52,6 +52,7 @@ class Camera2Helper(
     private var mCameraId: String = ""
 
     //region ---摄像头控制---
+    @Synchronized
     fun start() {
         if (mCameraDevice != null) return
         startBackgroundThread()
@@ -64,10 +65,17 @@ class Camera2Helper(
         }
     }
 
+    @Synchronized
     fun stop() {
         if (mCameraDevice == null) return
         closeCamera()
         stopBackgroundThread()
+    }
+
+    fun release(){
+        stop()
+        camera2Listener=null
+        context.clear()
     }
 
     fun switchCamera() {

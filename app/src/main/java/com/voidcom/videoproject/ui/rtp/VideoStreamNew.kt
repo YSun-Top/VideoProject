@@ -21,13 +21,13 @@ class VideoStreamNew(
      */
     private var rotation = 0
     private var isLiving = false
-    private var camera2Helper: Camera2Helper?=null
+    private var camera2Helper: Camera2Helper? = null
 
     override fun startLive() {
+        isLiving = true
     }
 
     override fun setPreviewDisplay(surfaceHolder: SurfaceHolder?) {
-
     }
 
     override fun switchCamera() {
@@ -35,11 +35,13 @@ class VideoStreamNew(
     }
 
     override fun stopLive() {
-
+        isLiving = false
     }
 
     override fun release() {
-
+        camera2Helper?.stop()
+        camera2Helper?.release()
+        camera2Helper = null
     }
 
     override fun onPreviewDegreeChanged(degree: Int) {
@@ -52,8 +54,8 @@ class VideoStreamNew(
     }
 
     override fun onPreviewFrame(yuvData: ByteArray) {
-        if (isLiving){
-            callback.onVideoFrame(yuvData,2)
+        if (isLiving) {
+            callback.onVideoFrame(yuvData, 2)
         }
     }
 
@@ -66,7 +68,7 @@ class VideoStreamNew(
     }
 
     fun startPreview() {
-        KLog.d(TAG,"开始预览")
+        KLog.d(TAG, "开始预览")
         rotation = context.get()?.windowManager?.defaultDisplay?.rotation ?: 0
         camera2Helper = Camera2Helper(
             mTextureView,
@@ -79,11 +81,11 @@ class VideoStreamNew(
     }
 
     fun stopPreview() {
-        KLog.d(TAG,"停止预览")
+        KLog.d(TAG, "停止预览")
         camera2Helper?.stop()
     }
 
-    companion object{
+    companion object {
         private const val TAG = "VideoStreamNew"
     }
 

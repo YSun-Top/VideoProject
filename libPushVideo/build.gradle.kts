@@ -4,11 +4,12 @@ plugins {
 }
 
 android {
-    namespace = "com.example.libpushvideo"
-    compileSdk = 33
+    val androidBuildTools: Map<*, *> = rootProject.ext["androidBuildTools"] as Map<*, *>
+    compileSdk = androidBuildTools["compileSdk"] as Int
 
     defaultConfig {
-        minSdk = 21
+        minSdk = androidBuildTools["minSdk"] as Int
+        targetSdk = androidBuildTools["targetSdk"] as Int
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
