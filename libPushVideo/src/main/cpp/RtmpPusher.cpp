@@ -53,6 +53,7 @@ void releasePackets(RTMPPacket *&packet) {
         packet = nullptr;
     }
 }
+
 void *start(void *args) {
     char *url = static_cast<char *>(args);
     RTMP *rtmp;
@@ -131,7 +132,7 @@ RTMP_PUSHER_FUNC(void, nativeInit) {
     jobject_error = env->NewGlobalRef(instance);
 }
 
-RTMP_PUSHER_FUNC(void, nativePushVideo,jbyteArray yuv,jint cameraType) {
+RTMP_PUSHER_FUNC(void, nativePushVideo, jbyteArray yuv, jint cameraType) {
     if (!videoStream || !isPushing) {
         return;
     }
@@ -140,30 +141,37 @@ RTMP_PUSHER_FUNC(void, nativePushVideo,jbyteArray yuv,jint cameraType) {
     env->ReleaseByteArrayElements(yuv, yuv_plane, 0);
 }
 
-RTMP_PUSHER_FUNC(void,nativeStart,jstring path){
-    LOGI("native start...");
+RTMP_PUSHER_FUNC(void, nativeStart, jstring path) {
     if (isPushing) {
         return;
     }
     const char *path_ = env->GetStringUTFChars(path, nullptr);
     char *url = new char[strlen(path_) + 1];
     strcpy(url, path_);
+    LOGI("native start...: %s", url);
 
     std::thread pushThread(start, url);
     pushThread.detach();
     env->ReleaseStringUTFChars(path, path_);
 }
 
-RTMP_PUSHER_FUNC(void ,nativeStop){
+RTMP_PUSHER_FUNC(void, nativeStop) {
     LOGI("native stop...");
     isPushing = false;
     packets.setRunning(false);
 }
-RTMP_PUSHER_FUNC(void ,nativeRelease){
+RTMP_PUSHER_FUNC(void, nativeRelease) {
     LOGI("native release...");
     env->DeleteGlobalRef(jobject_error);
     delete videoStream;
     videoStream = nullptr;
     delete audioStream;
     audioStream = nullptr;
+}
+
+RTMP_PUSHER_FUNC(void, nativeSetAudioCodecInfo, jint sampleRateInHz, jint channels) {
+    if (!audioStream)return;
+    int ret = audioStream->setAudioEncInfo(sampleRateInHz, channels);
+    if (ret >= 0) return;
+    throwErrToJava(ERROR_AUDIO_ENCODER_OPEN);
 }

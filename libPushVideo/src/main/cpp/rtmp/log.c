@@ -51,7 +51,7 @@ static void rtmp_log_default(int level, const char *format, va_list vl)
 	char str[MAX_PRINT_LEN]="";
 
 	vsnprintf(str, MAX_PRINT_LEN-1, format, vl);
-
+	LOGE(str,"");
 	/* Filter out 'no-name' */
 	if ( RTMP_debuglevel<RTMP_LOGALL && strstr(str, "no-name" ) != NULL )
 		return;
@@ -63,7 +63,6 @@ static void rtmp_log_default(int level, const char *format, va_list vl)
 			putc('\n', fmsg);
 			neednl = 0;
 		}
-//        LOGE(format,vl);
 		fprintf(fmsg, "%s: %s\n", levels[level], str);
 #ifdef _DEBUG
 		fflush(fmsg);

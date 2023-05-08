@@ -4,7 +4,7 @@
 #include "log.h"
 #include "rtmp_sys.h"
 
-//#include "bytes.h"
+#include "bytes.h"
 
 static const AMFObjectProperty AMFProp_Invalid = {{0, 0}, AMF_INVALID};
 static const AVal AV_empty = {0, 0};

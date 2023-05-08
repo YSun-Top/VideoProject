@@ -40,6 +40,7 @@ constructor(
     }
 
     override fun onAudioCodecInfo(sampleRate: Int, channelCount: Int) {
+        nativeSetAudioCodecInfo(sampleRate, channelCount)
     }
 
     override fun onVideoFrame(yuv: ByteArray, cameraType: Int) {
@@ -66,10 +67,11 @@ constructor(
         nativeStop()
     }
 
-    fun startPreview(){
+    fun startPreview() {
         videoStream.startPreview()
     }
-    fun stopPreview(){
+
+    fun stopPreview() {
         videoStream.stopPreview()
     }
 
@@ -118,6 +120,8 @@ constructor(
     private external fun nativeStop()
 
     private external fun nativeRelease()
+
+    private external fun nativeSetAudioCodecInfo(sampleRateInHz: Int, channels: Int)
 
     companion object {
         init {

@@ -113,41 +113,41 @@ static struct urlopt {
   char *use;
 } options[] = {
         {AVC("socks"), OFF(Link.sockshost), OPT_STR, 0,
-        "Use the specified SOCKS proxy"},
+                "Use the specified SOCKS proxy"},
         {AVC("app"), OFF(Link.app), OPT_STR, 0,
-        "Name of target app on server"},
+                "Name of target app on server"},
         {AVC("tcUrl"), OFF(Link.tcUrl), OPT_STR, 0,
-        "URL to played stream"},
+                "URL to played stream"},
         {AVC("pageUrl"), OFF(Link.pageUrl), OPT_STR, 0,
-        "URL of played media's web page"},
+                "URL of played media's web page"},
         {AVC("swfUrl"), OFF(Link.swfUrl), OPT_STR, 0,
-        "URL to player SWF file"},
+                "URL to player SWF file"},
         {AVC("flashver"), OFF(Link.flashVer), OPT_STR, 0,
-        "Flash version string (default " DEF_VERSTR ")"},
+                "Flash version string (default " DEF_VERSTR ")"},
         {AVC("conn"), OFF(Link.extras), OPT_CONN, 0,
-        "Append arbitrary AMF data to Connect message"},
+                "Append arbitrary AMF data to Connect message"},
         {AVC("playpath"), OFF(Link.playpath), OPT_STR, 0,
-        "Path to target media on server"},
+                "Path to target media on server"},
         {AVC("playlist"), OFF(Link.lFlags), OPT_BOOL, RTMP_LF_PLST,
-        "Set playlist before play command"},
+                "Set playlist before play command"},
         {AVC("live"), OFF(Link.lFlags), OPT_BOOL, RTMP_LF_LIVE,
-        "Stream is live, no seeking possible"},
+                "Stream is live, no seeking possible"},
         {AVC("subscribe"), OFF(Link.subscribepath), OPT_STR, 0,
-        "Stream to subscribe to"},
+                "Stream to subscribe to"},
         {AVC("token"), OFF(Link.token), OPT_STR, 0,
-        "Key for SecureToken response"},
+                "Key for SecureToken response"},
         {AVC("swfVfy"), OFF(Link.lFlags), OPT_BOOL, RTMP_LF_SWFV,
-        "Perform SWF Verification"},
+                "Perform SWF Verification"},
         {AVC("swfAge"), OFF(Link.swfAge), OPT_INT, 0,
-        "Number of days to use cached SWF hash"},
+                "Number of days to use cached SWF hash"},
         {AVC("start"), OFF(Link.seekTime), OPT_INT, 0,
-        "Stream start position in milliseconds"},
+                "Stream start position in milliseconds"},
         {AVC("stop"), OFF(Link.stopTime), OPT_INT, 0,
-        "Stream stop position in milliseconds"},
+                "Stream stop position in milliseconds"},
         {AVC("buffer"), OFF(m_nBufferMS), OPT_INT, 0,
-        "Buffer time in milliseconds"},
+                "Buffer time in milliseconds"},
         {AVC("timeout"), OFF(Link.timeout), OPT_INT, 0,
-        "Session timeout in seconds"},
+                "Session timeout in seconds"},
         {{NULL, 0}, 0, 0}
 };
 
@@ -1054,15 +1054,13 @@ HandleCtrl(RTMP *r, const RTMPPacket *packet) {
 }
 
 static void
-HandleServerBW(RTMP *r, const RTMPPacket *packet)
-{
+HandleServerBW(RTMP *r, const RTMPPacket *packet) {
     r->m_nServerBW = AMF_DecodeInt32(packet->m_body);
     RTMP_Log(RTMP_LOGDEBUG, "%s: server BW = %d", __FUNCTION__, r->m_nServerBW);
 }
 
 static void
-HandleClientBW(RTMP *r, const RTMPPacket *packet)
-{
+HandleClientBW(RTMP *r, const RTMPPacket *packet) {
     r->m_nClientBW = AMF_DecodeInt32(packet->m_body);
     if (packet->m_nBodySize > 4)
         r->m_nClientBW2 = packet->m_body[4];
@@ -1248,14 +1246,13 @@ HandleInvoke(RTMP *r, const char *body, unsigned int nBodySize) {
 SAVC(FCSubscribe);
 
 static int
-SendFCSubscribe(RTMP *r, AVal *subscribepath)
-{
+SendFCSubscribe(RTMP *r, AVal *subscribepath) {
     RTMPPacket packet;
     char pbuf[512], *pend = pbuf + sizeof(pbuf);
     char *enc;
-    packet.m_nChannel = 0x03;	/* control channel (invoke) */
+    packet.m_nChannel = 0x03;    /* control channel (invoke) */
     packet.m_headerType = RTMP_PACKET_SIZE_MEDIUM;
-    packet.m_packetType = 0x14;	/* INVOKE */
+    packet.m_packetType = 0x14;    /* INVOKE */
     packet.m_nTimeStamp = 0;
     packet.m_nInfoField2 = 0;
     packet.m_hasAbsTimestamp = 0;
@@ -1277,16 +1274,15 @@ SendFCSubscribe(RTMP *r, AVal *subscribepath)
 }
 
 static int
-SendCheckBW(RTMP *r)
-{
+SendCheckBW(RTMP *r) {
     RTMPPacket packet;
     char pbuf[256], *pend = pbuf + sizeof(pbuf);
     char *enc;
 
-    packet.m_nChannel = 0x03;	/* control channel (invoke) */
+    packet.m_nChannel = 0x03;    /* control channel (invoke) */
     packet.m_headerType = RTMP_PACKET_SIZE_LARGE;
-    packet.m_packetType = 0x14;	/* INVOKE */
-    packet.m_nTimeStamp = 0;	/* RTMP_GetTime(); */
+    packet.m_packetType = 0x14;    /* INVOKE */
+    packet.m_nTimeStamp = 0;    /* RTMP_GetTime(); */
     packet.m_nInfoField2 = 0;
     packet.m_hasAbsTimestamp = 0;
     packet.m_body = pbuf + RTMP_MAX_HEADER_SIZE;
@@ -1409,10 +1405,8 @@ WriteN(RTMP *r, const char *buffer, int n) {
 
         if (r->Link.protocol & RTMP_FEATURE_HTTP) {
             nBytes = HTTP_Post(r, RTMPT_SEND, ptr, n);
-            LOGE("HTTP_Post:%d", nBytes);
         } else {
             nBytes = RTMPSockBuf_Send(&r->m_sb, ptr, n);
-            LOGE("RTMPSockBuf_Send:%d", nBytes);
         }
         /*RTMP_Log(RTMP_LOGDEBUG, "%s: %d\n", __FUNCTION__, nBytes); */
 
@@ -1526,8 +1520,8 @@ SocksNegotiate(RTMP *r) {
                 4, 1,            /* SOCKS 4, connect */
                 (r->Link.port >> 8) & 0xFF,
                 (r->Link.port) & 0xFF,
-                (char)(addr >> 24) & 0xFF, (char)(addr >> 16) & 0xFF,
-                (char)(addr >> 8) & 0xFF, (char)addr & 0xFF,
+                (char) (addr >> 24) & 0xFF, (char) (addr >> 16) & 0xFF,
+                (char) (addr >> 8) & 0xFF, (char) addr & 0xFF,
                 0
         };                /* NULL terminate */
 
@@ -1959,12 +1953,10 @@ RTMP_SendPacket(RTMP *r, RTMPPacket *packet, int queue) {
             memcpy(toff, header, nChunkSize + hSize);
             toff += nChunkSize + hSize;
         } else {
-            LOGE("n:%d", nChunkSize + hSize);
             wrote = WriteN(r, header, nChunkSize + hSize);
-            if (!wrote) {
-                LOGE("在这里报错了：%d", wrote);
+            if (!wrote)
                 return FALSE;
-            }
+
         }
         nSize -= nChunkSize;
         buffer += nChunkSize;
@@ -2429,9 +2421,6 @@ RTMP_Connect0(RTMP *r, struct sockaddr *service) {
                 (r->m_sb.sb_socket, SOL_SOCKET, SO_SNDTIMEO, (char *) &tv, sizeof(tv))) {
             RTMP_Log(RTMP_LOGERROR, "%s, Setting socket timeout to %ds failed!",
                      __FUNCTION__, r->Link.timeout);
-
-            LOGE("%s, Setting socket timeout to %ds failed!",
-                 __FUNCTION__, r->Link.timeout);
         }
 
         if (connect(r->m_sb.sb_socket, service, sizeof(struct sockaddr)) < 0) {
@@ -2439,8 +2428,6 @@ RTMP_Connect0(RTMP *r, struct sockaddr *service) {
             RTMP_Log(RTMP_LOGERROR, "%s, failed to connect socket. %d (%s)",
                      __FUNCTION__, err, strerror(err));
             RTMP_Close(r);
-            LOGE("%s, failed to connect socket. %d (%s)",
-                 __FUNCTION__, err, strerror(err));
             return FALSE;
         }
 
@@ -2449,15 +2436,12 @@ RTMP_Connect0(RTMP *r, struct sockaddr *service) {
             if (!SocksNegotiate(r)) {
                 RTMP_Log(RTMP_LOGERROR, "%s, SOCKS negotiation failed.", __FUNCTION__);
                 RTMP_Close(r);
-                LOGE("%s, SOCKS negotiation failed.", __FUNCTION__);
                 return FALSE;
             }
         }
     } else {
         RTMP_Log(RTMP_LOGERROR, "%s, failed to create socket. Error: %d", __FUNCTION__,
                  GetSockError());
-        LOGE("%s, failed to create socket. Error: %d", __FUNCTION__,
-             GetSockError());
         return FALSE;
     }
 
@@ -2522,32 +2506,28 @@ RTMP_Connect1(RTMP *r, RTMPPacket *cp) {
 int
 RTMP_Connect(RTMP *r, RTMPPacket *cp) {
     struct sockaddr_in service;
-    if (!r->Link.hostname.av_len){
-        LOGE("av_len: %d",r->Link.hostname.av_len);
+    if (!r->Link.hostname.av_len)
         return FALSE;
-    }
+
 
     memset(&service, 0, sizeof(struct sockaddr_in));
     service.sin_family = AF_INET;
 
     if (r->Link.socksport) {
         /* Connect via SOCKS */
-        if (!add_addr_info(&service, &r->Link.sockshost, r->Link.socksport)){
-            LOGE("add_addr_info");
+        if (!add_addr_info(&service, &r->Link.sockshost, r->Link.socksport))
             return FALSE;
-        }
+
     } else {
         /* Connect directly */
-        if (!add_addr_info(&service, &r->Link.hostname, r->Link.port)){
-            LOGE("add_addr_info_directly");
+        if (!add_addr_info(&service, &r->Link.hostname, r->Link.port))
             return FALSE;
-        }
+
     }
 
-    if (!RTMP_Connect0(r, (struct sockaddr *) &service)){
-        LOGE("RTMP_Connect0");
+    if (!RTMP_Connect0(r, (struct sockaddr *) &service))
         return FALSE;
-    }
+
 
     r->m_bSendCounter = TRUE;
 
@@ -2736,20 +2716,15 @@ RTMP_FindFirstMatchingProperty(AMFObject *obj, const AVal *name,
 }
 
 static int
-DumpMetaData(AMFObject *obj)
-{
+DumpMetaData(AMFObject *obj) {
     AMFObjectProperty *prop;
     int n;
-    for (n = 0; n < obj->o_num; n++)
-    {
+    for (n = 0; n < obj->o_num; n++) {
         prop = AMF_GetProp(obj, NULL, n);
-        if (prop->p_type != AMF_OBJECT)
-        {
+        if (prop->p_type != AMF_OBJECT) {
             char str[256] = "";
-            switch (prop->p_type)
-            {
-                case AMF_NUMBER:
-                    snprintf(str, 255, "%.2f", prop->p_vu.p_number);
+            switch (prop->p_type) {
+                case AMF_NUMBER:snprintf(str, 255, "%.2f", prop->p_vu.p_number);
                     break;
                 case AMF_BOOLEAN:
                     snprintf(str, 255, "%s",
@@ -2759,24 +2734,20 @@ DumpMetaData(AMFObject *obj)
                     snprintf(str, 255, "%.*s", prop->p_vu.p_aval.av_len,
                              prop->p_vu.p_aval.av_val);
                     break;
-                case AMF_DATE:
-                    snprintf(str, 255, "timestamp:%.2f", prop->p_vu.p_number);
+                case AMF_DATE:snprintf(str, 255, "timestamp:%.2f", prop->p_vu.p_number);
                     break;
                 default:
                     snprintf(str, 255, "INVALID TYPE 0x%02x",
-                             (unsigned char)prop->p_type);
+                             (unsigned char) prop->p_type);
             }
-            if (prop->p_name.av_len)
-            {
+            if (prop->p_name.av_len) {
                 /* chomp */
                 if (strlen(str) >= 1 && str[strlen(str) - 1] == '\n')
                     str[strlen(str) - 1] = '\0';
                 RTMP_Log(RTMP_LOGINFO, "  %-22.*s%s", prop->p_name.av_len,
                          prop->p_name.av_val, str);
             }
-        }
-        else
-        {
+        } else {
             if (prop->p_name.av_len)
                 RTMP_Log(RTMP_LOGINFO, "%.*s:", prop->p_name.av_len, prop->p_name.av_val);
             DumpMetaData(&prop->p_vu.p_object);
@@ -2785,34 +2756,29 @@ DumpMetaData(AMFObject *obj)
     return FALSE;
 }
 
-#define HEX2BIN(a)	(((a)&0x40)?((a)&0xf)+9:((a)&0xf))
+#define HEX2BIN(a)    (((a)&0x40)?((a)&0xf)+9:((a)&0xf))
 
 static void
-DecodeTEA(AVal *key, AVal *text)
-{
-    uint32_t *v, k[4] = { 0 }, u;
+DecodeTEA(AVal *key, AVal *text) {
+    uint32_t *v, k[4] = {0}, u;
     uint32_t z, y, sum = 0, e, DELTA = 0x9e3779b9;
     int32_t p, q;
     int i, n;
     unsigned char *ptr, *out;
 
     /* prep key: pack 1st 16 chars into 4 LittleEndian ints */
-    ptr = (unsigned char *)key->av_val;
+    ptr = (unsigned char *) key->av_val;
     u = 0;
     n = 0;
     v = k;
     p = key->av_len > 16 ? 16 : key->av_len;
-    for (i = 0; i < p; i++)
-    {
+    for (i = 0; i < p; i++) {
         u |= ptr[i] << (n * 8);
-        if (n == 3)
-        {
+        if (n == 3) {
             *v++ = u;
             u = 0;
             n = 0;
-        }
-        else
-        {
+        } else {
             n++;
         }
     }
@@ -2823,10 +2789,9 @@ DecodeTEA(AVal *key, AVal *text)
     /* prep text: hex2bin, multiples of 4 */
     n = (text->av_len + 7) / 8;
     out = malloc(n * 8);
-    ptr = (unsigned char *)text->av_val;
+    ptr = (unsigned char *) text->av_val;
     v = (uint32_t *) out;
-    for (i = 0; i < n; i++)
-    {
+    for (i = 0; i < n; i++) {
         u = (HEX2BIN(ptr[0]) << 4) + HEX2BIN(ptr[1]);
         u |= ((HEX2BIN(ptr[2]) << 4) + HEX2BIN(ptr[3])) << 8;
         u |= ((HEX2BIN(ptr[4]) << 4) + HEX2BIN(ptr[5])) << 16;
@@ -2842,8 +2807,7 @@ DecodeTEA(AVal *key, AVal *text)
     y = v[0];
     q = 6 + 52 / n;
     sum = q * DELTA;
-    while (sum != 0)
-    {
+    while (sum != 0) {
         e = sum >> 2 & 3;
         for (p = n - 1; p > 0; p--)
             z = v[p - 1], y = v[p] -= MX;
@@ -2858,8 +2822,7 @@ DecodeTEA(AVal *key, AVal *text)
 }
 
 static int
-HTTP_Post(RTMP *r, RTMPTCmd cmd, const char *buf, int len)
-{
+HTTP_Post(RTMP *r, RTMPTCmd cmd, const char *buf, int len) {
     char hbuf[512];
     int hlen = snprintf(hbuf, sizeof(hbuf), "POST /%s%s/%d HTTP/1.1\r\n"
                                             "Host: %.*s:%d\r\n"
@@ -2881,8 +2844,7 @@ HTTP_Post(RTMP *r, RTMPTCmd cmd, const char *buf, int len)
 
 
 int RTMP_ParseURL(const char *url, int *protocol, AVal *host, unsigned int *port,
-                  AVal *playpath, AVal *app)
-{
+                  AVal *playpath, AVal *app) {
     char *p, *end, *col, *ques, *slash;
 
     RTMP_Log(RTMP_LOGDEBUG, "Parsing...");
@@ -2898,26 +2860,26 @@ int RTMP_ParseURL(const char *url, int *protocol, AVal *host, unsigned int *port
 
     /* look for usual :// pattern */
     p = strstr(url, "://");
-    if(!p) {
+    if (!p) {
         RTMP_Log(RTMP_LOGERROR, "RTMP URL: No :// in url!");
         return FALSE;
     }
     {
-        int len = (int)(p-url);
+        int len = (int) (p - url);
 
-        if(len == 4 && strncasecmp(url, "rtmp", 4)==0)
+        if (len == 4 && strncasecmp(url, "rtmp", 4) == 0)
             *protocol = RTMP_PROTOCOL_RTMP;
-        else if(len == 5 && strncasecmp(url, "rtmpt", 5)==0)
+        else if (len == 5 && strncasecmp(url, "rtmpt", 5) == 0)
             *protocol = RTMP_PROTOCOL_RTMPT;
-        else if(len == 5 && strncasecmp(url, "rtmps", 5)==0)
+        else if (len == 5 && strncasecmp(url, "rtmps", 5) == 0)
             *protocol = RTMP_PROTOCOL_RTMPS;
-        else if(len == 5 && strncasecmp(url, "rtmpe", 5)==0)
+        else if (len == 5 && strncasecmp(url, "rtmpe", 5) == 0)
             *protocol = RTMP_PROTOCOL_RTMPE;
-        else if(len == 5 && strncasecmp(url, "rtmfp", 5)==0)
+        else if (len == 5 && strncasecmp(url, "rtmfp", 5) == 0)
             *protocol = RTMP_PROTOCOL_RTMFP;
-        else if(len == 6 && strncasecmp(url, "rtmpte", 6)==0)
+        else if (len == 6 && strncasecmp(url, "rtmpte", 6) == 0)
             *protocol = RTMP_PROTOCOL_RTMPTE;
-        else if(len == 6 && strncasecmp(url, "rtmpts", 6)==0)
+        else if (len == 6 && strncasecmp(url, "rtmpts", 6) == 0)
             *protocol = RTMP_PROTOCOL_RTMPTS;
         else {
             RTMP_Log(RTMP_LOGWARNING, "Unknown protocol!\n");
@@ -2929,29 +2891,29 @@ int RTMP_ParseURL(const char *url, int *protocol, AVal *host, unsigned int *port
 
     parsehost:
     /* let's get the hostname */
-    p+=3;
+    p += 3;
 
     /* check for sudden death */
-    if(*p==0) {
+    if (*p == 0) {
         RTMP_Log(RTMP_LOGWARNING, "No hostname in URL!");
         return FALSE;
     }
 
-    end   = p + strlen(p);
-    col   = strchr(p, ':');
-    ques  = strchr(p, '?');
+    end = p + strlen(p);
+    col = strchr(p, ':');
+    ques = strchr(p, '?');
     slash = strchr(p, '/');
 
     {
         int hostlen;
-        if(slash)
+        if (slash)
             hostlen = slash - p;
         else
             hostlen = end - p;
-        if(col && col -p < hostlen)
+        if (col && col - p < hostlen)
             hostlen = col - p;
 
-        if(hostlen < 256) {
+        if (hostlen < 256) {
             host->av_val = p;
             host->av_len = hostlen;
             RTMP_Log(RTMP_LOGDEBUG, "Parsed host    : %.*s", hostlen, host->av_val);
@@ -2959,26 +2921,26 @@ int RTMP_ParseURL(const char *url, int *protocol, AVal *host, unsigned int *port
             RTMP_Log(RTMP_LOGWARNING, "Hostname exceeds 255 characters!");
         }
 
-        p+=hostlen;
+        p += hostlen;
     }
 
     /* get the port number if available */
-    if(*p == ':') {
+    if (*p == ':') {
         unsigned int p2;
         p++;
         p2 = atoi(p);
-        if(p2 > 65535) {
+        if (p2 > 65535) {
             RTMP_Log(RTMP_LOGWARNING, "Invalid port number!");
         } else {
             *port = p2;
         }
     }
 
-    if(!slash) {
+    if (!slash) {
         RTMP_Log(RTMP_LOGWARNING, "No application or playpath in URL!");
         return TRUE;
     }
-    p = slash+1;
+    p = slash + 1;
 
     {
         /* parse application
@@ -2991,25 +2953,24 @@ int RTMP_ParseURL(const char *url, int *protocol, AVal *host, unsigned int *port
         int applen, appnamelen;
 
         slash2 = strchr(p, '/');
-        if(slash2)
-            slash3 = strchr(slash2+1, '/');
+        if (slash2)
+            slash3 = strchr(slash2 + 1, '/');
 
-        applen = end-p; /* ondemand, pass all parameters as app */
+        applen = end - p; /* ondemand, pass all parameters as app */
         appnamelen = applen; /* ondemand length */
 
-        if(ques && strstr(p, "slist=")) { /* whatever it is, the '?' and slist= means we need to use everything as app and parse plapath from slist= */
-            appnamelen = ques-p;
-        }
-        else if(strncmp(p, "ondemand/", 9)==0) {
+        if (ques && strstr(p,
+                           "slist=")) { /* whatever it is, the '?' and slist= means we need to use everything as app and parse plapath from slist= */
+            appnamelen = ques - p;
+        } else if (strncmp(p, "ondemand/", 9) == 0) {
             /* app = ondemand/foobar, only pass app=ondemand */
             applen = 8;
             appnamelen = 8;
-        }
-        else { /* app!=ondemand, so app is app[/appinstance] */
-            if(slash3)
-                appnamelen = slash3-p;
-            else if(slash2)
-                appnamelen = slash2-p;
+        } else { /* app!=ondemand, so app is app[/appinstance] */
+            if (slash3)
+                appnamelen = slash3 - p;
+            else if (slash2)
+                appnamelen = slash2 - p;
 
             applen = appnamelen;
         }
@@ -3024,8 +2985,8 @@ int RTMP_ParseURL(const char *url, int *protocol, AVal *host, unsigned int *port
     if (*p == '/')
         p++;
 
-    if (end-p) {
-        AVal av = {p, end-p};
+    if (end - p) {
+        AVal av = {p, end - p};
         RTMP_ParsePlaypath(&av, playpath);
     }
 
@@ -3059,22 +3020,22 @@ void RTMP_ParsePlaypath(AVal *in, AVal *out) {
     out->av_len = 0;
 
     if ((*ppstart == '?') &&
-            (temp=strstr(ppstart, "slist=")) != 0) {
-        ppstart = temp+6;
+            (temp = strstr(ppstart, "slist=")) != 0) {
+        ppstart = temp + 6;
         pplen = strlen(ppstart);
 
         temp = strchr(ppstart, '&');
         if (temp) {
-            pplen = temp-ppstart;
+            pplen = temp - ppstart;
         }
     }
 
     q = strchr(ppstart, '?');
     if (pplen >= 4) {
         if (q)
-            ext = q-4;
+            ext = q - 4;
         else
-            ext = &ppstart[pplen-4];
+            ext = &ppstart[pplen - 4];
         if ((strncmp(ext, ".f4v", 4) == 0) ||
                 (strncmp(ext, ".mp4", 4) == 0)) {
             addMP4 = 1;
@@ -3089,7 +3050,7 @@ void RTMP_ParsePlaypath(AVal *in, AVal *out) {
         }
     }
 
-    streamname = (char *)malloc((pplen+4+1)*sizeof(char));
+    streamname = (char *) malloc((pplen + 4 + 1) * sizeof(char));
     if (!streamname)
         return;
 
@@ -3110,7 +3071,7 @@ void RTMP_ParsePlaypath(AVal *in, AVal *out) {
         }
     }
 
-    for (p=(char *)ppstart; pplen >0;) {
+    for (p = (char *) ppstart; pplen > 0;) {
         /* skip extension */
         if (subExt && p == ext) {
             p += 4;
@@ -3119,7 +3080,7 @@ void RTMP_ParsePlaypath(AVal *in, AVal *out) {
         }
         if (*p == '%') {
             unsigned int c;
-            sscanf(p+1, "%02x", &c);
+            sscanf(p + 1, "%02x", &c);
             *destptr++ = c;
             pplen -= 3;
             p += 3;

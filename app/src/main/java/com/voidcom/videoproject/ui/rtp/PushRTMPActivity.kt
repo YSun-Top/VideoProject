@@ -135,6 +135,6 @@ class PushRTMPActivity : BaseActivity<ActivityPushRtmpBinding, EmptyViewModel>()
 
     companion object {
         private val TAG = PushRTMPActivity::class.java.simpleName
-        private const val LIVE_URL = "rtmp://172.16.31.46/live/stream"
+        private const val LIVE_URL = "rtmp://192.168.20.141/live/stream"
     }
 }
