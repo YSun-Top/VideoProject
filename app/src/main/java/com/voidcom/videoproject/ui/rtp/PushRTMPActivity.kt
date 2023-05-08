@@ -1,7 +1,9 @@
 package com.voidcom.videoproject.ui.rtp
 
+import android.graphics.SurfaceTexture
 import android.media.AudioFormat
 import android.util.Log
+import android.view.TextureView
 import android.widget.CompoundButton
 import android.widget.CompoundButton.OnCheckedChangeListener
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,7 +19,7 @@ import com.voidcom.videoproject.databinding.ActivityPushRtmpBinding
  * 摄像头界面，包含推流控制和摄像头切换
  */
 class PushRTMPActivity : BaseActivity<ActivityPushRtmpBinding, EmptyViewModel>(),
-    OnCheckedChangeListener {
+    OnCheckedChangeListener, TextureView.SurfaceTextureListener {
     private lateinit var livePusher: LivePusherNew
     private var isPushing = false
 
@@ -31,6 +33,7 @@ class PushRTMPActivity : BaseActivity<ActivityPushRtmpBinding, EmptyViewModel>()
                 initPusher()
                 return
             }
+
             //请求权限,registerForActivityResult必须这种onStart()之前执行
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
                 for (i in result.iterator()) {
@@ -52,6 +55,7 @@ class PushRTMPActivity : BaseActivity<ActivityPushRtmpBinding, EmptyViewModel>()
 
     override fun onInitListener() {
         super.onInitListener()
+        mBinding.surfaceView.surfaceTextureListener=this
         mBinding.btnSwitchCamera.setOnClickListener {
             livePusher.switchCamera()
         }
@@ -87,7 +91,27 @@ class PushRTMPActivity : BaseActivity<ActivityPushRtmpBinding, EmptyViewModel>()
         }
     }
 
+    override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
+        Log.i(TAG, "onSurfaceTextureAvailable...")
+        if (PermissionsUtils.checkPermission(this, AppCode.requestRecordAudio,AppCode.requestCamera).isEmpty()) {
+            livePusher.startPreview()
+        }
+    }
+
+    override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
+    }
+
+    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
+        Log.i(TAG, "onSurfaceTextureDestroyed...")
+        livePusher.stopPreview()
+        return false
+    }
+
+    override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
+    }
+
     private fun initPusher() {
+        Log.d(TAG, "初始化推流，并打卡摄像头")
         val videoParam = VideoParam(640, 480, Camera2Helper.CAMERA_ID_BACK.toInt(), 800000, 10)
         val audioParam =
             AudioParam(44100, AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT, 2)
@@ -111,6 +135,6 @@ class PushRTMPActivity : BaseActivity<ActivityPushRtmpBinding, EmptyViewModel>()
 
     companion object {
         private val TAG = PushRTMPActivity::class.java.simpleName
-        private const val LIVE_URL = "rtmp://192.168.20.141/live/stream"
+        private const val LIVE_URL = "rtmp://172.16.31.46/live/stream"
     }
 }

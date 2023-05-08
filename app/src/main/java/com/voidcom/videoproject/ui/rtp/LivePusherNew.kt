@@ -1,7 +1,6 @@
 package com.voidcom.videoproject.ui.rtp
 
 import android.app.Activity
-import android.util.Log
 import android.view.SurfaceHolder
 import android.view.TextureView
 import androidx.annotation.RequiresPermission
@@ -30,6 +29,7 @@ constructor(
     init {
         nativeInit()
         audioStream = AudioStream(this, audioParam)
+        startPreview()
     }
 
     override fun getInputSamples(): Int {
@@ -64,6 +64,13 @@ constructor(
         videoStream.stopLive()
         audioStream.stopLive()
         nativeStop()
+    }
+
+    fun startPreview(){
+        videoStream.startPreview()
+    }
+    fun stopPreview(){
+        videoStream.stopPreview()
     }
 
     /**

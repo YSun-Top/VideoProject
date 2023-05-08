@@ -1,12 +1,11 @@
 package com.voidcom.videoproject.ui.rtp
 
 import android.app.Activity
-import android.graphics.SurfaceTexture
 import android.util.Log
 import android.util.Size
 import android.view.SurfaceHolder
 import android.view.TextureView
-import android.view.TextureView.SurfaceTextureListener
+import com.voidcom.v_base.utils.KLog
 import java.lang.ref.WeakReference
 
 class VideoStreamNew(
@@ -14,7 +13,7 @@ class VideoStreamNew(
     val mTextureView: TextureView,
     val videoParam: VideoParam,
     val context: WeakReference<Activity>
-) : VideoStreamBase(), SurfaceTextureListener, Camera2Listener {
+) : VideoStreamBase(), Camera2Listener {
     /**
      * 当前屏幕的一个旋转状态，如果屏幕没有旋转是默认的状态，值为{@link Surface#ROTATION_0}。
      * 当屏幕旋转了90°，则返回值{@link Surface#ROTATION_90}或{@link Surface#ROTATION_270}，
@@ -23,10 +22,6 @@ class VideoStreamNew(
     private var rotation = 0
     private var isLiving = false
     private var camera2Helper: Camera2Helper?=null
-
-    init {
-        mTextureView.surfaceTextureListener = this
-    }
 
     override fun startLive() {
     }
@@ -51,25 +46,6 @@ class VideoStreamNew(
 
     }
 
-    override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
-        Log.i(TAG, "onSurfaceTextureAvailable...")
-        startPreview()
-    }
-
-    override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
-
-    }
-
-    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
-        Log.i(TAG, "onSurfaceTextureDestroyed...")
-        stopPreview()
-        return false
-    }
-
-    override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
-
-    }
-
     override fun onCameraOpened(previewSize: Size?, displayOrientation: Int) {
         Log.i(TAG, "onCameraOpened previewSize=" + previewSize.toString())
 
@@ -89,7 +65,8 @@ class VideoStreamNew(
 
     }
 
-    private fun startPreview() {
+    fun startPreview() {
+        KLog.d(TAG,"开始预览")
         rotation = context.get()?.windowManager?.defaultDisplay?.rotation ?: 0
         camera2Helper = Camera2Helper(
             mTextureView,
@@ -101,7 +78,8 @@ class VideoStreamNew(
         ).apply { start() }
     }
 
-    private fun stopPreview() {
+    fun stopPreview() {
+        KLog.d(TAG,"停止预览")
         camera2Helper?.stop()
     }
 

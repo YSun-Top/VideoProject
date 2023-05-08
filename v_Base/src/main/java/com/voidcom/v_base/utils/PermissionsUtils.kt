@@ -12,7 +12,6 @@ import android.util.ArrayMap
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.voidcom.v_base.R
-import java.util.Arrays
 
 object PermissionsUtils {
     private val TAG = PermissionsUtils::class.java.simpleName
@@ -58,8 +57,8 @@ object PermissionsUtils {
         }
     }
 
-    fun checkPermission(context: Context, type: Int): Map<String, Boolean> {
-        return checkPermission(context, getPermissionsFormRequestType(type))
+    fun checkPermission(context: Context, vararg type: Int): Map<String, Boolean> {
+        return checkPermission(context, getPermissionsFormRequestType(*type))
     }
 
     /**
