@@ -45,7 +45,8 @@ class Camera2Helper(
     var specificCameraId: String,
     var camera2Listener: Camera2Listener? = null,
     val previewViewSize: Size,
-    val rotation: Int = 0,
+    val rotation: Int,
+    var rotateDegree: Int = 0,
     val context: WeakReference<Activity>
 ) {
     private var mCameraDevice: CameraDevice? = null
@@ -72,9 +73,9 @@ class Camera2Helper(
         stopBackgroundThread()
     }
 
-    fun release(){
+    fun release() {
         stop()
-        camera2Listener=null
+        camera2Listener = null
         context.clear()
     }
 
@@ -297,18 +298,14 @@ class Camera2Helper(
         }
     }
 
-    private fun getPreviewDegree(rotation: Int): Int {
-        return when (rotation) {
-            Surface.ROTATION_0 -> 90
-            Surface.ROTATION_90 -> 0
-            Surface.ROTATION_180 -> 270
-            Surface.ROTATION_270 -> 180
+    private fun getCameraOrientation(rotation: Int, cameraId: String): Int {
+        val degree = when (rotation) {
+            Surface.ROTATION_0 -> 0
+            Surface.ROTATION_90 -> 90
+            Surface.ROTATION_180 -> 180
+            Surface.ROTATION_270 -> 270
             else -> rotation * 90
         }
-    }
-
-    private fun getCameraOrientation(rotation: Int, cameraId: String): Int {
-        val degree = getPreviewDegree(rotation)
         val result = if (CAMERA_ID_FRONT == cameraId) {
             (360 - (mSensorOrientation + degree) % 360) % 360
         } else {
@@ -316,6 +313,10 @@ class Camera2Helper(
         }
         Log.i(TAG, "getCameraOrientation, result=$result")
         return result
+    }
+
+    fun updatePreviewDegree(degree: Int) {
+        this.rotateDegree = degree
     }
 
     private val mCameraOpenCloseLock = Semaphore(1)
@@ -390,7 +391,6 @@ class Camera2Helper(
                     }
                     offset += len / 4
                 }
-                val rotateDegree=getPreviewDegree(rotation)
                 //如果设备旋转了，还需要对数据处理，使之显示正常
                 if (rotateDegree == 90 || rotateDegree == 180) {
                     if (dstData == null) {

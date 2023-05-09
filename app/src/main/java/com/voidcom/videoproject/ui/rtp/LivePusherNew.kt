@@ -48,6 +48,7 @@ constructor(
     }
 
     override fun onVideoCodecInfo(width: Int, height: Int, frameRate: Int, bitrate: Int) {
+        nativeSetVideoCodecInfo(width,height,frameRate,bitrate)
     }
 
     fun setPreviewDisplay(holder: SurfaceHolder) {
@@ -120,7 +121,7 @@ constructor(
     private external fun nativeStop()
 
     private external fun nativeRelease()
-
+    private external fun nativeSetVideoCodecInfo(width: Int,height: Int,fps:Int, bitrate: Int)
     private external fun nativeSetAudioCodecInfo(sampleRateInHz: Int, channels: Int)
 
     companion object {

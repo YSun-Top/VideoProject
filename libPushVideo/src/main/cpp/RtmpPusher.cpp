@@ -41,6 +41,7 @@ void throwErrToJava(int error_code) {
 
 void callback(RTMPPacket *packet) {
     if (packet) {
+//        LOGE("callback:循环发送RTMP包数据");
         packet->m_nTimeStamp = RTMP_GetTime() - start_time;
         packets.push(packet);
     }
@@ -96,6 +97,7 @@ void *start(void *args) {
             if (!isPushing) {
                 break;
             }
+//            LOGE("循环发送RTMP数据包：从包队列取出数据并发送");
             if (!packet) {
                 continue;
             }
@@ -134,6 +136,7 @@ RTMP_PUSHER_FUNC(void, nativeInit) {
 
 RTMP_PUSHER_FUNC(void, nativePushVideo, jbyteArray yuv, jint cameraType) {
     if (!videoStream || !isPushing) {
+        LOGE("nativePushVideo-isPushing:%d",!isPushing);
         return;
     }
     jbyte *yuv_plane = env->GetByteArrayElements(yuv, JNI_FALSE);
@@ -167,6 +170,13 @@ RTMP_PUSHER_FUNC(void, nativeRelease) {
     videoStream = nullptr;
     delete audioStream;
     audioStream = nullptr;
+}
+
+RTMP_PUSHER_FUNC(void, nativeSetVideoCodecInfo,jint width, jint height, jint fps, jint bitrate){
+    if (!videoStream)return;
+    int ret=videoStream->setVideoEncInfo(width,height,fps,bitrate);
+    if (ret>=0)return;
+    throwErrToJava(ERROR_VIDEO_ENCODER_OPEN);
 }
 
 RTMP_PUSHER_FUNC(void, nativeSetAudioCodecInfo, jint sampleRateInHz, jint channels) {
