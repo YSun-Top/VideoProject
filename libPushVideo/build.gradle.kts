@@ -53,6 +53,8 @@ android {
 
 dependencies {
     implementation(project(":libSDKBase"))
+    implementation(project(":v_Base"))
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:$rootProject.kotlin.kotlin_stdlib")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.8.0")

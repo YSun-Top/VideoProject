@@ -1,4 +1,4 @@
-package com.voidcom.videoproject.ui.rtp
+package com.example.libpushvideo
 
 /**
  * 对应{@link ImageFormat.YUV_XXX}图像格式工具

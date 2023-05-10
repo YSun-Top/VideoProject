@@ -3,16 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.voidcom.videoproject">
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
@@ -46,9 +41,6 @@
             android:launchMode="singleInstance"
             android:screenOrientation="landscape" />
         <activity android:name=".ui.OutputVideoInfoActivity" />
-        <activity
-            android:name=".ui.videoCut.VideoCropActivity"
-            android:exported="false" />
         <activity
             android:name=".ui.videoCut.VideoCutActivity"
             android:exported="false"

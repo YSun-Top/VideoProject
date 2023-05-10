@@ -1,4 +1,4 @@
-package com.voidcom.videoproject.ui.rtp
+package com.example.libpushvideo
 
 interface OnFrameDataCallback {
     fun getInputSamples(): Int

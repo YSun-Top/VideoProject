@@ -1,4 +1,4 @@
-package com.voidcom.videoproject.ui.rtp
+package com.example.libpushvideo
 
 import android.app.Activity
 import android.content.Context
@@ -41,13 +41,13 @@ import kotlin.math.abs
  * @param rotation 角度信息，默认为0，当设备旋转了值不为零
  */
 class Camera2Helper(
-    val previewDisplayView: TextureView,
-    var specificCameraId: String,
-    var camera2Listener: Camera2Listener? = null,
-    val previewViewSize: Size,
-    val rotation: Int,
-    var rotateDegree: Int = 0,
-    val context: WeakReference<Activity>
+    private val previewDisplayView: TextureView,
+    private var specificCameraId: String,
+    private var camera2Listener: Camera2Listener? = null,
+    private val previewViewSize: Size,
+    private val rotation: Int,
+    private var rotateDegree: Int = 0,
+    private val context: WeakReference<Activity>
 ) {
     private var mCameraDevice: CameraDevice? = null
     private var mCameraId: String = ""

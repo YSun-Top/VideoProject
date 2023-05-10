@@ -45,8 +45,6 @@ dependencies {
     implementation project(":v_Base")
     implementation project(":ffmpegLib")
     implementation project(":libPushVideo")
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.4.0'
     testImplementation 'org.testng:testng:6.9.6'
     androidTestImplementation("androidx.test.ext:junit:${rootProject.androidx.ext_junit}")
     androidTestImplementation("androidx.test.espresso:espresso-core:${rootProject.androidx.espresso_core}") {

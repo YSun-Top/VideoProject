@@ -1,4 +1,4 @@
-package com.voidcom.videoproject.ui.rtp
+package com.example.libpushvideo
 
 import android.app.Activity
 import android.util.Log

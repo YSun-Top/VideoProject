@@ -9,7 +9,7 @@
 
 #define RTMP_PUSHER_FUNC(RETURN_TYPE, FUNC_NAME, ...) \
     extern "C" \
-    JNIEXPORT RETURN_TYPE JNICALL Java_com_voidcom_videoproject_ui_rtp_LivePusherNew_ ## FUNC_NAME \
+    JNIEXPORT RETURN_TYPE JNICALL Java_com_example_libpushvideo_LivePusherNew_ ## FUNC_NAME \
     (JNIEnv *env, jobject instance, ##__VA_ARGS__)    \
 
 PacketQueue<RTMPPacket *> packets;

@@ -1,4 +1,4 @@
-package com.voidcom.videoproject.ui.rtp
+package com.example.libpushvideo
 
 /**
  * 推流音频配置

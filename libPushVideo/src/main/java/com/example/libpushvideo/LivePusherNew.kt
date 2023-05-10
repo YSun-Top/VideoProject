@@ -1,4 +1,4 @@
-package com.voidcom.videoproject.ui.rtp
+package com.example.libpushvideo
 
 import android.app.Activity
 import android.view.SurfaceHolder
@@ -91,6 +91,9 @@ constructor(
         nativeRelease()
     }
 
+    /**
+     * 内部实现方式就是：停止摄像头然后判断当前摄像头ID，使用新的摄像头ID启动摄像头
+     */
     fun switchCamera() {
         videoStream.switchCamera()
     }
