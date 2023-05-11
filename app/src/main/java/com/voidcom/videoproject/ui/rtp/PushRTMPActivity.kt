@@ -14,7 +14,7 @@ import com.voidcom.v_base.utils.PermissionsUtils
 import com.voidcom.videoproject.R
 import com.voidcom.videoproject.databinding.ActivityPushRtmpBinding
 import com.example.libpushvideo.AudioParam
-import com.example.libpushvideo.Camera2Helper
+import com.example.libpushvideo.CameraHelper
 import com.example.libpushvideo.CameraType
 import com.example.libpushvideo.LivePusherNew
 import com.example.libpushvideo.VideoParam
@@ -117,7 +117,7 @@ class PushRTMPActivity : BaseActivity<ActivityPushRtmpBinding, EmptyViewModel>()
 
     private fun initPusher() {
         Log.d(TAG, "初始化推流，并打卡摄像头")
-        val videoParam = VideoParam(640, 480, Camera2Helper.CAMERA_ID_BACK.toInt(), 800000, 10)
+        val videoParam = VideoParam(640, 480, CameraHelper.CAMERA_ID_BACK.toInt(), 800000, 10)
         val audioParam =
             AudioParam(44100, AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT, 2)
         if (PermissionsUtils.checkPermission(this, AppCode.requestRecordAudio).isEmpty()) {

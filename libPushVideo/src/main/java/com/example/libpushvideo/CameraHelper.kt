@@ -36,14 +36,14 @@ import kotlin.math.abs
  * 摄像头助手，用于管理摄像头的开关、切换等操作
  * @param previewDisplayView 摄像头预览的view
  * @param specificCameraId 希望开启的摄像头
- * @param camera2Listener 摄像头回调，如开启、关闭、错误等
+ * @param cameraListener 摄像头回调，如开启、关闭、错误等
  * @param previewViewSize
  * @param rotation 角度信息，默认为0，当设备旋转了值不为零
  */
-class Camera2Helper(
+class CameraHelper(
     private val previewDisplayView: TextureView,
     private var specificCameraId: String,
-    private var camera2Listener: Camera2Listener? = null,
+    private var cameraListener: Camera2Listener? = null,
     private val previewViewSize: Size,
     private val rotation: Int,
     private var rotateDegree: Int = 0,
@@ -75,7 +75,7 @@ class Camera2Helper(
 
     fun release() {
         stop()
-        camera2Listener = null
+        cameraListener = null
         context.clear()
     }
 
@@ -118,9 +118,9 @@ class Camera2Helper(
             mCameraDevice?.close()
             mCameraDevice = null
             mImageReader.close()
-            camera2Listener?.onCameraClosed()
+            cameraListener?.onCameraClosed()
         } catch (e: InterruptedException) {
-            camera2Listener?.onCameraError(e)
+            cameraListener?.onCameraError(e)
         } finally {
             mCameraOpenCloseLock.release()
         }
@@ -160,7 +160,7 @@ class Camera2Helper(
                 if (configCameraParams(cm, i)) return
             }
         } catch (e: NullPointerException) {
-            camera2Listener?.onCameraError(e)
+            cameraListener?.onCameraError(e)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -248,6 +248,7 @@ class Camera2Helper(
 
     /**
      * 创建摄像头预览
+     * 设置两个输出目标，一个是ImageReader用于推流,一个是TextureView用于预览
      */
     private fun createCameraPreviewSession() {
         try {
@@ -327,7 +328,7 @@ class Camera2Helper(
             mCameraOpenCloseLock.release()
             mCameraDevice = camera
             createCameraPreviewSession()
-            camera2Listener?.onCameraOpened(mPreviewSize, getCameraOrientation(rotation, mCameraId))
+            cameraListener?.onCameraOpened(mPreviewSize, getCameraOrientation(rotation, mCameraId))
         }
 
         override fun onDisconnected(camera: CameraDevice) {
@@ -335,7 +336,7 @@ class Camera2Helper(
             mCameraOpenCloseLock.release()
             camera.close()
             mCameraDevice = null
-            camera2Listener?.onCameraClosed()
+            cameraListener?.onCameraClosed()
         }
 
         override fun onError(camera: CameraDevice, error: Int) {
@@ -343,7 +344,7 @@ class Camera2Helper(
             mCameraOpenCloseLock.release()
             camera.close()
             mCameraDevice = null
-            camera2Listener?.onCameraError(Exception("error occurred, code is $error"))
+            cameraListener?.onCameraError(Exception("error occurred, code is $error"))
 
         }
     }
@@ -402,10 +403,10 @@ class Camera2Helper(
                         } else {
                             YUVUtil.YUV420pRotate180(it, yuvData, image.width, image.height)
                         }
-                        camera2Listener?.onPreviewFrame(it)
+                        cameraListener?.onPreviewFrame(it)
                     }
                 } else {
-                    camera2Listener?.onPreviewFrame(yuvData)
+                    cameraListener?.onPreviewFrame(yuvData)
                 }
                 lock.unlock()
             }
@@ -435,7 +436,7 @@ class Camera2Helper(
 
         override fun onConfigureFailed(session: CameraCaptureSession) {
             Log.i(TAG, "onConfigureFailed: ")
-            camera2Listener?.onCameraError(Exception("configureFailed"))
+            cameraListener?.onCameraError(Exception("configureFailed"))
         }
     }
 
@@ -461,6 +462,6 @@ class Camera2Helper(
     companion object {
         const val CAMERA_ID_FRONT = "1"
         const val CAMERA_ID_BACK = "0"
-        private val TAG = Camera2Helper::class.java.simpleName
+        private val TAG = CameraHelper::class.java.simpleName
     }
 }

@@ -22,7 +22,7 @@ class VideoStreamNew(
      */
     private var rotation = 0
     private var isLiving = false
-    private var camera2Helper: Camera2Helper? = null
+    private var cameraHelper: CameraHelper? = null
     private var previewSize:Size?=null
 
     override fun startLive() {
@@ -33,7 +33,7 @@ class VideoStreamNew(
     }
 
     override fun switchCamera() {
-        camera2Helper?.switchCamera()
+        cameraHelper?.switchCamera()
     }
 
     override fun stopLive() {
@@ -41,9 +41,9 @@ class VideoStreamNew(
     }
 
     override fun release() {
-        camera2Helper?.stop()
-        camera2Helper?.release()
-        camera2Helper = null
+        cameraHelper?.stop()
+        cameraHelper?.release()
+        cameraHelper = null
     }
 
     override fun onPreviewDegreeChanged(degree: Int) {
@@ -81,7 +81,7 @@ class VideoStreamNew(
     }
 
     private fun updateVideoCodecInfo(degree: Int) {
-        camera2Helper?.updatePreviewDegree(degree)
+        cameraHelper?.updatePreviewDegree(degree)
         var width = previewSize!!.width
         var height = previewSize!!.height
         if (degree == 90 || degree == 270) {
@@ -100,9 +100,9 @@ class VideoStreamNew(
     fun startPreview() {
         KLog.d(TAG, "开始预览")
         rotation = context.get()?.windowManager?.defaultDisplay?.rotation ?: 0
-        camera2Helper = Camera2Helper(
+        cameraHelper = CameraHelper(
             mTextureView,
-            Camera2Helper.CAMERA_ID_BACK,
+            CameraHelper.CAMERA_ID_BACK,
             this,
             Size(videoParam.width, videoParam.height),
             rotation,
@@ -113,7 +113,7 @@ class VideoStreamNew(
 
     fun stopPreview() {
         KLog.d(TAG, "停止预览")
-        camera2Helper?.stop()
+        cameraHelper?.stop()
     }
 
     companion object {
