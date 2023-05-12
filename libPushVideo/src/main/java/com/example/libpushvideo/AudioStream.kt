@@ -4,14 +4,17 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import androidx.annotation.RequiresPermission
-import com.example.libpushvideo.OnFrameDataCallback
+import com.voidcom.v_base.utils.KLog
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
 class AudioStream @RequiresPermission(android.Manifest.permission.RECORD_AUDIO)
 constructor(callback: OnFrameDataCallback, audioParam: AudioParam) {
+    @set:Synchronized
     private var isMute = false
+
+    @set:Synchronized
     private var isLiving = false
     private val inputSamples: Int
     private val executor: ExecutorService = Executors.newSingleThreadExecutor()
@@ -38,9 +41,24 @@ constructor(callback: OnFrameDataCallback, audioParam: AudioParam) {
         )
     }
 
+    /**
+     * 设置是否静音
+     *
+     * @param m isMute
+     */
+    fun setMute(m: Boolean) {
+        //满足 1.设置为非静音模式 2.当前是静音模式(防止重复开启线程) 3.正在直播 三个状态时开启新的录音线程
+        if (!m && this.isMute && isLiving) {
+            executor.submit(audioRunnable)
+        }
+        this.isMute = m
+    }
+
+
     fun startLive() {
         isLiving = true
-        executor.submit(AudioTask())
+        if (isMute) return
+        executor.submit(audioRunnable)
     }
 
     fun stopLive() {
@@ -49,30 +67,27 @@ constructor(callback: OnFrameDataCallback, audioParam: AudioParam) {
 
     fun release() {
         audioRecord.release()
+        executor.shutdown()
     }
 
-    internal inner class AudioTask : Runnable {
-        override fun run() {
-            audioRecord.startRecording()
-            val bytes = ByteArray(inputSamples)
-            while (isLiving) {
-                if (!isMute) {
-                    val len = audioRecord.read(bytes, 0, bytes.size)
-                    if (len > 0) {
-                        mCallback.onAudioFrame(bytes)
-                    }
-                }
+    private val audioRunnable = Runnable {
+        audioRecord.startRecording()
+        val bytes = ByteArray(inputSamples)
+        var len: Int
+        while (isLiving) {
+            if (isMute) {
+                KLog.d(TAG, )
+                break
             }
-            audioRecord.stop()
+            len = audioRecord.read(bytes, 0, bytes.size)
+            if (len > 0) {
+                mCallback.onAudioFrame(bytes)
+            }
         }
+        audioRecord.stop()
     }
 
-    /**
-     * Setting mute or not
-     *
-     * @param isMute isMute
-     */
-    fun setMute(isMute: Boolean) {
-        this.isMute = isMute
+    companion object {
+        val TAG: String = AudioStream::class.java.simpleName
     }
 }

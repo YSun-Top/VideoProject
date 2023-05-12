@@ -15,8 +15,8 @@ import com.voidcom.videoproject.R
 import com.voidcom.videoproject.databinding.ActivityPushRtmpBinding
 import com.example.libpushvideo.AudioParam
 import com.example.libpushvideo.CameraHelper
-import com.example.libpushvideo.CameraType
 import com.example.libpushvideo.LivePusherNew
+import com.example.libpushvideo.NativeLivePusherHelper
 import com.example.libpushvideo.VideoParam
 
 /**
@@ -126,14 +126,14 @@ class PushRTMPActivity : BaseActivity<ActivityPushRtmpBinding, EmptyViewModel>()
                     this,
                     videoParam,
                     audioParam,
-                    mBinding.surfaceView,
-                    CameraType.CAMERA2
+                    mBinding.surfaceView
                 )
         }
     }
 
-    private val callback = object : LivePusherNew.LiveErrorCallback {
+    private val callback = object : NativeLivePusherHelper.LiveErrorCallback {
         override fun onError(msg: String) {
+            livePusher.stopPush()
             Log.e(TAG, "onError:$msg")
         }
     }
