@@ -5,11 +5,15 @@
 //
 // Created by Void on 2023/5/5.
 //
-VideoStream::VideoStream():m_frameLen(0),
-                           videoCodec(nullptr),
-                           pic_in(nullptr),
-                           videoCallback(nullptr) {
+VideoStream::VideoStream() {
+    m_frameLen = 0;
+    videoCodec = nullptr;
+    pic_in = nullptr;
+    videoCallback = nullptr;
+}
 
+void VideoStream::setVideoCallback(VideoCallback callback) {
+    this->videoCallback = callback;
 }
 
 int VideoStream::setVideoEncInfo(int width, int height, int fps, int bitrate) {
@@ -75,10 +79,6 @@ int VideoStream::setVideoEncInfo(int width, int height, int fps, int bitrate) {
     return ret;
 }
 
-void VideoStream::setVideoCallback(VideoCallback callback) {
-    this->videoCallback = callback;
-}
-
 void VideoStream::sendSpsPps(uint8_t *sps, uint8_t *pps, int sps_len, int pps_len) {
     int bodySize = 13 + sps_len + 3 + pps_len;
     auto *packet = new RTMPPacket();
@@ -116,8 +116,8 @@ void VideoStream::sendSpsPps(uint8_t *sps, uint8_t *pps, int sps_len, int pps_le
 
     //video
     packet->m_packetType = RTMP_PACKET_TYPE_VIDEO;
-    packet->m_nBodySize  = bodySize;
-    packet->m_nChannel   = 0x10;
+    packet->m_nBodySize = bodySize;
+    packet->m_nChannel = 0x10;
     //sps and pps no timestamp
     packet->m_nTimeStamp = 0;
     packet->m_hasAbsTimestamp = 0;
@@ -159,10 +159,10 @@ void VideoStream::sendFrame(int type, uint8_t *payload, int i_payload) {
     memcpy(&packet->m_body[i], payload, static_cast<size_t>(i_payload));
 
     packet->m_hasAbsTimestamp = 0;
-    packet->m_nBodySize       = bodySize;
-    packet->m_packetType      = RTMP_PACKET_TYPE_VIDEO;
-    packet->m_nChannel        = 0x10;
-    packet->m_headerType      = RTMP_PACKET_SIZE_LARGE;
+    packet->m_nBodySize = bodySize;
+    packet->m_packetType = RTMP_PACKET_TYPE_VIDEO;
+    packet->m_nChannel = 0x10;
+    packet->m_headerType = RTMP_PACKET_SIZE_LARGE;
     videoCallback(packet);
 }
 
@@ -173,7 +173,7 @@ void VideoStream::encodeVideo(int8_t *data, int camera_type) {
 
     if (camera_type == 1) {
         memcpy(pic_in->img.plane[0], data, m_frameLen); // y
-        for (int i = 0; i < m_frameLen/4; ++i) {
+        for (int i = 0; i < m_frameLen / 4; ++i) {
             *(pic_in->img.plane[1] + i) = *(data + m_frameLen + i * 2 + 1);  // u
             *(pic_in->img.plane[2] + i) = *(data + m_frameLen + i * 2); // v
         }

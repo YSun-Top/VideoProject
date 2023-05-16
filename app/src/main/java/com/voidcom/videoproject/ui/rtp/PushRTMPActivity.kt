@@ -1,23 +1,21 @@
 package com.voidcom.videoproject.ui.rtp
 
 import android.graphics.SurfaceTexture
-import android.media.AudioFormat
 import android.util.Log
 import android.view.TextureView
 import android.widget.CompoundButton
 import android.widget.CompoundButton.OnCheckedChangeListener
 import androidx.activity.result.contract.ActivityResultContracts
+import com.example.libpushvideo.CameraHelper
+import com.example.libpushvideo.LivePusherNew
+import com.example.libpushvideo.NativeLivePusherHelper
+import com.example.libpushvideo.VideoParam
 import com.voidcom.v_base.ui.BaseActivity
 import com.voidcom.v_base.ui.EmptyViewModel
 import com.voidcom.v_base.utils.AppCode
 import com.voidcom.v_base.utils.PermissionsUtils
 import com.voidcom.videoproject.R
 import com.voidcom.videoproject.databinding.ActivityPushRtmpBinding
-import com.example.libpushvideo.AudioParam
-import com.example.libpushvideo.CameraHelper
-import com.example.libpushvideo.LivePusherNew
-import com.example.libpushvideo.NativeLivePusherHelper
-import com.example.libpushvideo.VideoParam
 
 /**
  * 实现一个RTMP推流到服务端，然后在电脑拉流播放的功能
@@ -60,7 +58,7 @@ class PushRTMPActivity : BaseActivity<ActivityPushRtmpBinding, EmptyViewModel>()
 
     override fun onInitListener() {
         super.onInitListener()
-        mBinding.surfaceView.surfaceTextureListener=this
+        mBinding.surfaceView.surfaceTextureListener = this
         mBinding.btnSwitchCamera.setOnClickListener {
             livePusher.switchCamera()
         }
@@ -98,7 +96,12 @@ class PushRTMPActivity : BaseActivity<ActivityPushRtmpBinding, EmptyViewModel>()
 
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
         Log.i(TAG, "onSurfaceTextureAvailable...")
-        if (PermissionsUtils.checkPermission(this, AppCode.requestRecordAudio,AppCode.requestCamera).isEmpty()) {
+        if (PermissionsUtils.checkPermission(
+                this,
+                AppCode.requestRecordAudio,
+                AppCode.requestCamera
+            ).isEmpty()
+        ) {
             livePusher.startPreview()
         }
     }
@@ -118,17 +121,11 @@ class PushRTMPActivity : BaseActivity<ActivityPushRtmpBinding, EmptyViewModel>()
     private fun initPusher() {
         Log.d(TAG, "初始化推流，并打卡摄像头")
         val videoParam = VideoParam(640, 480, CameraHelper.CAMERA_ID_BACK.toInt(), 800000, 10)
-        val audioParam =
-            AudioParam(44100, AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT, 2)
-        if (PermissionsUtils.checkPermission(this, AppCode.requestRecordAudio).isEmpty()) {
-            livePusher =
-                LivePusherNew(
-                    this,
-                    videoParam,
-                    audioParam,
-                    mBinding.surfaceView
-                )
-        }
+        livePusher = LivePusherNew(
+                this,
+                videoParam,
+                mBinding.surfaceView
+            )
     }
 
     private val callback = object : NativeLivePusherHelper.LiveErrorCallback {

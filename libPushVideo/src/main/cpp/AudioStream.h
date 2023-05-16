@@ -13,11 +13,11 @@ class AudioStream {
     typedef void (*AudioCallback)(RTMPPacket *packet);
 
 private:
-    AudioCallback audioCallback;
-    int m_channels;
+    AudioCallback audioCallback = nullptr;
+    int m_channels = 0;
     faacEncHandle m_audioCodec = 0;
-    u_long m_inputSamples;
-    u_long m_maxOutputBytes;
+    u_long m_inputSamples = 0;
+    u_long m_maxOutputBytes = 0;
     u_char *m_buffer = 0;
 
 public:
@@ -28,8 +28,6 @@ public:
     int setAudioEncInfo(int samplesInHZ, int channels);
 
     void setAudioCallback(AudioCallback callback);
-
-    int getInputSamples() const;
 
     void encodeData(int8_t *data);
 

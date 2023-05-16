@@ -5,9 +5,7 @@
 #include "AudioStream.h"
 #include "PushInterface.h"
 
-AudioStream::AudioStream() {
-
-}
+AudioStream::AudioStream() = default;
 
 void AudioStream::setAudioCallback(AudioStream::AudioCallback callback) {
     this->audioCallback = callback;

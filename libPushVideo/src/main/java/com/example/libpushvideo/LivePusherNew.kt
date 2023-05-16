@@ -3,34 +3,29 @@ package com.example.libpushvideo
 import android.app.Activity
 import android.view.SurfaceHolder
 import android.view.TextureView
-import androidx.annotation.RequiresPermission
+import com.voidcom.v_base.utils.AppCode
+import com.voidcom.v_base.utils.PermissionsUtils
 import com.voidcom.v_base.utils.audioplayer.InnerAudioRecorder
 import java.lang.ref.WeakReference
 
-class LivePusherNew @RequiresPermission(android.Manifest.permission.RECORD_AUDIO)
+class LivePusherNew
 constructor(
     activity: Activity,
     videoParam: VideoParam,
-    audioParam: AudioParam,
     view: TextureView
-) : OnFrameDataCallback {
+) : OnFrameDataCallback, InnerAudioRecorder.AudioRecorderListener {
 
-    private var audioStream: AudioStream
+    private var audioStream: InnerAudioRecorder?=null
     private var videoStream = VideoStreamNew(this, view, videoParam, WeakReference(activity))
 
     init {
         NativeLivePusherHelper.getInstant().nativeInit()
-        InnerAudioRecorder.instance().startRecorder()
-        audioStream = AudioStream(this, audioParam)
+        if (PermissionsUtils.checkPermission(activity, AppCode.requestRecordAudio).isEmpty()) {
+            audioStream = InnerAudioRecorder()
+        }
         startPreview()
     }
 
-    override fun getInputSamples(): Int {
-        return 0
-    }
-
-    override fun onAudioFrame(pcm: ByteArray?) {
-    }
 
     override fun onAudioCodecInfo(sampleRate: Int, channelCount: Int) {
         NativeLivePusherHelper.getInstant().nativeSetAudioCodecInfo(sampleRate, channelCount)
@@ -45,6 +40,13 @@ constructor(
             .nativeSetVideoCodecInfo(width, height, frameRate, bitrate)
     }
 
+    override fun onAudioData(data: ByteArray, start: Int, end: Int) {
+        NativeLivePusherHelper.getInstant().nativePushAudio(data.copyOfRange(start,end))
+    }
+
+    override fun onInitError(message: String) {
+    }
+
     fun setPreviewDisplay(holder: SurfaceHolder) {
         videoStream.setPreviewDisplay(holder)
     }
@@ -53,12 +55,12 @@ constructor(
         NativeLivePusherHelper.getInstant().nativeStart(path)
         NativeLivePusherHelper.getInstant().setCallback(callback)
         videoStream.startLive()
-        audioStream.startLive()
+        audioStream?.startRecorder()
     }
 
     fun stopPush() {
         videoStream.stopLive()
-        audioStream.stopLive()
+        audioStream?.stopRecorder()
         NativeLivePusherHelper.getInstant().nativeStop()
     }
 
@@ -76,12 +78,12 @@ constructor(
      * @param isMute is mute or not
      */
     fun setMute(isMute: Boolean) {
-        audioStream.setMute(isMute)
+        audioStream?.setMute(isMute)
     }
 
     fun release() {
         videoStream.release()
-        audioStream.release()
+        audioStream?.release()
         NativeLivePusherHelper.getInstant().nativeRelease()
     }
 

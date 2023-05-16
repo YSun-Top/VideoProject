@@ -144,6 +144,13 @@ RTMP_PUSHER_FUNC(void, nativePushVideo, jbyteArray yuv, jint cameraType) {
     env->ReleaseByteArrayElements(yuv, yuv_plane, 0);
 }
 
+RTMP_PUSHER_FUNC(void, nativePushAudio, jbyteArray yuv){
+    if (!audioStream||!isPushing)return;
+    jbyte *data = env->GetByteArrayElements(yuv, nullptr);
+    audioStream->encodeData(data);
+    env->ReleaseByteArrayElements(yuv, data, 0);
+}
+
 RTMP_PUSHER_FUNC(void, nativeStart, jstring path) {
     if (isPushing) {
         return;

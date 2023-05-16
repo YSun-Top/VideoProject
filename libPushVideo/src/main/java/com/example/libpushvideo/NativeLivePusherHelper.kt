@@ -6,6 +6,7 @@ class NativeLivePusherHelper {
     external fun nativeInit()
 
     external fun nativePushVideo(yuv: ByteArray, cameraType: Int)
+    external fun nativePushAudio(yuv: ByteArray)
 
     external fun nativeStart(path: String)
 

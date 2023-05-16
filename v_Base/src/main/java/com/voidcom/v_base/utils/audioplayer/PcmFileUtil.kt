@@ -89,14 +89,19 @@ class PcmFileUtil {
     }
 
     fun write(data: ByteArray, offset: Int, len: Int) {
-        synchronized(this@PcmFileUtil) {
+        try {
             mFos?.write(data, offset, len)
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 
     fun closeWriteFile() {
-        synchronized(this@PcmFileUtil) {
+        try {
             mFos?.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
             mFos = null
         }
     }

@@ -31,11 +31,11 @@ public:
 
     ~VideoStream();
 
+    void setVideoCallback(VideoCallback callback);
+
     int setVideoEncInfo(int width, int height, int fps, int bitrate);
 
     void encodeVideo(int8_t *data, int camera_type);
-
-    void setVideoCallback(VideoCallback callback);
 
 };
 
