@@ -14,7 +14,7 @@ class NativeLivePusherHelper {
 
     external fun nativeRelease()
 
-    external fun nativeSetVideoCodecInfo(width: Int, height: Int, fps: Int, bitrate: Int)
+    external fun nativeSetVideoCodecInfo(wh: IntArray, fps: Int, bitrate: Int)
 
     external fun nativeSetAudioCodecInfo(sampleRateInHz: Int, channels: Int)
 

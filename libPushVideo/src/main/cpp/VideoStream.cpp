@@ -16,6 +16,14 @@ void VideoStream::setVideoCallback(VideoCallback callback) {
     this->videoCallback = callback;
 }
 
+/**
+ * 设置视频编码配置 (H264)
+ * @param width previewSize.width
+ * @param height previewSize.height
+ * @param fps {@link com.example.libpushvideo.VideoParam#frameRate}
+ * @param bitrate
+ * @return >=0 ok
+ */
 int VideoStream::setVideoEncInfo(int width, int height, int fps, int bitrate) {
     std::lock_guard<std::mutex> l(m_mutex);
     m_frameLen = width * height;
@@ -33,37 +41,41 @@ int VideoStream::setVideoEncInfo(int width, int height, int fps, int bitrate) {
     x264_param_t param;
     int ret = x264_param_default_preset(&param, "ultrafast", "zerolatency");
     if (ret < 0) {
+        LOGE("create x264 param fail");
         return ret;
     }
+    //标识当前码流的Level。编码的Level定义了某种条件下的最大视频分辨率、最大视频帧率等参数
     param.i_level_idc = 32;
     //input format
     param.i_csp = X264_CSP_I420;
     param.i_width = width;
     param.i_height = height;
-    //no B frame
+    //两个图像之间有多少个B帧
     param.i_bframe = 0;
     //i_rc_method:bitrate control, CQP(constant quality), CRF(constant bitrate), ABR(average bitrate)
+    //设置码率控制方式，X264_RC_CQP 0 恒定质量(动态码率); X264_RC_CRF 1 恒定码率; X264_RC_ABR 2 平均码率
     param.rc.i_rc_method = X264_RC_ABR;
-    //bitrate(Kbps)
+    //码率(Kbps)
     param.rc.i_bitrate = bitrate / 1024;
-    //max bitrate
+    //最大码率
     param.rc.i_vbv_max_bitrate = bitrate / 1024 * 1.2;
     //unit:kbps
     param.rc.i_vbv_buffer_size = bitrate / 1024;
 
-    //frame rate
+    //帧率
     param.i_fps_num = fps;
     param.i_fps_den = 1;
+    //ffmpeg字段
     param.i_timebase_den = param.i_fps_num;
     param.i_timebase_num = param.i_fps_den;
     //using fps
-    param.b_vfr_input = 0;
+//    param.b_vfr_input = 0;
     //key frame interval(GOP)
     param.i_keyint_max = fps * 2;
     //each key frame attaches sps/pps
     param.b_repeat_headers = 1;
     //thread number
-    param.i_threads = 1;
+    param.i_threads = 3;
 
     ret = x264_param_apply_profile(&param, "baseline");
     if (ret < 0) {

@@ -16,9 +16,10 @@ class VideoStream{
 private:
     std::mutex m_mutex;
 
+    //一帧的大小，width*height
     int m_frameLen;
-    x264_t *videoCodec = 0;
-    x264_picture_t *pic_in = 0;
+    x264_t *videoCodec = nullptr;
+    x264_picture_t *pic_in = nullptr;
 
     VideoCallback videoCallback;
 

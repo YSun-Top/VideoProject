@@ -5,23 +5,24 @@ import android.view.SurfaceHolder
 import android.view.TextureView
 import com.voidcom.v_base.utils.AppCode
 import com.voidcom.v_base.utils.PermissionsUtils
-import com.voidcom.v_base.utils.audioplayer.InnerAudioRecorder
+import com.voidcom.v_base.utils.audioplayer.AudioParam
 import java.lang.ref.WeakReference
 
 class LivePusherNew
 constructor(
-    activity: Activity,
-    videoParam: VideoParam,
-    view: TextureView
-) : OnFrameDataCallback, InnerAudioRecorder.AudioRecorderListener {
+        activity: Activity,
+        videoParam: VideoParam,
+        audioParam: AudioParam,
+        view: TextureView
+) : OnFrameDataCallback {
 
-    private var audioStream: InnerAudioRecorder?=null
+    private var audioStream: AudioStream? = null
     private var videoStream = VideoStreamNew(this, view, videoParam, WeakReference(activity))
 
     init {
         NativeLivePusherHelper.getInstant().nativeInit()
         if (PermissionsUtils.checkPermission(activity, AppCode.requestRecordAudio).isEmpty()) {
-            audioStream = InnerAudioRecorder()
+            audioStream = AudioStream(this, audioParam)
         }
         startPreview()
     }
@@ -31,20 +32,18 @@ constructor(
         NativeLivePusherHelper.getInstant().nativeSetAudioCodecInfo(sampleRate, channelCount)
     }
 
+    override fun onAudioFrame(pcm: ByteArray?) {
+        pcm?.let {
+            NativeLivePusherHelper.getInstant().nativePushAudio(it)
+        }
+    }
+
     override fun onVideoFrame(yuv: ByteArray, cameraType: Int) {
         NativeLivePusherHelper.getInstant().nativePushVideo(yuv, cameraType)
     }
 
-    override fun onVideoCodecInfo(width: Int, height: Int, frameRate: Int, bitrate: Int) {
-        NativeLivePusherHelper.getInstant()
-            .nativeSetVideoCodecInfo(width, height, frameRate, bitrate)
-    }
-
-    override fun onAudioData(data: ByteArray, start: Int, end: Int) {
-        NativeLivePusherHelper.getInstant().nativePushAudio(data.copyOfRange(start,end))
-    }
-
-    override fun onInitError(message: String) {
+    override fun onVideoCodecInfo(wHArray: IntArray, frameRate: Int, bitrate: Int) {
+        NativeLivePusherHelper.getInstant().nativeSetVideoCodecInfo(wHArray, frameRate, bitrate)
     }
 
     fun setPreviewDisplay(holder: SurfaceHolder) {

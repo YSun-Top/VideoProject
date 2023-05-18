@@ -29,17 +29,17 @@ int AudioStream::setAudioEncInfo(int samplesInHZ, int channels) {
     return faacEncSetConfiguration(m_audioCodec, config);
 }
 
-int AudioStream::getInputSamples() const {
-    return static_cast<int>(m_inputSamples);
-}
-
 RTMPPacket *AudioStream::getAudioTag() {
     u_char *buf;
     u_long len;
     faacEncGetDecoderSpecificInfo(m_audioCodec, &buf, &len);
     int bodySize = static_cast<int>(2 + len);
     auto *packet = new RTMPPacket();
-    RTMPPacket_Alloc(packet, bodySize);
+    int ret = RTMPPacket_Alloc(packet, bodySize);
+    if (!ret){
+        LOGE("RTMPPacket 分配内存失败");
+        return nullptr;
+    }
     //channel layout: stereo
     packet->m_body[0] = 0xAF;
     if (m_channels == 1) {
