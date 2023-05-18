@@ -16,6 +16,14 @@ void VideoStream::setVideoCallback(VideoCallback callback) {
     this->videoCallback = callback;
 }
 
+/**
+ *
+ * @param width previewSize.width
+ * @param height previewSize.height
+ * @param fps {@link com.example.libpushvideo.VideoParam#frameRate}
+ * @param bitrate
+ * @return
+ */
 int VideoStream::setVideoEncInfo(int width, int height, int fps, int bitrate) {
     std::lock_guard<std::mutex> l(m_mutex);
     m_frameLen = width * height;

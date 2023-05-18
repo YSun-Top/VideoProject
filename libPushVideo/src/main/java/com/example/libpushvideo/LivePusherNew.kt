@@ -15,7 +15,7 @@ constructor(
     view: TextureView
 ) : OnFrameDataCallback, InnerAudioRecorder.AudioRecorderListener {
 
-    private var audioStream: InnerAudioRecorder?=null
+    private var audioStream: InnerAudioRecorder? = null
     private var videoStream = VideoStreamNew(this, view, videoParam, WeakReference(activity))
 
     init {
@@ -35,13 +35,12 @@ constructor(
         NativeLivePusherHelper.getInstant().nativePushVideo(yuv, cameraType)
     }
 
-    override fun onVideoCodecInfo(width: Int, height: Int, frameRate: Int, bitrate: Int) {
-        NativeLivePusherHelper.getInstant()
-            .nativeSetVideoCodecInfo(width, height, frameRate, bitrate)
+    override fun onVideoCodecInfo(wHArray: IntArray, frameRate: Int, bitrate: Int) {
+        NativeLivePusherHelper.getInstant().nativeSetVideoCodecInfo(wHArray, frameRate, bitrate)
     }
 
     override fun onAudioData(data: ByteArray, start: Int, end: Int) {
-        NativeLivePusherHelper.getInstant().nativePushAudio(data.copyOfRange(start,end))
+        NativeLivePusherHelper.getInstant().nativePushAudio(data.copyOfRange(start, end))
     }
 
     override fun onInitError(message: String) {

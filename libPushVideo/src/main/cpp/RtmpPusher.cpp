@@ -136,7 +136,7 @@ RTMP_PUSHER_FUNC(void, nativeInit) {
 
 RTMP_PUSHER_FUNC(void, nativePushVideo, jbyteArray yuv, jint cameraType) {
     if (!videoStream || !isPushing) {
-        LOGE("nativePushVideo-isPushing:%d",!isPushing);
+        LOGE("nativePushVideo-isPushing:%d", !isPushing);
         return;
     }
     jbyte *yuv_plane = env->GetByteArrayElements(yuv, JNI_FALSE);
@@ -144,8 +144,8 @@ RTMP_PUSHER_FUNC(void, nativePushVideo, jbyteArray yuv, jint cameraType) {
     env->ReleaseByteArrayElements(yuv, yuv_plane, 0);
 }
 
-RTMP_PUSHER_FUNC(void, nativePushAudio, jbyteArray yuv){
-    if (!audioStream||!isPushing)return;
+RTMP_PUSHER_FUNC(void, nativePushAudio, jbyteArray yuv) {
+    if (!audioStream || !isPushing)return;
     jbyte *data = env->GetByteArrayElements(yuv, nullptr);
     audioStream->encodeData(data);
     env->ReleaseByteArrayElements(yuv, data, 0);
@@ -179,10 +179,12 @@ RTMP_PUSHER_FUNC(void, nativeRelease) {
     audioStream = nullptr;
 }
 
-RTMP_PUSHER_FUNC(void, nativeSetVideoCodecInfo,jint width, jint height, jint fps, jint bitrate){
+RTMP_PUSHER_FUNC(void, nativeSetVideoCodecInfo, jintArray wh, jint fps, jint bitrate) {
     if (!videoStream)return;
-    int ret=videoStream->setVideoEncInfo(width,height,fps,bitrate);
-    if (ret>=0)return;
+    int *whArray = env->GetIntArrayElements(wh, nullptr);
+    int ret = videoStream->setVideoEncInfo(whArray[0], whArray[1], fps, bitrate);
+    env->ReleaseIntArrayElements(wh, whArray, 0);
+    if (ret >= 0)return;
     throwErrToJava(ERROR_VIDEO_ENCODER_OPEN);
 }
 

@@ -23,7 +23,7 @@ class VideoStreamNew(
     private var rotation = 0
     private var isLiving = false
     private var cameraHelper: CameraHelper? = null
-    private var previewSize:Size?=null
+    private var previewSize: Size? = null
 
     override fun startLive() {
         isLiving = true
@@ -52,7 +52,7 @@ class VideoStreamNew(
 
     override fun onCameraOpened(previewSize: Size?, displayOrientation: Int) {
         Log.i(TAG, "onCameraOpened previewSize=" + previewSize.toString())
-        this.previewSize=previewSize
+        this.previewSize = previewSize
         updateVideoCodecInfo(getPreviewDegree(rotation))
     }
 
@@ -82,16 +82,17 @@ class VideoStreamNew(
 
     private fun updateVideoCodecInfo(degree: Int) {
         cameraHelper?.updatePreviewDegree(degree)
-        var width = previewSize!!.width
-        var height = previewSize!!.height
+        val tmp = IntArray(2)
+        //如果预览角度为横屏，需要修改宽高
         if (degree == 90 || degree == 270) {
-            val temp = width
-            width = height
-            height = temp
+            tmp[0] = previewSize?.height ?: 500
+            tmp[1] = previewSize?.width ?: 500
+        } else {
+            tmp[0] = previewSize?.width ?: 500
+            tmp[1] = previewSize?.height ?: 500
         }
         callback.onVideoCodecInfo(
-            width,
-            height,
+            tmp,
             videoParam.frameRate,
             videoParam.bitRate
         )
