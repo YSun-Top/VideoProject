@@ -52,7 +52,6 @@ int VideoStream::setVideoEncInfo(int width, int height, int fps, int bitrate) {
     param.i_height = height;
     //两个图像之间有多少个B帧
     param.i_bframe = 0;
-    //i_rc_method:bitrate control, CQP(constant quality), CRF(constant bitrate), ABR(average bitrate)
     //设置码率控制方式，X264_RC_CQP 0 恒定质量(动态码率); X264_RC_CRF 1 恒定码率; X264_RC_ABR 2 平均码率
     param.rc.i_rc_method = X264_RC_ABR;
     //码率(Kbps)
