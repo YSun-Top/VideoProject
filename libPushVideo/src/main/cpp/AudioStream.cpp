@@ -11,6 +11,12 @@ void AudioStream::setAudioCallback(AudioStream::AudioCallback callback) {
     this->audioCallback = callback;
 }
 
+/**
+ * 配置音频编码器
+ * @param samplesInHZ
+ * @param channels
+ * @return
+ */
 int AudioStream::setAudioEncInfo(int samplesInHZ, int channels) {
     m_channels = channels;
     //open faac encoder
@@ -20,12 +26,13 @@ int AudioStream::setAudioEncInfo(int samplesInHZ, int channels) {
                                &m_maxOutputBytes);
     m_buffer = new u_char[m_maxOutputBytes];
 
-    //set encoder params
+    //配置编码器参数
     faacEncConfigurationPtr config = faacEncGetCurrentConfiguration(m_audioCodec);
     config->mpegVersion   = MPEG4;
     config->aacObjectType = LOW;
     config->inputFormat   = FAAC_INPUT_16BIT;
     config->outputFormat  = 0;
+    //将配置应用到编码器
     return faacEncSetConfiguration(m_audioCodec, config);
 }
 

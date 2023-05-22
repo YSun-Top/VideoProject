@@ -15,6 +15,7 @@ class AudioStream {
 private:
     AudioCallback audioCallback = nullptr;
     int m_channels = 0;
+    //faac 编码器
     faacEncHandle m_audioCodec = 0;
     u_long m_inputSamples = 0;
     u_long m_maxOutputBytes = 0;

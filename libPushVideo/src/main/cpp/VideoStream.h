@@ -18,7 +18,9 @@ private:
 
     //一帧的大小，width*height
     int m_frameLen;
+    //H264编码器
     x264_t *videoCodec = nullptr;
+    //描述一视频帧的特征
     x264_picture_t *pic_in = nullptr;
 
     VideoCallback videoCallback;
