@@ -3,7 +3,13 @@ package com.example.libpushvideo
 class NativeLivePusherHelper {
     private var callback: LiveErrorCallback? = null
 
+    //region ----- init -----
     external fun nativeInit()
+
+    external fun nativeSetVideoCodecInfo(wh: IntArray, fps: Int, bitrate: Int)
+
+    external fun nativeSetAudioCodecInfo(sampleRateInHz: Int, channels: Int)
+    //endregion
 
     external fun nativePushVideo(yuv: ByteArray, cameraType: Int)
     external fun nativePushAudio(yuv: ByteArray)
@@ -13,10 +19,6 @@ class NativeLivePusherHelper {
     external fun nativeStop()
 
     external fun nativeRelease()
-
-    external fun nativeSetVideoCodecInfo(wh: IntArray, fps: Int, bitrate: Int)
-
-    external fun nativeSetAudioCodecInfo(sampleRateInHz: Int, channels: Int)
 
     fun setCallback(callback: LiveErrorCallback) {
         this.callback = callback

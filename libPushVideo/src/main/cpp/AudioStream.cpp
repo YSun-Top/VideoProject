@@ -15,7 +15,7 @@ void AudioStream::setAudioCallback(AudioStream::AudioCallback callback) {
  * 配置音频编码器
  * @param samplesInHZ
  * @param channels
- * @return
+ * @return < 0 fail
  */
 int AudioStream::setAudioEncInfo(int samplesInHZ, int channels) {
     m_channels = channels;

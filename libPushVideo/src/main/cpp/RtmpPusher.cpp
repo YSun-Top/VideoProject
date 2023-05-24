@@ -65,6 +65,7 @@ void *start(void *args) {
             break;
         }
         RTMP_Init(rtmp);
+        //给RTMP设置推流地址
         int ret = RTMP_SetupURL(rtmp, url);
         if (!ret) {
             LOGE("RTMP_SetupURL:%s", url);

@@ -355,6 +355,9 @@ SendFCUnpublish(RTMP *r) {
     return RTMP_SendPacket(r, &packet, FALSE);
 }
 
+/**
+ * 配置地址信息
+ */
 static int
 add_addr_info(struct sockaddr_in *service, AVal *host, int port) {
     char *hostname;
@@ -367,6 +370,7 @@ add_addr_info(struct sockaddr_in *service, AVal *host, int port) {
         hostname = host->av_val;
     }
 
+    //返回一个Internet 标准的地址
     service->sin_addr.s_addr = inet_addr(hostname);
     if (service->sin_addr.s_addr == INADDR_NONE) {
         struct hostent *hostbyname = gethostbyname(hostname);
@@ -2055,11 +2059,17 @@ int RTMP_SetOpt(RTMP *r, const AVal *opt, AVal *arg) {
     return TRUE;
 }
 
+/**
+ * 设置RTMP地址，同时对地址进行解析，获取地址中的IP、目录等
+ * @param url 推流地址
+ * @return
+ */
 int RTMP_SetupURL(RTMP *r, char *url) {
     AVal opt, arg;
     char *p1, *p2, *ptr = strchr(url, ' ');
-    int ret, len;
+    int ret;
     unsigned int port = 0;
+    unsigned long len;
 
     if (ptr)
         *ptr = '\0';
@@ -2155,7 +2165,9 @@ int RTMP_SetupURL(RTMP *r, char *url) {
     }
     return TRUE;
 }
-
+/**
+ * 设置为推流，如果是播放操作不需要设置
+ */
 void
 RTMP_EnableWrite(RTMP *r) {
     r->Link.protocol |= RTMP_FEATURE_WRITE;
@@ -2509,7 +2521,6 @@ RTMP_Connect(RTMP *r, RTMPPacket *cp) {
     if (!r->Link.hostname.av_len)
         return FALSE;
 
-
     memset(&service, 0, sizeof(struct sockaddr_in));
     service.sin_family = AF_INET;
 
@@ -2517,17 +2528,14 @@ RTMP_Connect(RTMP *r, RTMPPacket *cp) {
         /* Connect via SOCKS */
         if (!add_addr_info(&service, &r->Link.sockshost, r->Link.socksport))
             return FALSE;
-
     } else {
         /* Connect directly */
         if (!add_addr_info(&service, &r->Link.hostname, r->Link.port))
             return FALSE;
-
     }
 
     if (!RTMP_Connect0(r, (struct sockaddr *) &service))
         return FALSE;
-
 
     r->m_bSendCounter = TRUE;
 
@@ -2842,12 +2850,22 @@ HTTP_Post(RTMP *r, RTMPTCmd cmd, const char *buf, int len) {
     return hlen;
 }
 
-
+/**
+ * 解析URL,获取URL的协议类型、IP、端口、目录等信息
+ * 例如 rtmp://192.168.20.141/live/stream
+ * @param url 推流地址
+ * @param protocol
+ * @param host
+ * @param port
+ * @param playpath
+ * @param app
+ * @return 0 false; 1 true
+ */
 int RTMP_ParseURL(const char *url, int *protocol, AVal *host, unsigned int *port,
                   AVal *playpath, AVal *app) {
     char *p, *end, *col, *ques, *slash;
 
-    RTMP_Log(RTMP_LOGDEBUG, "Parsing...");
+    RTMP_Log(RTMP_LOGDEBUG, "Parsing URL...");
 
     *protocol = RTMP_PROTOCOL_RTMP;
     *port = 0;
@@ -2856,14 +2874,14 @@ int RTMP_ParseURL(const char *url, int *protocol, AVal *host, unsigned int *port
     app->av_len = 0;
     app->av_val = NULL;
 
-    /* Old School Parsing */
-
     /* look for usual :// pattern */
     p = strstr(url, "://");
     if (!p) {
         RTMP_Log(RTMP_LOGERROR, "RTMP URL: No :// in url!");
         return FALSE;
     }
+
+    //对比url的前N个字符，判断其使用的协议类型
     {
         int len = (int) (p - url);
 
@@ -2891,6 +2909,7 @@ int RTMP_ParseURL(const char *url, int *protocol, AVal *host, unsigned int *port
 
     parsehost:
     /* let's get the hostname */
+    // ‘://’
     p += 3;
 
     /* check for sudden death */
